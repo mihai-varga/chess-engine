@@ -3,5 +3,3 @@
 > engine-ul implicit: sudo apt-get install fairymax
 
 pentru a juca cu chess engine-ul implicit: `make run`
-
-ce am reusit sa fac e sa mut eu (alb)  dupa care programul nostru muta un pion negru
