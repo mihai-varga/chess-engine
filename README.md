@@ -3,3 +3,5 @@
 > engine-ul implicit: sudo apt-get install fairymax
 
 pentru a juca cu chess engine-ul implicit: `make run`
+
+log-ul se gasete in fisierul xboard.debug 
