@@ -1,4 +1,7 @@
 > download xboard: http://ftp.gnu.org/gnu/xboard/xboard-4.7.3.tar.gz <br>
 > tutorial xboard: http://www.gnu.org/software/xboard/engine-intf.html <br>
+> engine-ul implicit: sudo apt-get install fairymax
 
-pentru a juca cu chess engine-ul de pe linux: `xboard -fcp "/abs/path/to/exec" -scp "GNUChess"`
+pentru a juca cu chess engine-ul implicit: `make run`
+
+ce am reusit sa fac e sa mut eu (alb)  dupa care programul nostru muta un pion negru
