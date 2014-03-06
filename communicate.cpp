@@ -13,15 +13,16 @@ int main() {
         // version > 1
         scanf("%s", command); // 2 
         printf("feature myname=\"Piept de sahist\"\n");
-        printf("feature time=1\n");
+        printf("feature easy\n");
         printf("feature done=1\n");
-        printf("go\n");
     }
 
 
     while (1) {
         scanf("%s", command); 
-        printf("move a7a6\n");
+        if (strcmp(command, "white") == 0) {
+            printf("move a2a3\n");
+        }
     }
     return 0;
 }

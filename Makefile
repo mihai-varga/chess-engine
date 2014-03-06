@@ -11,3 +11,6 @@ $(EXE) : $(SRC)
 run: $(EXE)
 	xboard -debug  -fcp $(DIR)/$(EXE) 
 
+run: $(EXE)
+	xboard -debug  -fcp $(DIR)/$(EXE)  -mode TwoMachines
+
