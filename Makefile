@@ -8,8 +8,6 @@ DIR=$(shell pwd)
 $(EXE) : $(SRC)
 	$(CC) -o $(EXE) $(SRC) $(CFLAGS)
 
-run: $(EXE)
-	xboard -debug  -fcp $(DIR)/$(EXE) 
 
 run: $(EXE)
 	xboard -debug  -fcp $(DIR)/$(EXE)  -mode TwoMachines
