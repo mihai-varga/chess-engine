@@ -62,11 +62,7 @@ ChessBoard::~ChessBoard() {}
 
 void ChessBoard::printBoard(ChessBoard::Bitboard to_print) {
 	for (int i = 0; i < 64; i++) {
-<<<<<<< HEAD
 		Bitboard c = b & (1LL << i);
-=======
-		Bitboard c = to_print & (1ULL << i);
->>>>>>> 5d9369611be90f4fcc594b6828ff4797c2c52bc7
 		if (c) {
 			cout << 1 << " ";
 		} else {
