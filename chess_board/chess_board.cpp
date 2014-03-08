@@ -60,7 +60,7 @@ ChessBoard::ChessBoard() {
 
 ChessBoard::~ChessBoard() {}
 
-void ChessBoard::printBoard(ChessBoard::Bitboard to_print) {
+void ChessBoard::printBoard(ChessBoard::Bitboard b) {
 	for (int i = 0; i < 64; i++) {
 		Bitboard c = b & (1LL << i);
 		if (c) {
@@ -75,6 +75,50 @@ void ChessBoard::printBoard(ChessBoard::Bitboard to_print) {
 	cout << endl;
 }
 
+ChessBoard::Bitboard ChessBoard::getPiece(char c, int i) {
+	if (c > 'h' || c < 'a' || i > 8 || i < 1) throw 1;
+	int ind = c - 'a';
+	ind += (i - 1) * 8;
+	return ChessBoard::piece[ind];
+}
+
+/*
+ * 0 1 2
+ * 3 K 4
+ * 5 6 7
+ */
+ChessBoard::Bitboard ChessBoard::getKingMoves(ChessBoard::Bitboard b) {
+	ChessBoard::Bitboard moves[8], ret;
+	// trimL and trimR check if the king is on
+	// file A or H respectively
+	ChessBoard::Bitboard trimL, trimR;
+	trimL = b & ChessBoard::clearFile[0];
+	trimR = b & ChessBoard::clearFile[7];
+	for (int i = 0; i < 8; i++) {
+		moves[i] = 0;
+	}
+	moves[0] = trimL << 9;
+	moves[1] = b << 8;
+	moves[2] = trimR << 7;
+	moves[3] = trimL << 1;
+	moves[4] = trimR >> 1;
+	moves[5] = trimL >> 7;
+	moves[6] = b >> 8;
+	moves[7] = trimR >> 9;
+	ret = 0;
+	for (int i = 0; i < 8; i++) {
+		ret |= moves[i];
+	}
+	// if moving the white king
+	if (b == ChessBoard::boards[5]) {
+		ret &= ~ChessBoard::allWhites;
+	} else { // if moving the black king
+		ret &= ~ChessBoard::allBlacks;
+	}
+	return ret;
+}
+
+
 int main() {
 	ChessBoard cb;
 	cb.printBoard(cb.piece[0]);
@@ -87,5 +131,7 @@ int main() {
 	cb.printBoard(cb.allWhites);
 	cb.printBoard(cb.allBlacks);
 	cb.printBoard(cb.allPieces);
+	cb.printBoard(cb.getPiece('e', 1));
+	cb.printBoard(cb.getKingMoves(cb.getPiece('f', 3)));
 	return 0;
 }
