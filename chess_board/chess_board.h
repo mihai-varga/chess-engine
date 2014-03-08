@@ -1,9 +1,10 @@
 #ifndef __CHESS_BOARD_H__
 #define __CHESS_BOARD_H__
+#include <stdint.h>
 
 class ChessBoard {
 	public:
-		typedef long long Bitboard;
+		typedef int64_t Bitboard;
 	public:
 		/*
 		 *  0 - white pawns
