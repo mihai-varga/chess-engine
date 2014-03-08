@@ -4,12 +4,12 @@
 
 class ChessBoard {
 	public:
-		typedef int64_t Bitboard;
+		typedef unsigned long long Bitboard;
 	public:
 		/*
 		 *  0 - white pawns
 		 *  1 - white rooks
-		 *  2 - white horses
+		 *  2 - white knights
 		 *  3 - white bishops
 		 *  4 - white queen
 		 *  5 - white king
@@ -17,7 +17,7 @@ class ChessBoard {
 		 *
 		 *  6 - black pawns
 		 *  7 - black rooks
-		 *  8 - black horses
+		 *  8 - black knights
 		 *  9 - black bishops
 		 * 10 - black queen
 		 * 11 - black king
