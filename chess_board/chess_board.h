@@ -4,7 +4,7 @@
 
 class ChessBoard {
 	public:
-		typedef int64_t Bitboard;
+		typedef unsigned long long Bitboard;
 	public:
 		/*
 		 *  0 - white pawns

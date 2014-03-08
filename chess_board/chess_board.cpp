@@ -1,6 +1,7 @@
 #include "chess_board.h"
 #include <iostream>
 #include <stdio.h>
+#include<climits>
 
 using namespace std;
 
@@ -19,9 +20,9 @@ ChessBoard::ChessBoard() {
 
 ChessBoard::~ChessBoard() {}
 
-void ChessBoard::printBoard(ChessBoard::Bitboard b) {
+void ChessBoard::printBoard(ChessBoard::Bitboard to_print) {
 	for (int i = 0; i < 64; i++) {
-		char c = b & (1LL << i);
+		Bitboard c = to_print & (1ULL << i);
 		if (c) {
 			cout << 1;
 		} else {
