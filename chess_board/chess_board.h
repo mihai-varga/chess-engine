@@ -47,6 +47,7 @@ class ChessBoard {
 		void printBoard(Bitboard b);
 		Bitboard getPiece(char c, int i);
 		Bitboard getKingMoves(Bitboard b);
+		Bitboard getKnightMoves(Bitboard b);
 };
 
 #endif

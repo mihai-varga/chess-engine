@@ -89,22 +89,22 @@ ChessBoard::Bitboard ChessBoard::getPiece(char c, int i) {
  */
 ChessBoard::Bitboard ChessBoard::getKingMoves(ChessBoard::Bitboard b) {
 	ChessBoard::Bitboard moves[8], ret;
-	// trimL and trimR check if the king is on
+	// trimA and trimH check if the king is on
 	// file A or H respectively
-	ChessBoard::Bitboard trimL, trimR;
-	trimL = b & ChessBoard::clearFile[0];
-	trimR = b & ChessBoard::clearFile[7];
+	ChessBoard::Bitboard trimA, trimH;
+	trimA = b & ChessBoard::clearFile[0];
+	trimH = b & ChessBoard::clearFile[7];
 	for (int i = 0; i < 8; i++) {
 		moves[i] = 0;
 	}
-	moves[0] = trimL << 9;
-	moves[1] = b << 8;
-	moves[2] = trimR << 7;
-	moves[3] = trimL << 1;
-	moves[4] = trimR >> 1;
-	moves[5] = trimL >> 7;
-	moves[6] = b >> 8;
-	moves[7] = trimR >> 9;
+	moves[0] = trimA >> 9;
+	moves[1] = b >> 8;
+	moves[2] = trimH >> 7;
+	moves[3] = trimA >> 1;
+	moves[4] = trimH << 1;
+	moves[5] = trimA << 7;
+	moves[6] = b << 8;
+	moves[7] = trimH << 9;
 	ret = 0;
 	for (int i = 0; i < 8; i++) {
 		ret |= moves[i];
@@ -112,12 +112,59 @@ ChessBoard::Bitboard ChessBoard::getKingMoves(ChessBoard::Bitboard b) {
 	// if moving the white king
 	if (b == ChessBoard::boards[5]) {
 		ret &= ~ChessBoard::allWhites;
-	} else { // if moving the black king
-		ret &= ~ChessBoard::allBlacks;
+	} else {
+		if (b == ChessBoard::boards[11]) { // if moving the black king
+				ret &= ~ChessBoard::allBlacks;
+		} else {
+			throw 1;
+		}
 	}
 	return ret;
 }
 
+/*
+ * - 1 - 2 -
+ * 0 - - - 3
+ * - - N - -
+ * 7 - - - 4
+ * - 6 - 5 -
+ */
+ChessBoard::Bitboard ChessBoard::getKnightMoves(ChessBoard::Bitboard b) {
+	ChessBoard::Bitboard moves[8], ret;
+	// trimAB and trimGH check if the knight is on
+	// files (A, B) or (G, H) respectively
+	ChessBoard::Bitboard trimAB, trimGH, trimA, trimH;
+	trimAB = b & ChessBoard::clearFile[0] & ChessBoard::clearFile[1];
+	trimGH = b & ChessBoard::clearFile[7] & ChessBoard::clearFile[6];
+	trimA = b & ChessBoard::clearFile[0];
+	trimH = b & ChessBoard::clearFile[7];
+	for (int i = 0; i < 8; i++) {
+		moves[i] = 0;
+	}
+	moves[0] = trimAB >> 10;//
+	moves[1] = trimA >> 17;//
+	moves[2] = trimH >> 15;//
+	moves[3] = trimGH >> 6;
+	moves[4] = trimGH << 10;
+	moves[5] = trimH << 17;
+	moves[6] = trimA << 15;
+	moves[7] = trimAB << 6;//
+	ret = 0;
+	for (int i = 0; i < 8; i++) {
+		ret |= moves[i];
+	}
+	// if moving a white knight
+	if (b & ChessBoard::boards[2]) {
+		ret &= ~ChessBoard::allWhites;
+	} else {
+		if (b & ChessBoard::boards[8]) { // if moving a black knight
+				ret &= ~ChessBoard::allBlacks;
+		} else {
+			throw 1;
+		}
+	}
+	return ret;
+}
 
 int main() {
 	ChessBoard cb;
@@ -131,7 +178,6 @@ int main() {
 	cb.printBoard(cb.allWhites);
 	cb.printBoard(cb.allBlacks);
 	cb.printBoard(cb.allPieces);
-	cb.printBoard(cb.getPiece('e', 1));
-	cb.printBoard(cb.getKingMoves(cb.getPiece('f', 3)));
+	cb.printBoard(cb.getKnightMoves(cb.getPiece('g', 1)));
 	return 0;
 }
