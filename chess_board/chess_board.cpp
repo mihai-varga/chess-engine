@@ -166,6 +166,40 @@ ChessBoard::Bitboard ChessBoard::getKnightMoves(ChessBoard::Bitboard b) {
 	return ret;
 }
 
+/*
+ * - - -
+ * - P -
+ * - 0 -
+ * - 1 -
+ */
+ChessBoard::Bitboard ChessBoard::getWhitePawnMoves(ChessBoard::Bitboard b) {
+	ChessBoard::Bitboard moves[2], ret;
+	moves[0] = 0;
+	moves[1] = 0;
+	moves[0] = b << 8;
+	moves[1] = b << 16;
+	ret = moves[0] | moves[1];
+	ret &= ~ChessBoard::allWhites;
+	return ret;
+}
+
+/*
+ * - 1 -
+ * - 0 -
+ * - P -
+ * - - -
+ */
+ChessBoard::Bitboard ChessBoard::getBlackPawnMoves(ChessBoard::Bitboard b) {
+	ChessBoard::Bitboard moves[2], ret;
+	moves[0] = 0;
+	moves[1] = 0;
+	moves[0] = b >> 8;
+	moves[1] = b >> 16;
+	ret = moves[0] | moves[1];
+	ret &= ~ChessBoard::allBlacks;
+	return ret;
+}
+
 int main() {
 	ChessBoard cb;
 	cb.printBoard(cb.piece[0]);
@@ -179,5 +213,7 @@ int main() {
 	cb.printBoard(cb.allBlacks);
 	cb.printBoard(cb.allPieces);
 	cb.printBoard(cb.getKnightMoves(cb.getPiece('g', 1)));
+	cb.printBoard(cb.getWhitePawnMoves(cb.getPiece('g', 7)));
+	cb.printBoard(cb.getBlackPawnMoves(cb.getPiece('g', 2)));
 	return 0;
 }

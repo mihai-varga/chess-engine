@@ -48,6 +48,8 @@ class ChessBoard {
 		Bitboard getPiece(char c, int i);
 		Bitboard getKingMoves(Bitboard b);
 		Bitboard getKnightMoves(Bitboard b);
+		Bitboard getWhitePawnMoves(Bitboard b);
+		Bitboard getBlackPawnMoves(Bitboard b);
 };
 
 #endif
