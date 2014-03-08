@@ -2,12 +2,7 @@ CC=g++
 CFLAGS=-c
 LDFLAGS=
 
-SOURCES=Action.cpp CaicWriter.cpp discretematrix.cpp \
-	   MesaConsoleApp.cpp nexusblock.cpp QueueElement.cpp TabReader.cpp
-
 OBJECTS=$(SOURCES:.cpp=.o)
-
-EXECUTABLE=mesa
 
 all: $(SOURCES) $(EXECUTABLE)
 
