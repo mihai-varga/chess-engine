@@ -5,27 +5,7 @@
 
 using namespace std;
 
-ChessBoard::ChessBoard() {
-	// initialize the masks
-	for (int i = 0; i < 8; i++) {
-		ChessBoard::maskRank[i] = 0;
-		ChessBoard::clearRank[i] = -1;
-		ChessBoard::maskFile[i] = 0;
-		ChessBoard::clearFile[i] = -1;
-		for (int j = 8 * i; j < 8 * i + 8; j++) {
-			ChessBoard::maskRank[i] |= 1LL << j;
-			ChessBoard::clearRank[i] &= ~(1LL << j);
-		}
-		for (int j = i; j < 64; j = j + 8) {
-			ChessBoard::maskFile[i] |= 1LL << j;
-			ChessBoard::clearFile[i] &= ~(1LL << j);
-		}
-	}
-	//initialize piece lookup table
-	for (int i = 0; i < 64; i++) {
-		ChessBoard::piece[i] = 0;
-		ChessBoard::piece[i] = 1LL << i;
-	}
+void ChessBoard::initBoard() {
 	//initialize the board table
 	for (int i = 0; i < 12; i++) {
 		ChessBoard::boards[i] = 0;
@@ -56,6 +36,30 @@ ChessBoard::ChessBoard() {
 		ChessBoard::allBlacks |= ChessBoard::boards[i + 6];
 	}
 	ChessBoard::allPieces = ChessBoard::allWhites | ChessBoard::allBlacks;
+}
+
+ChessBoard::ChessBoard() {
+	// initialize the masks
+	for (int i = 0; i < 8; i++) {
+		ChessBoard::maskRank[i] = 0;
+		ChessBoard::clearRank[i] = -1;
+		ChessBoard::maskFile[i] = 0;
+		ChessBoard::clearFile[i] = -1;
+		for (int j = 8 * i; j < 8 * i + 8; j++) {
+			ChessBoard::maskRank[i] |= 1LL << j;
+			ChessBoard::clearRank[i] &= ~(1LL << j);
+		}
+		for (int j = i; j < 64; j = j + 8) {
+			ChessBoard::maskFile[i] |= 1LL << j;
+			ChessBoard::clearFile[i] &= ~(1LL << j);
+		}
+	}
+	//initialize piece lookup table
+	for (int i = 0; i < 64; i++) {
+		ChessBoard::piece[i] = 0;
+		ChessBoard::piece[i] = 1LL << i;
+	}
+	ChessBoard::initBoard();
 }
 
 ChessBoard::~ChessBoard() {}

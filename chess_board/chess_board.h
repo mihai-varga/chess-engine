@@ -40,6 +40,8 @@ class ChessBoard {
 		 */
 		Bitboard piece[64];
 
+	private:
+		void initBoard();
 	public:
 		ChessBoard();
 		~ChessBoard();
