@@ -1,6 +1,7 @@
 #ifndef __CHESS_BOARD_H__
 #define __CHESS_BOARD_H__
 #include <stdint.h>
+#include <vector>
 
 class ChessBoard {
 	public:
@@ -22,13 +23,15 @@ class ChessBoard {
 		 * 10 - black queen
 		 * 11 - black king
 		 */
-		Bitboard boards[12], allWhites, allBlacks, allPieces;
+		std::vector<Bitboard> boards(12, 0);
+		Bitboard allWhites, allBlacks, allPieces;
 		/*
 		 * rank = row
 		 * file = column
 		 */
-		Bitboard maskRank[8], clearRank[8], maskFile[8], clearFile[8];
-		/* 
+		std::vector<Bitboard> maskRank(8, 0), clearRank(8, 0), maskFile(8, 0),
+			clearFile(8, 0);
+		/*
 		 * A1 B1 C1 D1 E1 F1 G1 H1
 		 * A2 B2 C2 D2 E2 F2 G2 H2
 		 * A3 B3 C3 D3 E3 F3 G3 H3
@@ -38,7 +41,7 @@ class ChessBoard {
 		 * A7 B7 C7 D7 E7 F7 G7 H7
 		 * A8 B8 C8 D8 E8 F8 G8 H8
 		 */
-		Bitboard piece[64];
+		std::vector<Bitboard> piece(64, 0);
 
 	private:
 		void initBoard();
@@ -48,10 +51,14 @@ class ChessBoard {
 
 		void printBoard(Bitboard b);
 		Bitboard getPiece(char c, int i);
-		Bitboard getKingMoves(Bitboard b);
-		Bitboard getKnightMoves(Bitboard b);
-		Bitboard getWhitePawnMoves(Bitboard b);
-		Bitboard getBlackPawnMoves(Bitboard b);
+		std::vector<Bitboard> getKingMoves(Bitboard b);
+		Bitboard getKingAllMoves(Bitboard b);
+		std::vector<Bitboard> getKnightMoves(Bitboard b);
+		Bitboard getKnightAllMoves(Bitboard b);
+		std::vector>Bitboard> getWhitePawnMoves(Bitboard b);
+		Bitboard getWhitePawnAllMoves(Bitboard b);
+		std::vector>Bitboard> getBlackPawnMoves(Bitboard b);
+		Bitboard getBlackPawnAllMoves(Bitboard b);
 };
 
 #endif

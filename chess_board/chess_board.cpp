@@ -91,8 +91,9 @@ ChessBoard::Bitboard ChessBoard::getPiece(char c, int i) {
  * 3 K 4
  * 5 6 7
  */
-ChessBoard::Bitboard ChessBoard::getKingMoves(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard moves[8], ret;
+std::vector<ChessBoard::Bitboard> ChessBoard::getKingMoves(ChessBoard::Bitboard b) {
+	std::vector<ChessBoard::Bitboard> moves(8, 0);
+	ChessBoard::Bitboard ret;
 	// trimA and trimH check if the king is on
 	// file A or H respectively
 	ChessBoard::Bitboard trimA, trimH;
@@ -133,8 +134,9 @@ ChessBoard::Bitboard ChessBoard::getKingMoves(ChessBoard::Bitboard b) {
  * 7 - - - 4
  * - 6 - 5 -
  */
-ChessBoard::Bitboard ChessBoard::getKnightMoves(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard moves[8], ret;
+ChessBoard::Bitboard* ChessBoard::getKnightMoves(ChessBoard::Bitboard b) {
+	std::vector<ChessBoard::Bitboard> moves(8, 0);
+	ChessBoard::Bitboard ret;
 	// trimAB and trimGH check if the knight is on
 	// files (A, B) or (G, H) respectively
 	ChessBoard::Bitboard trimAB, trimGH, trimA, trimH;
@@ -176,8 +178,9 @@ ChessBoard::Bitboard ChessBoard::getKnightMoves(ChessBoard::Bitboard b) {
  * - 0 -
  * - 1 -
  */
-ChessBoard::Bitboard ChessBoard::getWhitePawnMoves(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard moves[2], ret;
+std::vector<ChessBoard::Bitboard> ChessBoard::getWhitePawnMoves(ChessBoard::Bitboard b) {
+	std::vector<ChessBoard::Bitboard> moves(2, 0);
+	ChessBoard::Bitboard ret;
 	moves[0] = 0;
 	moves[1] = 0;
 	moves[0] = b << 8;
@@ -193,8 +196,9 @@ ChessBoard::Bitboard ChessBoard::getWhitePawnMoves(ChessBoard::Bitboard b) {
  * - P -
  * - - -
  */
-ChessBoard::Bitboard ChessBoard::getBlackPawnMoves(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard moves[2], ret;
+std::vector<ChessBoard::Bitboard> ChessBoard::getBlackPawnMoves(ChessBoard::Bitboard b) {
+	std::vector<ChessBoard::Bitboard> moves(2, 0);
+	ChessBoard::Bitboard ret;
 	moves[0] = 0;
 	moves[1] = 0;
 	moves[0] = b >> 8;
@@ -216,8 +220,8 @@ int main() {
 	cb.printBoard(cb.allWhites);
 	cb.printBoard(cb.allBlacks);
 	cb.printBoard(cb.allPieces);
-	cb.printBoard(cb.getKnightMoves(cb.getPiece('g', 1)));
-	cb.printBoard(cb.getWhitePawnMoves(cb.getPiece('g', 7)));
-	cb.printBoard(cb.getBlackPawnMoves(cb.getPiece('g', 2)));
+	cb.printBoard(cb.getKnightAllMoves(cb.getPiece('g', 1)));
+	cb.printBoard(cb.getWhiteAllPawnMoves(cb.getPiece('g', 7)));
+	cb.printBoard(cb.getBlackAllPawnMoves(cb.getPiece('g', 2)));
 	return 0;
 }
