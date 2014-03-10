@@ -203,21 +203,3 @@ ChessBoard::Bitboard ChessBoard::getBlackPawnMoves(ChessBoard::Bitboard b) {
 	ret &= ~ChessBoard::allBlacks;
 	return ret;
 }
-
-int main() {
-	ChessBoard cb;
-	cb.printBoard(cb.piece[0]);
-	cb.printBoard(cb.piece[1]);
-	cb.printBoard(cb.piece[2]);
-	cb.printBoard(cb.clearRank[0]);
-	cb.printBoard(cb.maskRank[0]);
-	cb.printBoard(cb.clearFile[0]);
-	cb.printBoard(cb.maskFile[7]);
-	cb.printBoard(cb.allWhites);
-	cb.printBoard(cb.allBlacks);
-	cb.printBoard(cb.allPieces);
-	cb.printBoard(cb.getKnightMoves(cb.getPiece('g', 1)));
-	cb.printBoard(cb.getWhitePawnMoves(cb.getPiece('g', 7)));
-	cb.printBoard(cb.getBlackPawnMoves(cb.getPiece('g', 2)));
-	return 0;
-}
