@@ -23,14 +23,16 @@ class ChessBoard {
 		 * 10 - black queen
 		 * 11 - black king
 		 */
-		std::vector<Bitboard> boards(12, 0);
+		std::vector<Bitboard> boards;
 		Bitboard allWhites, allBlacks, allPieces;
 		/*
 		 * rank = row
 		 * file = column
 		 */
-		std::vector<Bitboard> maskRank(8, 0), clearRank(8, 0), maskFile(8, 0),
-			clearFile(8, 0);
+		std::vector<Bitboard> maskRank;
+		std::vector<Bitboard> clearRank;
+		std::vector<Bitboard> maskFile;
+		std::vector<Bitboard> clearFile;
 		/*
 		 * A1 B1 C1 D1 E1 F1 G1 H1
 		 * A2 B2 C2 D2 E2 F2 G2 H2
@@ -41,7 +43,7 @@ class ChessBoard {
 		 * A7 B7 C7 D7 E7 F7 G7 H7
 		 * A8 B8 C8 D8 E8 F8 G8 H8
 		 */
-		std::vector<Bitboard> piece(64, 0);
+		std::vector<Bitboard> piece;
 
     private:
         void initBoard();
@@ -51,14 +53,22 @@ class ChessBoard {
 
 		void printBoard(Bitboard b);
 		Bitboard getPiece(char c, int i);
+
 		std::vector<Bitboard> getKingMoves(Bitboard b);
 		Bitboard getKingAllMoves(Bitboard b);
+		Bitboard getKingRandomMove(Bitboard b);
+
 		std::vector<Bitboard> getKnightMoves(Bitboard b);
 		Bitboard getKnightAllMoves(Bitboard b);
-		std::vector>Bitboard> getWhitePawnMoves(Bitboard b);
+		Bitboard getKnightRandomMove(Bitboard b);
+
+		std::vector<Bitboard> getWhitePawnMoves(Bitboard b);
 		Bitboard getWhitePawnAllMoves(Bitboard b);
-		std::vector>Bitboard> getBlackPawnMoves(Bitboard b);
+		Bitboard getWhitePawnRandomMove(Bitboard b);
+
+		std::vector<Bitboard> getBlackPawnMoves(Bitboard b);
 		Bitboard getBlackPawnAllMoves(Bitboard b);
+		Bitboard getBlackPawnRandomMove(Bitboard b);
 };
 
 #endif
