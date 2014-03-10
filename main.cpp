@@ -2,6 +2,7 @@
 #include<string.h>
 #include<map>
 #include<csignal>
+#include "chess_board/chess_board.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ bool isMove(char *command) {
 
 void signal_handler(int signal) {}
 
-int main() {
+void play() {
     /**
      * Comenzi posibile: winboard, xboard, new, force, go, white, 
      * black, quit, resign, move
@@ -34,7 +35,6 @@ int main() {
     bool white = false;
     bool forceMode = false;
     bool my_turn = false;
-
 
     while (1) {
         scanf("%s", command);
@@ -82,19 +82,36 @@ int main() {
         }
 
         if (!strcmp(command, "quit")) {
-            return 0;
-            continue;
+            return;
         }
 
         if (!strcmp(command, "resign")) {
-            return 0;
-            continue;
+            return;
         }
 
         if (isMove(command)) {
             printf("move d2d3\n");
         }
     }
-
-    return 0;
 }
+
+
+int main() {
+    play();
+    ChessBoard cb;
+    cb.printBoard(cb.piece[0]);
+    cb.printBoard(cb.piece[1]);
+    cb.printBoard(cb.piece[2]);
+    cb.printBoard(cb.clearRank[0]);
+    cb.printBoard(cb.maskRank[0]);
+    cb.printBoard(cb.clearFile[0]);
+    cb.printBoard(cb.maskFile[7]);
+    cb.printBoard(cb.allWhites);
+    cb.printBoard(cb.allBlacks);
+    cb.printBoard(cb.allPieces);
+    cb.printBoard(cb.getKnightMoves(cb.getPiece('g', 1)));
+    cb.printBoard(cb.getWhitePawnMoves(cb.getPiece('g', 7)));
+    cb.printBoard(cb.getBlackPawnMoves(cb.getPiece('g', 2)));
+    return 0;   
+}
+

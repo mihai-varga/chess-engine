@@ -1,8 +1,7 @@
 CC=g++
 CFLAGS= -g -Wall
-OBJ=communicate.o
-EXE=communicate
-SRC=communicate.cpp
+EXE=main
+SRC=main.cpp chess_board/chess_board.cpp
 DIR=$(shell pwd)
 
 $(EXE) : $(SRC)

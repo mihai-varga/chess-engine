@@ -43,11 +43,11 @@ class ChessBoard {
 		 */
 		std::vector<Bitboard> piece(64, 0);
 
-	private:
-		void initBoard();
-	public:
-		ChessBoard();
-		~ChessBoard();
+    private:
+        void initBoard();
+    public:
+        ChessBoard();
+        ~ChessBoard();
 
 		void printBoard(Bitboard b);
 		Bitboard getPiece(char c, int i);
