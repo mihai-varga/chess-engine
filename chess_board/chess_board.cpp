@@ -41,12 +41,12 @@ void ChessBoard::initBoard() {
 }
 
 ChessBoard::ChessBoard() {
-	boards = std::vector<ChessBoard::Bitboard>(12, 0);
-	maskRank = std::vector<ChessBoard::Bitboard>(8, 0);
-	clearRank = std::vector<ChessBoard::Bitboard>(8, 0);
-	maskFile = std::vector<ChessBoard::Bitboard>(8, 0);
-	clearFile = std::vector<ChessBoard::Bitboard>(8, 0);
-	piece = std::vector<ChessBoard::Bitboard>(64, 0);
+	boards = std::vector<ChessBoard::bitboard_t>(12, 0);
+	maskRank = std::vector<ChessBoard::bitboard_t>(8, 0);
+	clearRank = std::vector<ChessBoard::bitboard_t>(8, 0);
+	maskFile = std::vector<ChessBoard::bitboard_t>(8, 0);
+	clearFile = std::vector<ChessBoard::bitboard_t>(8, 0);
+	piece = std::vector<ChessBoard::bitboard_t>(64, 0);
 
     // initialize the masks
     for (int i = 0; i < 8; i++) {
@@ -73,9 +73,9 @@ ChessBoard::ChessBoard() {
 
 ChessBoard::~ChessBoard() {}
 
-void ChessBoard::printBoard(ChessBoard::Bitboard b) {
+void ChessBoard::printBoard(ChessBoard::bitboard_t b) {
     for (int i = 0; i < 64; i++) {
-        Bitboard c = b & (1LL << i);
+        bitboard_t c = b & (1LL << i);
         if (c) {
             cout << 1 << " ";
         } else {
@@ -88,7 +88,7 @@ void ChessBoard::printBoard(ChessBoard::Bitboard b) {
     cout << endl;
 }
 
-ChessBoard::Bitboard ChessBoard::getPiece(char c, int i) {
+ChessBoard::bitboard_t ChessBoard::getPiece(char c, int i) {
     if (c > 'h' || c < 'a' || i > 8 || i < 1) throw 1;
     int ind = c - 'a';
     ind += (i - 1) * 8;
@@ -100,11 +100,11 @@ ChessBoard::Bitboard ChessBoard::getPiece(char c, int i) {
  * 3 K 4
  * 5 6 7
  */
-std::vector<ChessBoard::Bitboard> ChessBoard::getKingMoves(ChessBoard::Bitboard b) {
-	std::vector<ChessBoard::Bitboard> moves(8, 0);
+std::vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboard_t b) {
+	std::vector<ChessBoard::bitboard_t> moves(8, 0);
 	// trimA and trimH check if the king is on
 	// file A or H respectively
-	ChessBoard::Bitboard trimA, trimH;
+	ChessBoard::bitboard_t trimA, trimH;
 	trimA = b & ChessBoard::clearFile[0];
 	trimH = b & ChessBoard::clearFile[7];
 	moves[0] = trimA >> 9;
@@ -118,9 +118,9 @@ std::vector<ChessBoard::Bitboard> ChessBoard::getKingMoves(ChessBoard::Bitboard 
 	return moves;
 }
 
-ChessBoard::Bitboard ChessBoard::getKingAllMoves(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard ret = 0;
-	std::vector<ChessBoard::Bitboard> moves = getKingMoves(b);
+ChessBoard::bitboard_t ChessBoard::getKingAllMoves(ChessBoard::bitboard_t b) {
+	ChessBoard::bitboard_t ret = 0;
+	std::vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
 	for (int i = 0; i < 8; i++) {
 		ret |= moves[i];
 	}
@@ -137,9 +137,9 @@ ChessBoard::Bitboard ChessBoard::getKingAllMoves(ChessBoard::Bitboard b) {
 	return ret;
 }
 
-ChessBoard::Bitboard ChessBoard::getKingRandomMove(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard ret = 0;
-	std::vector<ChessBoard::Bitboard> moves = getKingMoves(b);
+ChessBoard::bitboard_t ChessBoard::getKingRandomMove(ChessBoard::bitboard_t b) {
+	ChessBoard::bitboard_t ret = 0;
+	std::vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
 	srand(time(NULL));
 	ret = moves[rand() % 8];
 	return ret;
@@ -152,11 +152,11 @@ ChessBoard::Bitboard ChessBoard::getKingRandomMove(ChessBoard::Bitboard b) {
  * 7 - - - 4
  * - 6 - 5 -
  */
-std::vector<ChessBoard::Bitboard> ChessBoard::getKnightMoves(ChessBoard::Bitboard b) {
-	std::vector<ChessBoard::Bitboard> moves(8, 0);
+std::vector<ChessBoard::bitboard_t> ChessBoard::getKnightMoves(ChessBoard::bitboard_t b) {
+	std::vector<ChessBoard::bitboard_t> moves(8, 0);
 	// trimAB and trimGH check if the knight is on
 	// files (A, B) or (G, H) respectively
-	ChessBoard::Bitboard trimAB, trimGH, trimA, trimH;
+	ChessBoard::bitboard_t trimAB, trimGH, trimA, trimH;
 	trimAB = b & ChessBoard::clearFile[0] & ChessBoard::clearFile[1];
 	trimGH = b & ChessBoard::clearFile[7] & ChessBoard::clearFile[6];
 	trimA = b & ChessBoard::clearFile[0];
@@ -172,9 +172,9 @@ std::vector<ChessBoard::Bitboard> ChessBoard::getKnightMoves(ChessBoard::Bitboar
 	return moves;
 }
 
-ChessBoard::Bitboard ChessBoard::getKnightAllMoves(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard ret = 0;
-	std::vector<ChessBoard::Bitboard> moves = getKnightMoves(b);
+ChessBoard::bitboard_t ChessBoard::getKnightAllMoves(ChessBoard::bitboard_t b) {
+	ChessBoard::bitboard_t ret = 0;
+	std::vector<ChessBoard::bitboard_t> moves = getKnightMoves(b);
 	for (int i = 0; i < 8; i++) {
 		ret |= moves[i];
 	}
@@ -191,9 +191,9 @@ ChessBoard::Bitboard ChessBoard::getKnightAllMoves(ChessBoard::Bitboard b) {
 	return ret;
 }
 
-ChessBoard::Bitboard ChessBoard::getKnightRandomMove(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard ret = 0;
-	std::vector<ChessBoard::Bitboard> moves = getKnightMoves(b);
+ChessBoard::bitboard_t ChessBoard::getKnightRandomMove(ChessBoard::bitboard_t b) {
+	ChessBoard::bitboard_t ret = 0;
+	std::vector<ChessBoard::bitboard_t> moves = getKnightMoves(b);
 	srand(time(NULL));
 	ret = moves[rand() % 8];
 	return ret;
@@ -205,24 +205,24 @@ ChessBoard::Bitboard ChessBoard::getKnightRandomMove(ChessBoard::Bitboard b) {
  * - 0 -
  * - 1 -
  */
-std::vector<ChessBoard::Bitboard> ChessBoard::getWhitePawnMoves(ChessBoard::Bitboard b) {
-	std::vector<ChessBoard::Bitboard> moves(2, 0);
+std::vector<ChessBoard::bitboard_t> ChessBoard::getWhitePawnMoves(ChessBoard::bitboard_t b) {
+	std::vector<ChessBoard::bitboard_t> moves(2, 0);
 	moves[0] = b << 8;
 	moves[1] = b << 16;
 	return moves;
 }
 
-ChessBoard::Bitboard ChessBoard::getWhitePawnAllMoves(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard ret;
-	std::vector<ChessBoard::Bitboard> moves = getWhitePawnMoves(b);
+ChessBoard::bitboard_t ChessBoard::getWhitePawnAllMoves(ChessBoard::bitboard_t b) {
+	ChessBoard::bitboard_t ret;
+	std::vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
 	ret = moves[0] | moves[1];
 	ret &= ~ChessBoard::allWhites;
 	return ret;
 }
 
-ChessBoard::Bitboard ChessBoard::getWhitePawnRandomMove(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard ret = 0;
-	std::vector<ChessBoard::Bitboard> moves = getWhitePawnMoves(b);
+ChessBoard::bitboard_t ChessBoard::getWhitePawnRandomMove(ChessBoard::bitboard_t b) {
+	ChessBoard::bitboard_t ret = 0;
+	std::vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
 	srand(time(NULL));
 	ret = moves[rand() % 2];
 	return ret;
@@ -234,47 +234,25 @@ ChessBoard::Bitboard ChessBoard::getWhitePawnRandomMove(ChessBoard::Bitboard b) 
  * - P -
  * - - -
  */
-std::vector<ChessBoard::Bitboard> ChessBoard::getBlackPawnMoves(ChessBoard::Bitboard b) {
-	std::vector<ChessBoard::Bitboard> moves(2, 0);
+std::vector<ChessBoard::bitboard_t> ChessBoard::getBlackPawnMoves(ChessBoard::bitboard_t b) {
+	std::vector<ChessBoard::bitboard_t> moves(2, 0);
 	moves[0] = b >> 8;
 	moves[1] = b >> 16;
 	return moves;
 }
 
-ChessBoard::Bitboard ChessBoard::getBlackPawnAllMoves(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard ret;
-	std::vector<ChessBoard::Bitboard> moves = getBlackPawnMoves(b);
+ChessBoard::bitboard_t ChessBoard::getBlackPawnAllMoves(ChessBoard::bitboard_t b) {
+	ChessBoard::bitboard_t ret;
+	std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
 	ret = moves[0] | moves[1];
 	ret &= ~ChessBoard::allBlacks;
 	return ret;
 }
 
-ChessBoard::Bitboard ChessBoard::getBlackPawnRandomMove(ChessBoard::Bitboard b) {
-	ChessBoard::Bitboard ret = 0;
-	std::vector<ChessBoard::Bitboard> moves = getBlackPawnMoves(b);
+ChessBoard::bitboard_t ChessBoard::getBlackPawnRandomMove(ChessBoard::bitboard_t b) {
+	ChessBoard::bitboard_t ret = 0;
+	std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
 	srand(time(NULL));
 	ret = moves[rand() % 2];
 	return ret;
-}
-
-int main() {
-	ChessBoard cb;
-	cb.printBoard(cb.piece[0]);
-	cb.printBoard(cb.piece[1]);
-	cb.printBoard(cb.piece[2]);
-	cb.printBoard(cb.clearRank[0]);
-	cb.printBoard(cb.maskRank[0]);
-	cb.printBoard(cb.clearFile[0]);
-	cb.printBoard(cb.maskFile[7]);
-	cb.printBoard(cb.allWhites);
-	cb.printBoard(cb.allBlacks);
-	cb.printBoard(cb.allPieces);
-	cb.printBoard(cb.getKnightAllMoves(cb.getPiece('g', 1)));
-	cb.printBoard(cb.getWhitePawnAllMoves(cb.getPiece('g', 7)));
-	cb.printBoard(cb.getBlackPawnAllMoves(cb.getPiece('g', 2)));
-	cb.printBoard(cb.getKingRandomMove(cb.getPiece('g', 2)));
-	cb.printBoard(cb.getKnightRandomMove(cb.getPiece('g', 2)));
-	cb.printBoard(cb.getWhitePawnRandomMove(cb.getPiece('g', 2)));
-	cb.printBoard(cb.getBlackPawnRandomMove(cb.getPiece('g', 2)));
-	return 0;
 }

@@ -5,7 +5,7 @@
 
 class ChessBoard {
 	public:
-		typedef unsigned long long Bitboard;
+		typedef unsigned long long bitboard_t;
 	public:
 		/*
 		 *  0 - white pawns
@@ -23,16 +23,16 @@ class ChessBoard {
 		 * 10 - black queen
 		 * 11 - black king
 		 */
-		std::vector<Bitboard> boards;
-		Bitboard allWhites, allBlacks, allPieces;
+		std::vector<bitboard_t> boards;
+		bitboard_t allWhites, allBlacks, allPieces;
 		/*
 		 * rank = row
 		 * file = column
 		 */
-		std::vector<Bitboard> maskRank;
-		std::vector<Bitboard> clearRank;
-		std::vector<Bitboard> maskFile;
-		std::vector<Bitboard> clearFile;
+		std::vector<bitboard_t> maskRank;
+		std::vector<bitboard_t> clearRank;
+		std::vector<bitboard_t> maskFile;
+		std::vector<bitboard_t> clearFile;
 		/*
 		 * A1 B1 C1 D1 E1 F1 G1 H1
 		 * A2 B2 C2 D2 E2 F2 G2 H2
@@ -43,7 +43,7 @@ class ChessBoard {
 		 * A7 B7 C7 D7 E7 F7 G7 H7
 		 * A8 B8 C8 D8 E8 F8 G8 H8
 		 */
-		std::vector<Bitboard> piece;
+		std::vector<bitboard_t> piece;
 
     private:
         void initBoard();
@@ -51,24 +51,24 @@ class ChessBoard {
         ChessBoard();
         ~ChessBoard();
 
-		void printBoard(Bitboard b);
-		Bitboard getPiece(char c, int i);
+		void printBoard(bitboard_t b);
+		bitboard_t getPiece(char c, int i);
 
-		std::vector<Bitboard> getKingMoves(Bitboard b);
-		Bitboard getKingAllMoves(Bitboard b);
-		Bitboard getKingRandomMove(Bitboard b);
+		std::vector<bitboard_t> getKingMoves(bitboard_t b);
+		bitboard_t getKingAllMoves(bitboard_t b);
+		bitboard_t getKingRandomMove(bitboard_t b);
 
-		std::vector<Bitboard> getKnightMoves(Bitboard b);
-		Bitboard getKnightAllMoves(Bitboard b);
-		Bitboard getKnightRandomMove(Bitboard b);
+		std::vector<bitboard_t> getKnightMoves(bitboard_t b);
+		bitboard_t getKnightAllMoves(bitboard_t b);
+		bitboard_t getKnightRandomMove(bitboard_t b);
 
-		std::vector<Bitboard> getWhitePawnMoves(Bitboard b);
-		Bitboard getWhitePawnAllMoves(Bitboard b);
-		Bitboard getWhitePawnRandomMove(Bitboard b);
+		std::vector<bitboard_t> getWhitePawnMoves(bitboard_t b);
+		bitboard_t getWhitePawnAllMoves(bitboard_t b);
+		bitboard_t getWhitePawnRandomMove(bitboard_t b);
 
-		std::vector<Bitboard> getBlackPawnMoves(Bitboard b);
-		Bitboard getBlackPawnAllMoves(Bitboard b);
-		Bitboard getBlackPawnRandomMove(Bitboard b);
+		std::vector<bitboard_t> getBlackPawnMoves(bitboard_t b);
+		bitboard_t getBlackPawnAllMoves(bitboard_t b);
+		bitboard_t getBlackPawnRandomMove(bitboard_t b);
 };
 
 #endif
