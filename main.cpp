@@ -16,7 +16,7 @@ bool isMove(char *command) {
 
 void signal_handler(int signal) {}
 
-void play() {
+void play(ChessBoard &cb) {
     /**
      * Comenzi posibile: winboard, xboard, new, force, go, white, 
      * black, quit, resign, move
@@ -67,8 +67,18 @@ void play() {
 
         if (!strcmp(command, "go")) {
             forceMode = false;
-            //play(white); // joaca cu albele daca white e true altfel cu negrele
-            printf("move a2a3\n"); // trebuie sa printam o mutare
+            ChessBoard::bitboard_t next_move;
+            if (white) {
+                next_move = cb.getWhitePawnRandomMove(1ULL << 8);
+                printf("move %s%s\n", cb.ullToMove(1ULL << 8).c_str(),
+                        cb.ullToMove(next_move).c_str());
+            }
+            else {
+                next_move = cb.getBlackPawnRandomMove(1ULL << 56);
+                printf("move %s%s\n", cb.ullToMove(1ULL << 56).c_str(), 
+                        cb.ullToMove(next_move).c_str());
+            }
+            printf("resign\n");
             continue;
         }
 
@@ -91,13 +101,27 @@ void play() {
         }
 
         if (isMove(command)) {
-            printf("move d2d3\n");
+            ChessBoard::bitboard_t next_move;
+            if (white) {
+                next_move = cb.getWhitePawnRandomMove(1ULL << 8);
+                printf("move %s%s\n", cb.ullToMove(1ULL << 8).c_str(),
+                        cb.ullToMove(next_move).c_str());
+            }
+            else {
+                next_move = cb.getBlackPawnRandomMove(1ULL << 56);
+                printf("move %s%s\n", cb.ullToMove(1ULL << 56).c_str(), 
+                        cb.ullToMove(next_move).c_str());
+            }
+            printf("resign\n");
+            return;
+
         }
     }
 }
 
 int main() {
-    //play();
+    ChessBoard cb;
+    play(cb);
     return 0;   
 }
 

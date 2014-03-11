@@ -57,8 +57,8 @@ class ChessBoard {
 		void printBoard(bitboard_t b);
 		bitboard_t getPiece(char c, int i);
 
-        static std::string ullToMove(bitboard_t ull_move);
-        static bitboard_t moveToULL(std::string move);
+        std::string ullToMove(bitboard_t ull_move);
+        bitboard_t moveToULL(std::string move);
 
 		std::vector<bitboard_t> getKingMoves(bitboard_t b);
 		bitboard_t getKingAllMoves(bitboard_t b);
