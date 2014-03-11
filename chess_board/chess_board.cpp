@@ -7,6 +7,9 @@
 
 using namespace std;
 
+char ChessBoard::alph[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+char ChessBoard::numb[8] = {'1', '2', '3', '4', '5', '6', '7', '8'};
+
 void ChessBoard::initBoard() {
     //initialize the board table
     for (int i = 0; i < 12; i++) {
@@ -93,6 +96,23 @@ ChessBoard::bitboard_t ChessBoard::getPiece(char c, int i) {
     int ind = c - 'a';
     ind += (i - 1) * 8;
     return ChessBoard::piece[ind];
+}
+
+string ChessBoard::ullToMove(ChessBoard::bitboard_t ull_move) {
+    int index = 0;
+    while (index < 64 && (ull_move != 1ULL << index)) {
+        index++;
+    }
+    string move;
+    move += alph[index % 8];
+    move += numb[index / 8];
+    return move;
+}
+
+ChessBoard::bitboard_t ChessBoard::moveToULL(string move) {
+    int col = (int)move[0] - 97;
+    int row = (int)move[1] - 49;
+    return 1ULL << (row * 8 + col);
 }
 
 /*

@@ -2,6 +2,7 @@
 #define __CHESS_BOARD_H__
 #include <stdint.h>
 #include <vector>
+#include <string>
 
 class ChessBoard {
 	public:
@@ -47,12 +48,17 @@ class ChessBoard {
 
     private:
         void initBoard();
+        static char alph[8];
+        static char numb[8];
     public:
         ChessBoard();
         ~ChessBoard();
 
 		void printBoard(bitboard_t b);
 		bitboard_t getPiece(char c, int i);
+
+        static std::string ullToMove(bitboard_t ull_move);
+        static bitboard_t moveToULL(std::string move);
 
 		std::vector<bitboard_t> getKingMoves(bitboard_t b);
 		bitboard_t getKingAllMoves(bitboard_t b);

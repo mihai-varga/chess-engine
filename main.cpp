@@ -1,7 +1,8 @@
-#include<stdio.h>
-#include<string.h>
-#include<map>
-#include<csignal>
+#include <stdio.h>
+#include <string.h>
+#include <map>
+#include <csignal>
+#include <iostream>
 #include "chess_board/chess_board.h"
 
 using namespace std;
@@ -96,7 +97,7 @@ void play() {
 }
 
 int main() {
-    play();
+    //play();
     return 0;   
 }
 
