@@ -44,7 +44,7 @@ class ChessBoard {
 		 * A7 B7 C7 D7 E7 F7 G7 H7
 		 * A8 B8 C8 D8 E8 F8 G8 H8
 		 */
-		std::vector<bitboard_t> piece;
+		std::vector<bitboard_t> square;
 
     private:
         void initBoard();
@@ -55,13 +55,21 @@ class ChessBoard {
         ~ChessBoard();
 
 		void printBoard(bitboard_t b);
-		bitboard_t getPiece(char c, int i);
+		bitboard_t getSquare(char c, int i);
+        // get the coresponding board
+        // @return the index of the board
+        int getBoard(bitboard_t b);
 
         // asta-i pita $$$
         std::string getNextMoveTmp(char* opponent_move);
 
         std::string ullToMove(bitboard_t ull_move);
         bitboard_t moveToULL(std::string move);
+
+        // updates the board after a new move
+        void setMove(bitboard_t from, bitboard_t to);
+        // check if a move is valid
+        bool isValid(bitboard_t from, bitboard_t to);
 
 		std::vector<bitboard_t> getKingMoves(bitboard_t b);
 		bitboard_t getKingAllMoves(bitboard_t b);

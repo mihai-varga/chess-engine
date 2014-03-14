@@ -19,20 +19,20 @@ void ChessBoard::initBoard() {
     ChessBoard::boards[0] |= ChessBoard::maskRank[1];
     ChessBoard::boards[6] |= ChessBoard::maskRank[6];
     //rooks
-    ChessBoard::boards[1] |= ChessBoard::piece[0] | ChessBoard::piece[7];
-    ChessBoard::boards[7] |= ChessBoard::piece[63] | ChessBoard::piece[56];
+    ChessBoard::boards[1] |= ChessBoard::square[0] | ChessBoard::square[7];
+    ChessBoard::boards[7] |= ChessBoard::square[63] | ChessBoard::square[56];
     //knights
-    ChessBoard::boards[2] |= ChessBoard::piece[1] | ChessBoard::piece[6];
-    ChessBoard::boards[8] |= ChessBoard::piece[62] | ChessBoard::piece[57];
+    ChessBoard::boards[2] |= ChessBoard::square[1] | ChessBoard::square[6];
+    ChessBoard::boards[8] |= ChessBoard::square[62] | ChessBoard::square[57];
     //bishops
-    ChessBoard::boards[3] |= ChessBoard::piece[2] | ChessBoard::piece[5];
-    ChessBoard::boards[9] |= ChessBoard::piece[61] | ChessBoard::piece[58];
+    ChessBoard::boards[3] |= ChessBoard::square[2] | ChessBoard::square[5];
+    ChessBoard::boards[9] |= ChessBoard::square[61] | ChessBoard::square[58];
     //queen
-    ChessBoard::boards[4] |= ChessBoard::piece[3];
-    ChessBoard::boards[10] |= ChessBoard::piece[59];
+    ChessBoard::boards[4] |= ChessBoard::square[3];
+    ChessBoard::boards[10] |= ChessBoard::square[59];
     //king
-    ChessBoard::boards[5] |= ChessBoard::piece[4];
-    ChessBoard::boards[11] |= ChessBoard::piece[60];
+    ChessBoard::boards[5] |= ChessBoard::square[4];
+    ChessBoard::boards[11] |= ChessBoard::square[60];
     //initialize global tables
     ChessBoard::allBlacks = 0;
     ChessBoard::allWhites = 0;
@@ -49,7 +49,7 @@ ChessBoard::ChessBoard() {
 	clearRank = std::vector<ChessBoard::bitboard_t>(8, 0);
 	maskFile = std::vector<ChessBoard::bitboard_t>(8, 0);
 	clearFile = std::vector<ChessBoard::bitboard_t>(8, 0);
-	piece = std::vector<ChessBoard::bitboard_t>(64, 0);
+	square = std::vector<ChessBoard::bitboard_t>(64, 0);
 
     // initialize the masks
     for (int i = 0; i < 8; i++) {
@@ -66,10 +66,10 @@ ChessBoard::ChessBoard() {
             ChessBoard::clearFile[i] &= ~(1LL << j);
         }
     }
-    //initialize piece lookup table
+    //initialize square lookup table
     for (int i = 0; i < 64; i++) {
-        ChessBoard::piece[i] = 0;
-        ChessBoard::piece[i] = 1LL << i;
+        ChessBoard::square[i] = 0;
+        ChessBoard::square[i] = 1LL << i;
     }
     ChessBoard::initBoard();
 }
@@ -91,11 +91,19 @@ void ChessBoard::printBoard(ChessBoard::bitboard_t b) {
     cout << endl;
 }
 
-ChessBoard::bitboard_t ChessBoard::getPiece(char c, int i) {
+ChessBoard::bitboard_t ChessBoard::getSquare(char c, int i) {
     if (c > 'h' || c < 'a' || i > 8 || i < 1) throw 1;
     int ind = c - 'a';
     ind += (i - 1) * 8;
-    return ChessBoard::piece[ind];
+    return ChessBoard::square[ind];
+}
+
+int ChessBoard::getBoard(ChessBoard::bitboard_t b) {
+    for (int i = 0; i < 12; i++) {
+        if (b & ChessBoard::boards[i])
+            return i;
+    }
+    throw 1;
 }
 
 string ChessBoard::getNextMoveTmp(char *opp_move) {
@@ -126,6 +134,50 @@ ChessBoard::bitboard_t ChessBoard::moveToULL(string move) {
     int col = (int)move[0] - 97;
     int row = (int)move[1] - 49;
     return 1ULL << (row * 8 + col);
+}
+
+void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
+    int index = ChessBoard::getBoard(from);
+    ChessBoard::boards[index] = ChessBoard::boards[index] & ~from & to;
+    ChessBoard::allPieces = ChessBoard::allPieces & ~from & to;
+    // if white is moving
+    if (from & ChessBoard::allWhites) {
+        ChessBoard::allWhites = ChessBoard::allWhites & ~from & to;
+        if (to & ChessBoard::allBlacks) { // if white attacks black
+            int index_black = ChessBoard::getBoard(to);
+            ChessBoard::boards[index_black] = ChessBoard::boards[index_black] & ~to;
+            ChessBoard::allPieces = ChessBoard::allPieces & ~to;
+            ChessBoard::allBlacks = ChessBoard::allBlacks & ~to;
+        }
+    } else { // if black is moving
+        ChessBoard::allBlacks = ChessBoard::allBlacks & ~from & to;
+        if (to & ChessBoard::allWhites) { // if black attacks white
+            int index_white = ChessBoard::getBoard(to);
+            ChessBoard::boards[index_white] = ChessBoard::boards[index_white] & ~to;
+            ChessBoard::allPieces = ChessBoard::allPieces & ~to;
+            ChessBoard::allWhites = ChessBoard::allWhites & ~to;
+        }
+    }
+}
+
+bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
+    if (from == 0 || to == 0) {
+        return false;
+    }
+    if (from & ChessBoard::allWhites) {
+        if (to & ChessBoard::allWhites) {
+            return false;
+        }
+    } else {
+        if (from & ChessBoard::allBlacks) {
+            if (to & ChessBoard::allBlacks) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    return true;
 }
 
 /*
