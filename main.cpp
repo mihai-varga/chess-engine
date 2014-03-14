@@ -46,9 +46,6 @@ void play(ChessBoard &cb) {
                 scanf("%s", command); // 2
                 printf("feature myname=\"Piept de sahist\"\n");
                 printf("feature sigint=0\n"); // nu mai trimite SIGINT 
-                // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                // de sters
-                printf("feature st 2\n");
                 printf("feature done=1\n");
                 continue;
             }
