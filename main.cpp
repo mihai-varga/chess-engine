@@ -46,6 +46,9 @@ void play(ChessBoard &cb) {
                 scanf("%s", command); // 2
                 printf("feature myname=\"Piept de sahist\"\n");
                 printf("feature sigint=0\n"); // nu mai trimite SIGINT 
+                // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                // de sters
+                printf("feature st 2\n");
                 printf("feature done=1\n");
                 continue;
             }
@@ -67,18 +70,8 @@ void play(ChessBoard &cb) {
 
         if (!strcmp(command, "go")) {
             forceMode = false;
-            ChessBoard::bitboard_t next_move;
-            if (white) {
-                next_move = cb.getWhitePawnRandomMove(1ULL << 8);
-                printf("move %s%s\n", cb.ullToMove(1ULL << 8).c_str(),
-                        cb.ullToMove(next_move).c_str());
-            }
-            else {
-                next_move = cb.getBlackPawnRandomMove(1ULL << 56);
-                printf("move %s%s\n", cb.ullToMove(1ULL << 56).c_str(), 
-                        cb.ullToMove(next_move).c_str());
-            }
-            printf("resign\n");
+            //printf("resign\n");
+            printf("move a2a3\n");
             continue;
         }
 
@@ -101,20 +94,8 @@ void play(ChessBoard &cb) {
         }
 
         if (isMove(command)) {
-            ChessBoard::bitboard_t next_move;
-            if (white) {
-                next_move = cb.getWhitePawnRandomMove(1ULL << 8);
-                printf("move %s%s\n", cb.ullToMove(1ULL << 8).c_str(),
-                        cb.ullToMove(next_move).c_str());
-            }
-            else {
-                next_move = cb.getBlackPawnRandomMove(1ULL << 56);
-                printf("move %s%s\n", cb.ullToMove(1ULL << 56).c_str(), 
-                        cb.ullToMove(next_move).c_str());
-            }
-            printf("resign\n");
-            return;
-
+            printf("move %s\n", cb.getNextMoveTmp(command).c_str());
+            //printf("resign\n");
         }
     }
 }

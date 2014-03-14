@@ -98,6 +98,19 @@ ChessBoard::bitboard_t ChessBoard::getPiece(char c, int i) {
     return ChessBoard::piece[ind];
 }
 
+string ChessBoard::getNextMoveTmp(char *opp_move) {
+    int opp_move_int = (int)(opp_move[1] - '0');
+    string my_move = "";
+    my_move += opp_move[0];
+    my_move += numb[(8 - opp_move_int)];
+    my_move += opp_move[2];
+    opp_move_int = (int)(opp_move[3] - '0');
+    my_move += numb[(8 - opp_move_int)];
+    return my_move;
+}
+
+
+
 string ChessBoard::ullToMove(ChessBoard::bitboard_t ull_move) {
     int index = 0;
     while (index < 64 && (ull_move != 1ULL << index)) {

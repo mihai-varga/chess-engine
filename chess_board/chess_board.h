@@ -57,6 +57,9 @@ class ChessBoard {
 		void printBoard(bitboard_t b);
 		bitboard_t getPiece(char c, int i);
 
+        // asta-i pita $$$
+        std::string getNextMoveTmp(char* opponent_move);
+
         std::string ullToMove(bitboard_t ull_move);
         bitboard_t moveToULL(std::string move);
 
