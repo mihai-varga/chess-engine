@@ -2,6 +2,7 @@
 > tutorial xboard: http://www.gnu.org/software/xboard/engine-intf.html <br>
 > tutorial reprezentare tabla: http://pages.cs.wisc.edu/~psilord/blog/data/chess-pages/ <br>
 > engine-ul implicit: sudo apt-get install fairymax
+> discutii despre implementare: http://goo.gl/ScqkdT
 
 pentru a juca cu chess engine-ul implicit: `make run`
 
