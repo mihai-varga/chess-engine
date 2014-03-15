@@ -119,9 +119,9 @@ string ChessBoard::getNextMoveTmp(char *opp_move) {
 
 
 
-string ChessBoard::ullToMove(ChessBoard::bitboard_t ull_move) {
+string ChessBoard::bitboardToMove(ChessBoard::bitboard_t b) {
     int index = 0;
-    while (index < 64 && (ull_move != 1ULL << index)) {
+    while (index < 64 && (b != 1ULL << index)) {
         index++;
     }
     string move;
@@ -130,7 +130,7 @@ string ChessBoard::ullToMove(ChessBoard::bitboard_t ull_move) {
     return move;
 }
 
-ChessBoard::bitboard_t ChessBoard::moveToULL(string move) {
+ChessBoard::bitboard_t ChessBoard::moveToBitboard(string move) {
     int col = (int)move[0] - 97;
     int row = (int)move[1] - 49;
     return 1ULL << (row * 8 + col);
@@ -166,7 +166,7 @@ void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     printBoard(ChessBoard::allWhites);
 }
 
-bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
+bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to, ChessBoard::player_t p) {
     cout << "ALLWHITES\n";
     printBoard(ChessBoard::allWhites);
     cout << "FROM\n";
@@ -177,14 +177,19 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
         cout << "penis_0" <<endl;
         return false;
     }
-    if (from & ChessBoard::allWhites) {
-        if (to & ChessBoard::allWhites) {
-            cout << "penis_1" <<endl;
-            return false;
-        } else {
-            return true;
+    // if WHITE moves
+    if (p == WHITE) {
+        if (from & ChessBoard::allWhites) {
+            if (to & ChessBoard::allWhites) {
+                cout << "penis_1" <<endl;
+                return false;
+            } else {
+                return true;
+            }
         }
-    } else {
+        return false;
+    }
+    if (p == BLACK) {
         if (from & ChessBoard::allBlacks) {
             if (to & ChessBoard::allBlacks) {
                 cout << "penis_2" <<endl;
@@ -193,6 +198,7 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
                 return true;
             }
         }
+        return false;
     }
     cout << "penis_2" <<endl;
     return false;

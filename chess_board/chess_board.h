@@ -7,6 +7,7 @@
 class ChessBoard {
 	public:
 		typedef unsigned long long bitboard_t;
+        enum player_t {WHITE, BLACK};
 	public:
 		/*
 		 *  0 - white pawns
@@ -63,13 +64,13 @@ class ChessBoard {
         // asta-i pita $$$
         std::string getNextMoveTmp(char* opponent_move);
 
-        std::string ullToMove(bitboard_t ull_move);
-        bitboard_t moveToULL(std::string move);
+        std::string bitboardToMove(bitboard_t b);
+        bitboard_t moveToBitboard(std::string move);
 
         // updates the board after a new move
         void setMove(bitboard_t from, bitboard_t to);
         // check if a move is valid
-        bool isValid(bitboard_t from, bitboard_t to);
+        bool isValid(bitboard_t from, bitboard_t to, player_t p);
 
 		std::vector<bitboard_t> getKingMoves(bitboard_t b);
 		bitboard_t getKingAllMoves(bitboard_t b);
