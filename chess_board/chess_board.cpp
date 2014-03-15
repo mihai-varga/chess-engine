@@ -103,7 +103,7 @@ int ChessBoard::getBoard(ChessBoard::bitboard_t b) {
         if (b & ChessBoard::boards[i])
             return i;
     }
-    throw "penis";
+    throw "exception";
 }
 
 string ChessBoard::getNextMoveTmp(char *opp_move) {
@@ -156,32 +156,18 @@ void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
             ChessBoard::boards[index_white] = ChessBoard::boards[index_white] & ~to;
             //ChessBoard::allPieces = ChessBoard::allPieces & ~to;
             ChessBoard::allWhites = ChessBoard::allWhites & ~to;
-            cout << "ALBELE sunt\n";
-            printBoard(ChessBoard::allWhites);
-            cout << "tabla cu piesa capturata\n";
-            printBoard(ChessBoard::boards[index_white]);
         }
     }
-    cout << "Dupa mutare ALBELE sunt\n";
-    printBoard(ChessBoard::allWhites);
 }
 
 bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to, ChessBoard::player_t p) {
-    cout << "ALLWHITES\n";
-    printBoard(ChessBoard::allWhites);
-    cout << "FROM\n";
-    printBoard(from);
-    cout << "TO\n";
-    printBoard(to);
     if (from == 0 || to == 0) {
-        cout << "penis_0" <<endl;
         return false;
     }
     // if WHITE moves
     if (p == WHITE) {
         if (from & ChessBoard::allWhites) {
             if (to & ChessBoard::allWhites) {
-                cout << "penis_1" <<endl;
                 return false;
             } else {
                 return true;
@@ -192,7 +178,6 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to,
     if (p == BLACK) {
         if (from & ChessBoard::allBlacks) {
             if (to & ChessBoard::allBlacks) {
-                cout << "penis_2" <<endl;
                 return false;
             } else {
                 return true;
@@ -200,7 +185,6 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to,
         }
         return false;
     }
-    cout << "penis_2" <<endl;
     return false;
 }
 
