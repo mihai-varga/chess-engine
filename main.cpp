@@ -55,7 +55,7 @@ void play(ChessBoard &cb) {
         }
 
         if (!strcmp(command, "new")) {
-            //initBoard();
+            cb.initBoard();
             continue;
         }
 
@@ -87,11 +87,9 @@ void play(ChessBoard &cb) {
         }
 
         if (!strcmp(command, "quit")) {
-            return;
         }
 
         if (!strcmp(command, "resign")) {
-            return;
         }
 
         if (isMove(command)) {

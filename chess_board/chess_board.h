@@ -48,12 +48,12 @@ class ChessBoard {
 		std::vector<bitboard_t> square;
 
     private:
-        void initBoard();
         static char alph[8];
         static char numb[8];
     public:
         ChessBoard();
         ~ChessBoard();
+        void initBoard();
 
 		void printBoard(bitboard_t b);
 		bitboard_t getSquare(char c, int i);
