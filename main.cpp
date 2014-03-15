@@ -35,7 +35,6 @@ void play(ChessBoard &cb) {
     char command[256];
     bool white = false;
     bool forceMode = false;
-    bool my_turn = false;
 
     while (1) {
         scanf("%s", command);
@@ -68,7 +67,12 @@ void play(ChessBoard &cb) {
         if (!strcmp(command, "go")) {
             forceMode = false;
             //printf("resign\n");
-            printf("move a2a3\n");
+            if (white) {
+                printf("move a2a3\n");
+            }
+            else {
+                printf("move a7a6\n");
+            }
             continue;
         }
 
@@ -91,8 +95,18 @@ void play(ChessBoard &cb) {
         }
 
         if (isMove(command)) {
-            printf("move %s\n", cb.getNextMoveTmp(command).c_str());
-            //printf("resign\n");
+            cb.setMove(cb.moveToULL(command), cb.moveToULL(command + 2));
+            const char *my_move_const = cb.getNextMoveTmp(command).c_str();
+            char *my_move = strdup(my_move_const);
+            if (cb.isValid(cb.moveToULL(my_move), cb.moveToULL(my_move + 2))) {
+                cb.setMove(cb.moveToULL(my_move), cb.moveToULL(my_move + 2));
+                printf("move %s\n", my_move);
+            }
+            else {
+                printf("era sa fie: %s\n", my_move);
+                printf("resign\n");
+            }
+
         }
     }
 }
