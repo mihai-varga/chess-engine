@@ -103,7 +103,7 @@ int ChessBoard::getBoard(ChessBoard::bitboard_t b) {
         if (b & ChessBoard::boards[i])
             return i;
     }
-    throw 1;
+    throw "penis";
 }
 
 string ChessBoard::getNextMoveTmp(char *opp_move) {
@@ -167,11 +167,15 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     if (from & ChessBoard::allWhites) {
         if (to & ChessBoard::allWhites) {
             return false;
+        } else {
+            return true;
         }
     } else {
         if (from & ChessBoard::allBlacks) {
             if (to & ChessBoard::allBlacks) {
                 return false;
+            } else {
+                return true;
             }
         } else {
             return false;
