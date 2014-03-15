@@ -138,34 +138,48 @@ ChessBoard::bitboard_t ChessBoard::moveToULL(string move) {
 
 void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
     int index = ChessBoard::getBoard(from);
-    ChessBoard::boards[index] = ChessBoard::boards[index] & ~from & to;
-    ChessBoard::allPieces = ChessBoard::allPieces & ~from & to;
+    ChessBoard::boards[index] = (ChessBoard::boards[index] & ~from) | to;
+    ChessBoard::allPieces = (ChessBoard::allPieces & ~from) | to;
     // if white is moving
     if (from & ChessBoard::allWhites) {
-        ChessBoard::allWhites = ChessBoard::allWhites & ~from & to;
+        ChessBoard::allWhites = (ChessBoard::allWhites & ~from) | to;
         if (to & ChessBoard::allBlacks) { // if white attacks black
             int index_black = ChessBoard::getBoard(to);
             ChessBoard::boards[index_black] = ChessBoard::boards[index_black] & ~to;
-            ChessBoard::allPieces = ChessBoard::allPieces & ~to;
+            //ChessBoard::allPieces = ChessBoard::allPieces & ~to;
             ChessBoard::allBlacks = ChessBoard::allBlacks & ~to;
         }
     } else { // if black is moving
-        ChessBoard::allBlacks = ChessBoard::allBlacks & ~from & to;
+        ChessBoard::allBlacks = (ChessBoard::allBlacks & ~from) | to;
         if (to & ChessBoard::allWhites) { // if black attacks white
             int index_white = ChessBoard::getBoard(to);
             ChessBoard::boards[index_white] = ChessBoard::boards[index_white] & ~to;
-            ChessBoard::allPieces = ChessBoard::allPieces & ~to;
+            //ChessBoard::allPieces = ChessBoard::allPieces & ~to;
             ChessBoard::allWhites = ChessBoard::allWhites & ~to;
+            cout << "ALBELE sunt\n";
+            printBoard(ChessBoard::allWhites);
+            cout << "tabla cu piesa capturata\n";
+            printBoard(ChessBoard::boards[index_white]);
         }
     }
+    cout << "Dupa mutare ALBELE sunt\n";
+    printBoard(ChessBoard::allWhites);
 }
 
 bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
+    cout << "ALLWHITES\n";
+    printBoard(ChessBoard::allWhites);
+    cout << "FROM\n";
+    printBoard(from);
+    cout << "TO\n";
+    printBoard(to);
     if (from == 0 || to == 0) {
+        cout << "penis_0" <<endl;
         return false;
     }
     if (from & ChessBoard::allWhites) {
         if (to & ChessBoard::allWhites) {
+            cout << "penis_1" <<endl;
             return false;
         } else {
             return true;
@@ -173,15 +187,15 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     } else {
         if (from & ChessBoard::allBlacks) {
             if (to & ChessBoard::allBlacks) {
+                cout << "penis_2" <<endl;
                 return false;
             } else {
                 return true;
             }
-        } else {
-            return false;
         }
     }
-    return true;
+    cout << "penis_2" <<endl;
+    return false;
 }
 
 /*
