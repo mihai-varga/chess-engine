@@ -8,9 +8,11 @@ $(EXE) : $(SRC)
 	$(CC) -o $(EXE) $(SRC) $(CFLAGS)
 
 
-run: $(EXE)
+white: $(EXE)
 	xboard -debug  -fcp $(DIR)/$(EXE)  -mode TwoMachines
 
 black: $(EXE)
 	xboard -debug  -scp $(DIR)/$(EXE)  -mode TwoMachines
 
+clean:
+	rm $(EXE)

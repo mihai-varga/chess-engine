@@ -1,0 +1,17 @@
+Utilizare:
+    make       --> pentru compliare, rezultand executabilul "main"
+    make white --> pentru ca programul nostru sa joace cu alb impotriva 
+                   engine-ului implicit
+    make black --> pentru ca programul nostru sa joace cu negru impotriva 
+                   engine-ului implicit
+
+
+Modul de joc:
+    - executam mutari in oglinda, pana cand mutarea in oglinda nu mai este valida
+    - daca jucam cu alb, mutam un pion o pozitie in fata, urmand sa mutam in
+      oglinda dupa prima mutare a adversarului
+    - la intalnirea unei mutari invalide, jocul se incheie prin comanda "resign"
+
+Precizari:
+    - la inceputul jocului trimitem feature-ul: sigint=0 pentru a nu primi
+      semnalul SIGINT intre mutari.
