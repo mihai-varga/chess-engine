@@ -15,3 +15,16 @@ Modul de joc:
 Precizari:
     - la inceputul jocului trimitem feature-ul: sigint=0 pentru a nu primi
       semnalul SIGINT intre mutari.
+
+
+Reprezentarea tablei:
+    - am folosit variablie pe de 8 octeti (unsigned long long)
+    - fiecare bit reprezinta o pozitie de pe tabla de sah, pozitia A1 aflandu-se
+      pe cel mai semnificativ bit si H8 pe cel mai putin semnificativ
+    - un bit are valoarea 1 daca pe pozitia respectiva se afla o piesa si 0 altfel
+    - am folosit 12 astfel de variabilie pentru a stoca pionii albi/negri, 
+      caii albi/negri, nebunii albi/negri, turele albe/negre si respectiv regina
+      si regele alb/negru.
+    - pentru a seta mutari pe tabla si pentru a valida mutari, am folosit operatii
+      pe biti
+

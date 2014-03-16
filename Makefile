@@ -7,6 +7,8 @@ DIR=$(shell pwd | sed 's/ /\\ /g')
 $(EXE) : $(SRC)
 	$(CC) -o $(EXE) $(SRC) $(CFLAGS)
 
+build:
+	$(CC) -o $(EXE) $(SRC) $(CFLAGS)
 
 white: $(EXE)
 	xboard -debug  -fcp $(DIR)/$(EXE)  -mode TwoMachines
