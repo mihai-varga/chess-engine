@@ -4,6 +4,9 @@
 #include <climits>
 #include <cstdlib>
 #include <time.h>
+#include <utility>
+
+#define PairBB pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t>
 
 using namespace std;
 
