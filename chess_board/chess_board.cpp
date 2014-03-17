@@ -270,7 +270,42 @@ ChessBoard::bitboard_t ChessBoard::getKingRandomMove(ChessBoard::bitboard_t b) {
 
 ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
     std::pair<int, int> initialCoords = ChessBoard::getCoords(b);
-    return (ChessBoard::maskFile[initialCoords.second-1] ^ ChessBoard::maskRank[initialCoords.first-1]);
+    ChessBoard::bitboard_t ret = 0;
+    //return (ChessBoard::maskFile[initialCoords.second-1] ^ ChessBoard::maskRank[initialCoords.first-1]);
+    int x = initialCoords.first - 1;
+    int y = initialCoords.second - 1;
+    x--;
+    int i = 1;
+    while (x >= 0)
+    {
+        ret |= (b >> (8*i));
+        i++;
+        x--;
+    }
+    x = initialCoords.first+1;
+    i = 1;
+    while (x < 9)
+    {
+        ret |= (b << (8*i));
+        i++;
+        x++;
+    }
+    i = 1;
+    while (y > 0)
+    {
+        ret |= (b >> i);
+        i++;
+        y--;
+    }
+    y = initialCoords.second+1;
+    i = 1;
+    while (y < 9)
+    {
+        ret |= (b << i);
+        i++;
+        y++;
+    }
+    return ret;
 }
 
 /*
