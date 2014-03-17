@@ -6,6 +6,7 @@
 
 class ChessBoard {
 	public:
+        typedef pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> PairBB;
 		typedef unsigned long long bitboard_t;
         enum player_t {WHITE, BLACK};
 	public:
