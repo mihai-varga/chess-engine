@@ -164,6 +164,16 @@ string ChessBoard::bitboardToMove(ChessBoard::bitboard_t b) {
     return move;
 }
 
+std::vector<ChessBoard::bitboard_t> ChessBoard::split(ChessBoard::bitboard_t b) {
+    std::vector<ChessBoard::bitboard_t> v;
+    for (int i = 0; i < 64; i++) {
+        if (square[i] & b) {
+            v.push_back(square[i]);
+        }
+    }
+    return v;
+}
+
 ChessBoard::bitboard_t ChessBoard::moveToBitboard(string move) {
     int col = (int)move[0] - 97;
     int row = (int)move[1] - 49;
@@ -223,7 +233,70 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
 }
 
 bool ChessBoard::isChess() {
-    
+    ChessBoard::bitboard_t opponentAllMoves = 0ULL;
+    ChessBoard::player_t opponentColor = current_player == WHITE ? BLACK : WHITE;
+    std::vector<ChessBoard::bitboard_t> aux;
+    if (opponentColor == WHITE) {    
+        // check king
+        opponentAllMoves |= getKingAllMoves(boards[5]); 
+
+        // check queen
+        opponentAllMoves |= getQueenAllMoves(boards[4]); 
+        
+        // check rooks
+        aux = split(boards[1]);
+        for (int i = 0; i < aux.size(); i++) {
+            opponentAllMoves |= getRooksAllMoves(aux[i]);
+        }
+
+        // check knights
+        aux = split(boards[2]);
+        aux.clear();
+        for (int i = 0; i < aux.size(); i++) {
+            opponentAllMoves |= getKnightAllMoves(aux[i]);
+        }
+
+        // check bishops
+        aux = split(boards[3]);
+        aux.clear();
+        for (int i = 0; i < aux.size(); i++) {
+            opponentAllMoves |= getBishopAllMoves(aux[i]);
+        }
+    } else {
+        // check king
+        opponentAllMoves |= getKingAllMoves(boards[11]); 
+
+        // check queen
+        opponentAllMoves |= getQueenAllMoves(boards[10]); 
+        
+        // check rooks
+        aux = split(boards[7]);
+        for (int i = 0; i < aux.size(); i++) {
+            opponentAllMoves |= getRooksAllMoves(aux[i]);
+        }
+
+        // check knights
+        aux = split(boards[8]);
+        aux.clear();
+        for (int i = 0; i < aux.size(); i++) {
+            opponentAllMoves |= getKnightAllMoves(aux[i]);
+        }
+
+        // check bishops
+        aux = split(boards[9]);
+        aux.clear();
+        for (int i = 0; i < aux.size(); i++) {
+            opponentAllMoves |= getBishopAllMoves(aux[i]);
+        }
+    }
+    printBoard(opponentAllMoves);
+    if (opponentColor == WHITE && ((opponentAllMoves & boards[11]) != 0)) {
+        return true;
+    }
+    if (opponentColor == BLACK && ((opponentAllMoves & boards[5]) != 0)) {
+        return true;
+    }
+    return false;
 }
 
 /*
@@ -240,6 +313,7 @@ std::vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboar
     trimH = b & ChessBoard::clearFile[7];
     moves[0] = trimA >> 9;
     moves[1] = b >> 8;
+    bitboard_t currentPlayerPieces = current_player == WHITE ? allWhites : allBlacks;
     moves[2] = trimH >> 7;
     moves[3] = trimA >> 1;
     moves[4] = trimH << 1;
