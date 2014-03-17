@@ -57,7 +57,7 @@ class ChessBoard {
 
         void printBoard(bitboard_t b);
         bitboard_t getSquare(char c, int i);
-		std::pair<int, int> getCoords(bitboard_t b);
+        std::pair<int, int> getCoords(bitboard_t b);
         // get the coresponding board
         // @return the index of the board
         int getBoard(bitboard_t b);
@@ -79,6 +79,8 @@ class ChessBoard {
         std::vector<bitboard_t> getKnightMoves(bitboard_t b);
         bitboard_t getKnightAllMoves(bitboard_t b);
         bitboard_t getKnightRandomMove(bitboard_t b);
+
+        bitboard_t getRooksAllMoves(bitboard_t b);
 
         bitboard_t getBishopAllMoves(bitboard_t b);
 
