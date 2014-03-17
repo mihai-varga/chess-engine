@@ -190,13 +190,12 @@ void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     }
 }
 
-bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to,
-        ChessBoard::player_t p) {
+bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
     if (from == 0 || to == 0) {
         return false;
     }
     // if WHITE moves
-    if (p == WHITE) {
+    if (current_player == WHITE) {
         if (from & ChessBoard::allWhites) {
             if (to & ChessBoard::allWhites) {
                 return false;
@@ -206,7 +205,7 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to,
         }
         return false;
     }
-    if (p == BLACK) {
+    if (current_player == BLACK) {
         if (from & ChessBoard::allBlacks) {
             if (to & ChessBoard::allBlacks) {
                 return false;
