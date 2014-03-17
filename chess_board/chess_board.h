@@ -48,12 +48,12 @@ class ChessBoard {
 		std::vector<bitboard_t> square;
 
     private:
-        void initBoard();
         static char alph[8];
         static char numb[8];
     public:
         ChessBoard();
         ~ChessBoard();
+        void initBoard();
 
         /*
          * plots the board given as parameter
@@ -64,6 +64,7 @@ class ChessBoard {
          * and returns the coresponding bitboard
          */
 		bitboard_t getSquare(char c, int i);
+		std::pair<int, int> getCoords(bitboard_t b);
         /* get the coresponding board
          * @params
          *      b  the piece for which we want 
@@ -105,6 +106,10 @@ class ChessBoard {
          */
 		bitboard_t getKingAllMoves(bitboard_t b);
 		bitboard_t getKingRandomMove(bitboard_t b);
+
+		bitboard_t getRooksAllMoves(bitboard_t b);
+		bitboard_t getBishopAllMoves(bitboard_t b);
+		bitboard_t getQueenAllMoves(bitboard_t b);
 
         /*
          * returns a vector with all the possible moves

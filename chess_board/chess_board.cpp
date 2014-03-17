@@ -108,21 +108,21 @@ std::pair<int, int> ChessBoard::getCoords(ChessBoard::bitboard_t b)
 	int i = 1, j = 1;
 	while(1)
 	{
-		if(b << 8 == 0) {
+		if(b >> 8 == 0) {
 			break;
 		}
 		i++;
-		b = b << 8;
+		b = b >> 8;
 	}
 	//mask with 1 on first column
 	bitboard_t mask = 1LL << 63;
 	while(1)
 	{
-		if(mask && b) {
+		if(b >> 1 == 0) {
 			break;
 		}
 		j++;
-		mask = mask >> 1;
+		b = b >> 1;
 	}
 
 	std::pair<int, int> coords = std::make_pair(i, j);
@@ -272,7 +272,7 @@ ChessBoard::bitboard_t ChessBoard::getKingRandomMove(ChessBoard::bitboard_t b) {
 
 ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
     std::pair<int, int> initialCoords = ChessBoard::getCoords(b);
-    return (ChessBoard::maskFile[initialCoords.first] ^ ChessBoard::maskRank[initialCoords.second]);
+    return (ChessBoard::maskFile[initialCoords.second-1] ^ ChessBoard::maskRank[initialCoords.first-1]);
 }
 
 /*
@@ -329,12 +329,64 @@ ChessBoard::bitboard_t ChessBoard::getKnightRandomMove(ChessBoard::bitboard_t b)
     return ret;
 }
 
-/*
 ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
 {
-//TODO
-}*/
+    std::pair<int, int> initialCoords = ChessBoard::getCoords(b);
+	bitboard_t ret = 0;
 
+	//top,left
+	int x = initialCoords.first;
+	int y = initialCoords.second;
+	int i = 1;
+	while(x > 1 && y > 1)
+	{
+		ret |= b >> (i * 9);
+		i++;
+		x--;
+		y--;
+	}
+	//top,right
+	x = initialCoords.first;
+	y = initialCoords.second;
+	i = 1;
+	while(x > 1 && y < 8)
+	{
+		ret |= b >> (i * 7);
+		i++;
+		x--;
+		y++;
+	}
+	//bot,left
+	x = initialCoords.first;
+	y = initialCoords.second;
+	i = 1;
+	while(x < 8 && y > 1)
+	{
+		ret |= b << (i * 7);
+		i++;
+		x++;
+		y--;
+	}
+	//bot,right
+	x = initialCoords.first;
+	y = initialCoords.second;
+	i = 1;
+	while(x < 8 && y < 8)
+	{
+		ret |= b << (i * 9);
+		i++;
+		x++;
+		y++;
+	}
+	return ret;
+}
+
+ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
+{
+	bitboard_t rook = getRooksAllMoves(b);
+	bitboard_t bishop = getBishopAllMoves(b);
+	return rook | bishop;
+}
 /*
  * - - -
  * - P -
