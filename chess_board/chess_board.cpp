@@ -44,8 +44,7 @@ void ChessBoard::initBoard() {
     ChessBoard::allPieces = ChessBoard::allWhites | ChessBoard::allBlacks;
 }
 
-ChessBoard::ChessBoard(ChessBoard::player_t p) {
-    current_player = p;
+ChessBoard::ChessBoard() {
     boards = std::vector<ChessBoard::bitboard_t>(12, 0);
     maskRank = std::vector<ChessBoard::bitboard_t>(8, 0);
     clearRank = std::vector<ChessBoard::bitboard_t>(8, 0);
@@ -77,6 +76,10 @@ ChessBoard::ChessBoard(ChessBoard::player_t p) {
 }
 
 ChessBoard::~ChessBoard() {}
+
+void ChessBoard::setCurrentPlayer(ChessBoard::player_t p) {
+    ChessBoard::current_player = p;
+}
 
 void ChessBoard::printBoard(ChessBoard::bitboard_t b) {
     for (int i = 0; i < 64; i++) {

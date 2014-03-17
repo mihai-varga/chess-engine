@@ -36,6 +36,8 @@ void play(ChessBoard &cb) {
     bool white = false;
     bool forceMode = false;
 
+    cb.setCurrentPlayer(cb.BLACK);
+
     while (1) {
         scanf("%s", command);
 
@@ -79,11 +81,13 @@ void play(ChessBoard &cb) {
 
         if (!strcmp(command, "white")) {
             white = true;
+            cb.setCurrentPlayer(cb.WHITE);
             continue;
         }
 
         if (!strcmp(command, "black")) {
             white = false;
+            cb.setCurrentPlayer(cb.BLACK);
             continue;
         }
 
@@ -98,8 +102,7 @@ void play(ChessBoard &cb) {
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
             const char *my_move_const = cb.getNextMoveTmp(command).c_str();
             char *my_move = strdup(my_move_const);
-            if ((white && cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2), cb.WHITE)) 
-                    || (!white && cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2), cb.BLACK))) {
+            if (cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
                 cb.setMove(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2));
                 printf("move %s\n", my_move);
             }

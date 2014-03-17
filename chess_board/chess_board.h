@@ -6,9 +6,9 @@
 
 class ChessBoard {
 	public:
-        typedef pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> PairBB;
 		typedef unsigned long long bitboard_t;
-        enum player_t {WHITE, BLACK};
+        typedef std::pair<bitboard_t, bitboard_t> PairBB;
+        typedef enum {WHITE, BLACK} player_t ;
 	public:
         /*
          * current player color (no racism involved)
@@ -56,9 +56,10 @@ class ChessBoard {
         static char alph[8];
         static char numb[8];
     public:
-        ChessBoard(player_t p);
+        ChessBoard();
         ~ChessBoard();
         void initBoard();
+        void setCurrentPlayer(player_t p);
 
         /*
          * plots the board given as parameter
@@ -98,7 +99,7 @@ class ChessBoard {
         // updates the board after a new move
         void setMove(bitboard_t from, bitboard_t to);
         // check if a move is valid
-        bool isValid(bitboard_t from, bitboard_t to, player_t p);
+        bool isValid(bitboard_t from, bitboard_t to);
 
         /*
          * returns a vector with all the possible moves
