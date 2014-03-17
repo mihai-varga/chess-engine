@@ -9,6 +9,10 @@ class ChessBoard {
 		typedef unsigned long long bitboard_t;
         enum player_t {WHITE, BLACK};
 	public:
+        /*
+         * current player color (no racism involved)
+         */
+        player_t current_player;
 		/*
 		 *  0 - white pawns
 		 *  1 - white rooks
@@ -51,7 +55,7 @@ class ChessBoard {
         static char alph[8];
         static char numb[8];
     public:
-        ChessBoard();
+        ChessBoard(player_t p);
         ~ChessBoard();
         void initBoard();
 

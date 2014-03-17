@@ -46,7 +46,8 @@ void ChessBoard::initBoard() {
     ChessBoard::allPieces = ChessBoard::allWhites | ChessBoard::allBlacks;
 }
 
-ChessBoard::ChessBoard() {
+ChessBoard::ChessBoard(ChessBoard::player_t p) {
+    current_player = p;
     boards = std::vector<ChessBoard::bitboard_t>(12, 0);
     maskRank = std::vector<ChessBoard::bitboard_t>(8, 0);
     clearRank = std::vector<ChessBoard::bitboard_t>(8, 0);
@@ -333,6 +334,7 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
 {
     std::pair<int, int> initialCoords = ChessBoard::getCoords(b);
 	bitboard_t ret = 0;
+    bitboard_t currentPlayerPieces = current_player == WHITE ? allWhites : allBlacks;
 
 	//top,left
 	int x = initialCoords.first;
@@ -340,10 +342,15 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
 	int i = 1;
 	while(x > 1 && y > 1)
 	{
-		ret |= b >> (i * 9);
-		i++;
-		x--;
-		y--;
+        bitboard_t tmp = b >> (i * 9);
+        if (!(tmp & currentPlayerPieces)) {
+            ret |= tmp;
+            i++;
+            x--;
+            y--;
+        } else {
+            break;
+        }
 	}
 	//top,right
 	x = initialCoords.first;
@@ -351,10 +358,15 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
 	i = 1;
 	while(x > 1 && y < 8)
 	{
-		ret |= b >> (i * 7);
-		i++;
-		x--;
-		y++;
+        bitboard_t tmp = b >> (i * 7);
+        if (!(tmp & currentPlayerPieces)) {
+            ret |= tmp;
+            i++;
+            x--;
+            y++;
+        } else {
+            break;
+        }
 	}
 	//bot,left
 	x = initialCoords.first;
@@ -362,10 +374,15 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
 	i = 1;
 	while(x < 8 && y > 1)
 	{
-		ret |= b << (i * 7);
-		i++;
-		x++;
-		y--;
+        bitboard_t tmp = b << (i * 7);
+        if (!(tmp & currentPlayerPieces)) {
+            ret |= tmp;
+            i++;
+            x++;
+            y--;
+        } else {
+            break;
+        }
 	}
 	//bot,right
 	x = initialCoords.first;
@@ -373,10 +390,15 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
 	i = 1;
 	while(x < 8 && y < 8)
 	{
-		ret |= b << (i * 9);
-		i++;
-		x++;
-		y++;
+        bitboard_t tmp = b << (i * 9);
+        if (!(tmp & currentPlayerPieces)) {
+            ret |= tmp;
+            i++;
+            x++;
+            y++;
+        } else {
+            break;
+        }
 	}
 	return ret;
 }
