@@ -80,6 +80,8 @@ class ChessBoard {
         bitboard_t getKnightAllMoves(bitboard_t b);
         bitboard_t getKnightRandomMove(bitboard_t b);
 
+        bitboard_t getRooksAllMoves(bitboard_t b);
+
         bitboard_t getBishopAllMoves(bitboard_t b);
 
         std::vector<bitboard_t> getWhitePawnMoves(bitboard_t b);
