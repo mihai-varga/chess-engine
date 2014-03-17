@@ -4,6 +4,9 @@
 #include <climits>
 #include <cstdlib>
 #include <time.h>
+#include <utility>
+
+#define PairBB pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t>
 
 using namespace std;
 
@@ -68,7 +71,7 @@ ChessBoard::ChessBoard() {
     }
     //initialize square lookup table
     for (int i = 0; i < 64; i++) {
-        ChessBoard::square[i] = 0;
+//        ChessBoard::square[i] = 0;
         ChessBoard::square[i] = 1LL << i;
     }
     ChessBoard::initBoard();
@@ -96,6 +99,34 @@ ChessBoard::bitboard_t ChessBoard::getSquare(char c, int i) {
     int ind = c - 'a';
     ind += (i - 1) * 8;
     return ChessBoard::square[ind];
+}
+
+std::pair<int, int> ChessBoard::getCoords(ChessBoard::bitboard_t b)
+{
+	//i = line
+	//j = column
+	int i = 1, j = 1;
+	while(1)
+	{
+		if(b << 8 == 0) {
+			break;
+		}
+		i++;
+		b = b << 8;
+	}
+	//mask with 1 on first column
+	bitboard_t mask = 1LL << 63;
+	while(1)
+	{
+		if(mask && b) {
+			break;
+		}
+		j++;
+		mask = mask >> 1;
+	}
+
+	std::pair<int, int> coords = std::make_pair(i, j);
+	return coords;
 }
 
 int ChessBoard::getBoard(ChessBoard::bitboard_t b) {
@@ -292,6 +323,12 @@ ChessBoard::bitboard_t ChessBoard::getKnightRandomMove(ChessBoard::bitboard_t b)
     ret = moves[rand() % 8];
     return ret;
 }
+
+/*
+ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
+{
+//TODO
+}*/
 
 /*
  * - - -
