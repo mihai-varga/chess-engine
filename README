@@ -18,13 +18,16 @@ Precizari:
 
 
 Reprezentarea tablei:
-    - am folosit variablie pe de 8 octeti (unsigned long long)
+    - am folosit variabile pe 8 octeti (unsigned long long)
     - fiecare bit reprezinta o pozitie de pe tabla de sah, pozitia A1 aflandu-se
       pe cel mai semnificativ bit si H8 pe cel mai putin semnificativ
     - un bit are valoarea 1 daca pe pozitia respectiva se afla o piesa si 0 altfel
     - am folosit 12 astfel de variabilie pentru a stoca pionii albi/negri, 
-      caii albi/negri, nebunii albi/negri, turele albe/negre si respectiv regina
+      caii albi/negri, nebunii albi/negri, turele albe/negre si, respectiv, regina
       si regele alb/negru.
     - pentru a seta mutari pe tabla si pentru a valida mutari, am folosit operatii
       pe biti
+    - de asemenea folsim variabile de tipul bitboard_t pentru a retine toate piesele
+      albului, toate piesele negrului si toate piesele de pe tabla; acestea vor fi 
+      folosite pentru a determina daca o anumita mutare este sau nu valida
 
