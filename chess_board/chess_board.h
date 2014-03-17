@@ -100,6 +100,10 @@ class ChessBoard {
         void setMove(bitboard_t from, bitboard_t to);
         // check if a move is valid
         bool isValid(bitboard_t from, bitboard_t to);
+        /*
+         * checks if our king is in chess
+         */
+        bool isChess();
 
         /*
          * returns a vector with all the possible moves

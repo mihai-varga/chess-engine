@@ -45,6 +45,7 @@ void ChessBoard::initBoard() {
 }
 
 ChessBoard::ChessBoard() {
+    current_player = BLACK;
     boards = std::vector<ChessBoard::bitboard_t>(12, 0);
     maskRank = std::vector<ChessBoard::bitboard_t>(8, 0);
     clearRank = std::vector<ChessBoard::bitboard_t>(8, 0);
@@ -221,6 +222,10 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     return false;
 }
 
+bool ChessBoard::isChess() {
+    
+}
+
 /*
  * 0 1 2
  * 3 K 4
@@ -274,6 +279,7 @@ ChessBoard::bitboard_t ChessBoard::getKingRandomMove(ChessBoard::bitboard_t b) {
 ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
     std::pair<int, int> initialCoords = ChessBoard::getCoords(b);
     ChessBoard::bitboard_t ret = 0;
+    bitboard_t currentPlayerPieces = current_player == WHITE ? allWhites : allBlacks;
     //return (ChessBoard::maskFile[initialCoords.second-1] ^ ChessBoard::maskRank[initialCoords.first-1]);
     int x = initialCoords.first - 1;
     int y = initialCoords.second - 1;
@@ -281,32 +287,52 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
     int i = 1;
     while (x >= 0)
     {
-        ret |= (b >> (8*i));
-        i++;
-        x--;
+        ChessBoard::bitboard_t tmp = b >> (8 * i);
+        if (!(tmp & currentPlayerPieces)) {
+            ret |= tmp;
+            i++;
+            x--;
+        } else {
+            break;
+        }
     }
     x = initialCoords.first+1;
     i = 1;
     while (x < 9)
     {
-        ret |= (b << (8*i));
-        i++;
-        x++;
+        ChessBoard::bitboard_t tmp = b << (8 * i);
+        if (!(tmp & currentPlayerPieces)) {
+            ret |= tmp;
+            i++;
+            x++;
+        } else {
+            break;
+        }
     }
     i = 1;
     while (y > 0)
     {
-        ret |= (b >> i);
-        i++;
-        y--;
+        ChessBoard::bitboard_t tmp = b >> i;
+        if (!(tmp & currentPlayerPieces)) {
+            ret |= tmp;
+            i++;
+            y--;
+        } else {
+            break;
+        }
     }
     y = initialCoords.second+1;
     i = 1;
     while (y < 9)
     {
-        ret |= (b << i);
-        i++;
-        y++;
+        ChessBoard::bitboard_t tmp = b << i;
+        if (!(tmp & currentPlayerPieces)) {
+            ret |= tmp;
+            i++;
+            y++;
+        } else {
+            break;
+        }
     }
     return ret;
 }
