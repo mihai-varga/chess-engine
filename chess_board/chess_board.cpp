@@ -262,6 +262,13 @@ bool ChessBoard::isChess() {
         for (int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getBishopAllMoves(aux[i]);
         }
+
+        // check pawns
+        aux = split(boards[0]);
+        aux.clear();
+        for (int i = 0; i < aux.size(); i++) {
+            opponentAllMoves |= getWhitePawnAllMoves(aux[i]);
+        }
     } else {
         // check king
         opponentAllMoves |= getKingAllMoves(boards[11]); 
@@ -287,6 +294,13 @@ bool ChessBoard::isChess() {
         aux.clear();
         for (int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getBishopAllMoves(aux[i]);
+        }
+
+        // check pawns
+        aux = split(boards[6]);
+        aux.clear();
+        for (int i = 0; i < aux.size(); i++) {
+            opponentAllMoves |= getBlackPawnAllMoves(aux[i]);
         }
     }
     printBoard(opponentAllMoves);
@@ -550,54 +564,78 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
  * - 0 -
  * - 1 -
  */
-std::vector<ChessBoard::bitboard_t> ChessBoard::getWhitePawnMoves(ChessBoard::bitboard_t b) {
-    std::vector<ChessBoard::bitboard_t> moves(2, 0);
-    moves[0] = b << 8;
-    moves[1] = b << 16;
-    return moves;
-}
+    
 
-ChessBoard::bitboard_t ChessBoard::getWhitePawnAllMoves(ChessBoard::bitboard_t b) {
-    ChessBoard::bitboard_t ret;
-    std::vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
-    ret = moves[0] | moves[1];
-    ret &= ~ChessBoard::allWhites;
-    return ret;
-}
+    std::vector<ChessBoard::bitboard_t> ChessBoard::getWhitePawnMoves(ChessBoard::bitboard_t b) {
+        std::vector<ChessBoard::bitboard_t> moves;
+        moves.push_back(b << 8);
+        moves.push_back(b << 16);
+        if (ChessBoard::allBlacks & (b << 7))
+            moves.push_back(b << 7);
+        if (ChessBoard::allBlacks & (b << 9))
+            moves.push_back(b << 9);
+        return moves;
+    }
+     
+    ChessBoard::bitboard_t ChessBoard::getWhitePawnAllMoves(ChessBoard::bitboard_t b) {
+        ChessBoard::bitboard_t ret;
+        std::vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
+        if (moves.size() == 2)
+            ret = moves[0] | moves[1];
+        if (moves.size() == 3)
+            ret = moves[0] | moves[1] | moves[2];
+        ret &= ~ChessBoard::allWhites;
+        return ret;
+    }
+     
+    ChessBoard::bitboard_t ChessBoard::getWhitePawnRandomMove(ChessBoard::bitboard_t b) {
+        ChessBoard::bitboard_t ret = 0;
+        std::vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
+        srand(time(NULL));
+        if (moves.size() == 2)
+            ret = moves[rand() % 2];
+        if (moves.size() == 3)
+            ret = moves[rand() % 3];
+        return ret;
+    }
+     
+    /*
+     * - 1 -
+     * - 0 -
+     * - P -
+     * - - -
+     */
+    std::vector<ChessBoard::bitboard_t> ChessBoard::getBlackPawnMoves(ChessBoard::bitboard_t b) {
+        std::vector<ChessBoard::bitboard_t> moves;
+        moves.push_back(b >> 8);
+        moves.push_back(b >> 16);
+        if (ChessBoard::allBlacks & (b >> 7))
+            moves.push_back(b >> 7);
+        if (ChessBoard::allBlacks & (b >> 9))
+            moves.push_back(b >> 9);
+     
+        return moves;
+    }
+     
+    ChessBoard::bitboard_t ChessBoard::getBlackPawnAllMoves(ChessBoard::bitboard_t b) {
+        ChessBoard::bitboard_t ret;
+        std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
+        if (moves.size() == 2)
+            ret = moves[0] | moves[1];
+        if (moves.size() == 3)
+            ret = moves[0] | moves[1] | moves[2];
+        ret &= ~ChessBoard::allBlacks;
+        return ret;
+    }
+     
+    ChessBoard::bitboard_t ChessBoard::getBlackPawnRandomMove(ChessBoard::bitboard_t b) {
+        ChessBoard::bitboard_t ret = 0;
+        std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
+        srand(time(NULL));
+        if (moves.size() == 2)
+            ret = moves[rand() % 2];
+        if (moves.size() == 3)
+            ret = moves[rand() % 3];
+        return ret;
+    }
 
-ChessBoard::bitboard_t ChessBoard::getWhitePawnRandomMove(ChessBoard::bitboard_t b) {
-    ChessBoard::bitboard_t ret = 0;
-    std::vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
-    srand(time(NULL));
-    ret = moves[rand() % 2];
-    return ret;
-}
-
-/*
- * - 1 -
- * - 0 -
- * - P -
- * - - -
- */
-std::vector<ChessBoard::bitboard_t> ChessBoard::getBlackPawnMoves(ChessBoard::bitboard_t b) {
-    std::vector<ChessBoard::bitboard_t> moves(2, 0);
-    moves[0] = b >> 8;
-    moves[1] = b >> 16;
-    return moves;
-}
-
-ChessBoard::bitboard_t ChessBoard::getBlackPawnAllMoves(ChessBoard::bitboard_t b) {
-    ChessBoard::bitboard_t ret;
-    std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
-    ret = moves[0] | moves[1];
-    ret &= ~ChessBoard::allBlacks;
-    return ret;
-}
-
-ChessBoard::bitboard_t ChessBoard::getBlackPawnRandomMove(ChessBoard::bitboard_t b) {
-    ChessBoard::bitboard_t ret = 0;
-    std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
-    srand(time(NULL));
-    ret = moves[rand() % 2];
-    return ret;
-}
