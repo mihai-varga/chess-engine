@@ -105,7 +105,7 @@ class ChessBoard {
         /*
          * checks if our king is in chess
          */
-        bool isCheck();
+        std::vector< std::pair<ChessBoard::bitboard_t, int> >isCheck();
 
         /*
          * returns a vector with all the possible moves
