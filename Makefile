@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS= -g -Wall
 EXE=main
-SRC=main.cpp chess_board/chess_board.cpp
+SRC=main.cpp chess_board/*.cpp
 DIR=$(shell pwd | sed 's/ /\\ /g')
 
 $(EXE) : $(SRC)
