@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <time.h>
 
+using namespace std;
+
 void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
     int index = ChessBoard::getBoard(from);
     ChessBoard::boards[index] = (ChessBoard::boards[index] & ~from) | to;
@@ -57,85 +59,94 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     return false;
 }
 
-bool ChessBoard::isCheck() {
+vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck() {
     ChessBoard::bitboard_t opponentAllMoves = 0ULL;
-    ChessBoard::player_t opponentColor = current_player == WHITE ? BLACK : WHITE;
-    std::vector<ChessBoard::bitboard_t> aux;
+    ChessBoard::player_t opponentColor = current_player;
+    vector<ChessBoard::bitboard_t> aux;
+    // attacker position  &  attacker bitboard index
+    vector< pair<ChessBoard::bitboard_t, int> > attackers;
     if (opponentColor == WHITE) {    
-        // check king
-        opponentAllMoves |= getKingAllMoves(boards[5]); 
-
         // check queen
         opponentAllMoves |= getQueenAllMoves(boards[4]); 
+        if (boards[11] & getQueenAllMoves(boards[4])) {
+            ChessBoard::bitboard_t queen_pos = split(boards[4])[0];
+            attackers.push_back(make_pair(queen_pos, 4));
+        }
         
         // check rooks
         aux = split(boards[1]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            opponentAllMoves |= getRooksAllMoves(aux[i]);
+            if (boards[11] & getRooksAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 1));
+            }
         }
 
         // check knights
         aux = split(boards[2]);
-        aux.clear();
         for (unsigned int i = 0; i < aux.size(); i++) {
-            opponentAllMoves |= getKnightAllMoves(aux[i]);
+            if (boards[11] & getKnightAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 2));
+            }
         }
 
         // check bishops
         aux = split(boards[3]);
-        aux.clear();
         for (unsigned int i = 0; i < aux.size(); i++) {
-            opponentAllMoves |= getBishopAllMoves(aux[i]);
+            if (boards[11] & getBishopAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 3));
+            }
         }
 
         // check pawns
         aux = split(boards[0]);
-        aux.clear();
         for (unsigned int i = 0; i < aux.size(); i++) {
-            opponentAllMoves |= getWhitePawnAllMoves(aux[i]);
+            if (boards[11] & getWhitePawnAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 0));
+            }
         }
     } else {
-        // check king
-        opponentAllMoves |= getKingAllMoves(boards[11]); 
-
         // check queen
-        opponentAllMoves |= getQueenAllMoves(boards[10]); 
+        if (boards[5] & getQueenAllMoves(boards[10])) {
+            ChessBoard::bitboard_t queen_pos = split(boards[10])[0];
+            attackers.push_back(make_pair(queen_pos, 10));
+        }
         
         // check rooks
         aux = split(boards[7]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            opponentAllMoves |= getRooksAllMoves(aux[i]);
+            if (boards[5] & getRooksAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 7));
+            }
         }
 
         // check knights
         aux = split(boards[8]);
-        aux.clear();
         for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getKnightAllMoves(aux[i]);
+            if (boards[5] & getKnightAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 8));
+            }
         }
 
         // check bishops
         aux = split(boards[9]);
-        aux.clear();
         for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getBishopAllMoves(aux[i]);
+            if (boards[5] & getBishopAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 9));
+            }
         }
 
         // check pawns
         aux = split(boards[6]);
-        aux.clear();
         for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getBlackPawnAllMoves(aux[i]);
+            if (boards[5] & getBlackPawnAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 6));
+            }
         }
     }
-    printBoard(opponentAllMoves);
-    if (opponentColor == WHITE && ((opponentAllMoves & boards[11]) != 0)) {
-        return true;
-    }
-    if (opponentColor == BLACK && ((opponentAllMoves & boards[5]) != 0)) {
-        return true;
-    }
-    return false;
+    return attackers;
 }
 
 /*
@@ -143,8 +154,8 @@ bool ChessBoard::isCheck() {
  * 3 K 4
  * 5 6 7
  */
-std::vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboard_t b) {
-    std::vector<ChessBoard::bitboard_t> moves(8, 0);
+vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboard_t b) {
+    vector<ChessBoard::bitboard_t> moves(8, 0);
     // trimA and trimH check if the king is on
     // file A or H respectively
     ChessBoard::bitboard_t trimA, trimH;
@@ -152,7 +163,6 @@ std::vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboar
     trimH = b & ChessBoard::clearFile[7];
     moves[0] = trimA >> 9;
     moves[1] = b >> 8;
-    bitboard_t currentPlayerPieces = current_player == WHITE ? allWhites : allBlacks;
     moves[2] = trimH >> 7;
     moves[3] = trimA >> 1;
     moves[4] = trimH << 1;
@@ -164,7 +174,7 @@ std::vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboar
 
 ChessBoard::bitboard_t ChessBoard::getKingAllMoves(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
-    std::vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
+    vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
     for (int i = 0; i < 8; i++) {
         ret |= moves[i];
     }
@@ -183,14 +193,14 @@ ChessBoard::bitboard_t ChessBoard::getKingAllMoves(ChessBoard::bitboard_t b) {
 
 ChessBoard::bitboard_t ChessBoard::getKingRandomMove(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
-    std::vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
+    vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
     srand(time(NULL));
     ret = moves[rand() % 8];
     return ret;
 }
 
 ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
-    std::pair<int, int> initialCoords = ChessBoard::getCoords(b);
+    pair<int, int> initialCoords = ChessBoard::getCoords(b);
     ChessBoard::bitboard_t ret = 0;
     bitboard_t currentPlayerPieces = current_player == WHITE ? allWhites : allBlacks;
     //return (ChessBoard::maskFile[initialCoords.second-1] ^ ChessBoard::maskRank[initialCoords.first-1]);
@@ -257,8 +267,8 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
  * 7 - - - 4
  * - 6 - 5 -
  */
-std::vector<ChessBoard::bitboard_t> ChessBoard::getKnightMoves(ChessBoard::bitboard_t b) {
-    std::vector<ChessBoard::bitboard_t> moves(8, 0);
+vector<ChessBoard::bitboard_t> ChessBoard::getKnightMoves(ChessBoard::bitboard_t b) {
+    vector<ChessBoard::bitboard_t> moves(8, 0);
     // trimAB and trimGH check if the knight is on
     // files (A, B) or (G, H) respectively
     ChessBoard::bitboard_t trimAB, trimGH, trimA, trimH;
@@ -279,7 +289,7 @@ std::vector<ChessBoard::bitboard_t> ChessBoard::getKnightMoves(ChessBoard::bitbo
 
 ChessBoard::bitboard_t ChessBoard::getKnightAllMoves(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
-    std::vector<ChessBoard::bitboard_t> moves = getKnightMoves(b);
+    vector<ChessBoard::bitboard_t> moves = getKnightMoves(b);
     for (int i = 0; i < 8; i++) {
         ret |= moves[i];
     }
@@ -298,7 +308,7 @@ ChessBoard::bitboard_t ChessBoard::getKnightAllMoves(ChessBoard::bitboard_t b) {
 
 ChessBoard::bitboard_t ChessBoard::getKnightRandomMove(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
-    std::vector<ChessBoard::bitboard_t> moves = getKnightMoves(b);
+    vector<ChessBoard::bitboard_t> moves = getKnightMoves(b);
     srand(time(NULL));
     ret = moves[rand() % 8];
     return ret;
@@ -306,7 +316,7 @@ ChessBoard::bitboard_t ChessBoard::getKnightRandomMove(ChessBoard::bitboard_t b)
 
 ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
 {
-    std::pair<int, int> initialCoords = ChessBoard::getCoords(b);
+    pair<int, int> initialCoords = ChessBoard::getCoords(b);
 	bitboard_t ret = 0;
     bitboard_t currentPlayerPieces = current_player == WHITE ? allWhites : allBlacks;
 
@@ -390,8 +400,8 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
  * - 0 -
  * - 1 -
  */
-std::vector<ChessBoard::bitboard_t> ChessBoard::getWhitePawnMoves(ChessBoard::bitboard_t b) {
-    std::vector<ChessBoard::bitboard_t> moves;
+vector<ChessBoard::bitboard_t> ChessBoard::getWhitePawnMoves(ChessBoard::bitboard_t b) {
+    vector<ChessBoard::bitboard_t> moves;
     moves.push_back(b << 8);
     moves.push_back(b << 16);
     if (ChessBoard::allBlacks & (b << 7))
@@ -403,7 +413,7 @@ std::vector<ChessBoard::bitboard_t> ChessBoard::getWhitePawnMoves(ChessBoard::bi
  
 ChessBoard::bitboard_t ChessBoard::getWhitePawnAllMoves(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret;
-    std::vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
+    vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
     if (moves.size() == 2)
         ret = moves[0] | moves[1];
     if (moves.size() == 3)
@@ -414,7 +424,7 @@ ChessBoard::bitboard_t ChessBoard::getWhitePawnAllMoves(ChessBoard::bitboard_t b
  
 ChessBoard::bitboard_t ChessBoard::getWhitePawnRandomMove(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
-    std::vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
+    vector<ChessBoard::bitboard_t> moves = getWhitePawnMoves(b);
     srand(time(NULL));
     if (moves.size() == 2)
         ret = moves[rand() % 2];
@@ -429,8 +439,8 @@ ChessBoard::bitboard_t ChessBoard::getWhitePawnRandomMove(ChessBoard::bitboard_t
  * - P -
  * - - -
  */
-std::vector<ChessBoard::bitboard_t> ChessBoard::getBlackPawnMoves(ChessBoard::bitboard_t b) {
-    std::vector<ChessBoard::bitboard_t> moves;
+vector<ChessBoard::bitboard_t> ChessBoard::getBlackPawnMoves(ChessBoard::bitboard_t b) {
+    vector<ChessBoard::bitboard_t> moves;
     moves.push_back(b >> 8);
     moves.push_back(b >> 16);
     if (ChessBoard::allBlacks & (b >> 7))
@@ -443,7 +453,7 @@ std::vector<ChessBoard::bitboard_t> ChessBoard::getBlackPawnMoves(ChessBoard::bi
  
 ChessBoard::bitboard_t ChessBoard::getBlackPawnAllMoves(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret;
-    std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
+    vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
     if (moves.size() == 2)
         ret = moves[0] | moves[1];
     if (moves.size() == 3)
@@ -454,7 +464,7 @@ ChessBoard::bitboard_t ChessBoard::getBlackPawnAllMoves(ChessBoard::bitboard_t b
  
 ChessBoard::bitboard_t ChessBoard::getBlackPawnRandomMove(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
-    std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
+    vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
     srand(time(NULL));
     if (moves.size() == 2)
         ret = moves[rand() % 2];
