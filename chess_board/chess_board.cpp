@@ -245,28 +245,28 @@ bool ChessBoard::isChess() {
         
         // check rooks
         aux = split(boards[1]);
-        for (int i = 0; i < aux.size(); i++) {
+        for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getRooksAllMoves(aux[i]);
         }
 
         // check knights
         aux = split(boards[2]);
         aux.clear();
-        for (int i = 0; i < aux.size(); i++) {
+        for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getKnightAllMoves(aux[i]);
         }
 
         // check bishops
         aux = split(boards[3]);
         aux.clear();
-        for (int i = 0; i < aux.size(); i++) {
+        for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getBishopAllMoves(aux[i]);
         }
 
         // check pawns
         aux = split(boards[0]);
         aux.clear();
-        for (int i = 0; i < aux.size(); i++) {
+        for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getWhitePawnAllMoves(aux[i]);
         }
     } else {
@@ -278,28 +278,28 @@ bool ChessBoard::isChess() {
         
         // check rooks
         aux = split(boards[7]);
-        for (int i = 0; i < aux.size(); i++) {
+        for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getRooksAllMoves(aux[i]);
         }
 
         // check knights
         aux = split(boards[8]);
         aux.clear();
-        for (int i = 0; i < aux.size(); i++) {
+        for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getKnightAllMoves(aux[i]);
         }
 
         // check bishops
         aux = split(boards[9]);
         aux.clear();
-        for (int i = 0; i < aux.size(); i++) {
+        for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getBishopAllMoves(aux[i]);
         }
 
         // check pawns
         aux = split(boards[6]);
         aux.clear();
-        for (int i = 0; i < aux.size(); i++) {
+        for (unsigned int i = 0; i < aux.size(); i++) {
             opponentAllMoves |= getBlackPawnAllMoves(aux[i]);
         }
     }
