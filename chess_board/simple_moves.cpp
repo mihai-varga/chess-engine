@@ -57,7 +57,7 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     return false;
 }
 
-bool ChessBoard::isChess() {
+bool ChessBoard::isCheck() {
     ChessBoard::bitboard_t opponentAllMoves = 0ULL;
     ChessBoard::player_t opponentColor = current_player == WHITE ? BLACK : WHITE;
     std::vector<ChessBoard::bitboard_t> aux;

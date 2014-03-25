@@ -105,7 +105,7 @@ class ChessBoard {
         /*
          * checks if our king is in chess
          */
-        bool isChess();
+        bool isCheck();
 
         /*
          * returns a vector with all the possible moves

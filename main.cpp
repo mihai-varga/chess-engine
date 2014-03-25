@@ -102,7 +102,7 @@ void play(ChessBoard &cb) {
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
             const char *my_move_const = cb.getNextMoveTmp(command).c_str();
             char *my_move = strdup(my_move_const);
-            if (cb.isChess() == false && cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
+            if (cb.isCheck() == false && cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
             //if (cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
                 cb.setMove(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2));
                 printf("move %s\n", my_move);
