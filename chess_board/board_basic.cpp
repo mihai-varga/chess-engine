@@ -118,7 +118,6 @@ std::pair<int, int> ChessBoard::getCoords(ChessBoard::bitboard_t b)
 		b = b >> 8;
 	}
 	//mask with 1 on first column
-	bitboard_t mask = 1LL << 63;
 	while(1)
 	{
 		if(b >> 1 == 0) {
