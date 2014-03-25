@@ -34,7 +34,7 @@ void play(ChessBoard &cb) {
     
     char command[256];
     bool white = false;
-    bool forceMode = false;
+    //bool forceMode = false;
 
     cb.setCurrentPlayer(cb.BLACK);
 
@@ -62,12 +62,12 @@ void play(ChessBoard &cb) {
         }
 
         if (!strcmp(command, "force")) {
-            forceMode = true;
+            //forceMode = true;
             continue;
         }
 
         if (!strcmp(command, "go")) {
-            forceMode = false;
+            //forceMode = false;
             if (white) {
                 cb.setMove(cb.moveToBitboard("a2"), cb.moveToBitboard("a3"));
                 printf("move a2a3\n");

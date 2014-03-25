@@ -156,6 +156,7 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck() {
  */
 vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboard_t b) {
     vector<ChessBoard::bitboard_t> moves(8, 0);
+    vector<ChessBoard::bitboard_t> finalmoves;
     // trimA and trimH check if the king is on
     // file A or H respectively
     ChessBoard::bitboard_t trimA, trimH;
@@ -169,24 +170,26 @@ vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboard_t b
     moves[5] = trimA << 7;
     moves[6] = b << 8;
     moves[7] = trimH << 9;
-    return moves;
+    if (b & ChessBoard::boards[0])
+    {
+        for (unsigned int i = 0; i < 8; i++)
+            if (moves[i] & ChessBoard::allWhites)
+                finalmoves.push_back(moves[i]);
+    }
+    else
+    {
+        for (unsigned int i = 0; i < 8; i++)
+            if (moves[i] & ChessBoard::allBlacks)
+                finalmoves.push_back(moves[i]);
+    }
+    return finalmoves;
 }
 
 ChessBoard::bitboard_t ChessBoard::getKingAllMoves(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
     vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
-    for (int i = 0; i < 8; i++) {
+    for (unsigned int i = 0; i < moves.size(); i++) {
         ret |= moves[i];
-    }
-    // if moving the white king
-    if (b == ChessBoard::boards[5]) {
-        ret &= ~ChessBoard::allWhites;
-    } else {
-        if (b == ChessBoard::boards[11]) { // if moving the black king
-                ret &= ~ChessBoard::allBlacks;
-        } else {
-            throw 1;
-        }
     }
     return ret;
 }
@@ -195,7 +198,7 @@ ChessBoard::bitboard_t ChessBoard::getKingRandomMove(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
     vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
     srand(time(NULL));
-    ret = moves[rand() % 8];
+    ret = moves[rand() % moves.srand()];
     return ret;
 }
 
