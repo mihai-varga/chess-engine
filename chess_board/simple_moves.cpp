@@ -458,13 +458,14 @@ ChessBoard::bitboard_t ChessBoard::getBlackPawnAllMoves(ChessBoard::bitboard_t b
     ChessBoard::bitboard_t ret;
     std::vector<ChessBoard::bitboard_t> moves = getBlackPawnMoves(b);
 
-    if ((moves.size() > 1) && (moves[0] & ChessBoard::allWhites) && ((moves[0] >> 8) & moves[1]))
+    if ((moves.size() > 1) && (moves[0] & ChessBoard::allBlacks) && ((moves[0] << 8) & moves[1]))
     {
         for (unsigned int i = 2; i < moves.size(); i++)
-    if (moves.size() == 2)
-        ret = moves[0] | moves[1];
-    if (moves.size() == 3)
-        ret = moves[0] | moves[1] | moves[2];
+            ret |= moves[i];
+        return ret;
+    }
+    for (unsigned int i = 0; i < moves.size(); i++)
+        ret |= moves[i];
     ret &= ~ChessBoard::allBlacks;
     return ret;
 }
