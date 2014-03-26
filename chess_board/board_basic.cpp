@@ -42,6 +42,9 @@ void ChessBoard::initBoard() {
         ChessBoard::allBlacks |= ChessBoard::boards[i + 6];
     }
     ChessBoard::allPieces = ChessBoard::allWhites | ChessBoard::allBlacks;
+	//initialize booleans for castlings
+	whiteKingMoved = whiteRookKingMoved = whiteRookQueenMoved = false;
+	blackKingMoved = blackRookKingMoved = blackRookQueenMoved = false;
 }
 
 ChessBoard::ChessBoard() {
@@ -165,12 +168,18 @@ string ChessBoard::bitboardToMove(ChessBoard::bitboard_t b) {
 
 std::vector<ChessBoard::bitboard_t> ChessBoard::split(ChessBoard::bitboard_t b) {
     std::vector<ChessBoard::bitboard_t> v;
-    for (int i = 0; i < 64; i++) {
+	while(b)
+	{
+		v.push_back(b & (-b));
+		b &= (b - 1);
+	}
+ /*   for (int i = 0; i < 64; i++) {
         if (square[i] & b) {
             v.push_back(square[i]);
         }
     }
-    return v;
+ */ 
+	return v;
 }
 
 ChessBoard::bitboard_t ChessBoard::moveToBitboard(string move) {

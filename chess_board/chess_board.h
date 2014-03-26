@@ -9,6 +9,12 @@ class ChessBoard {
 		typedef unsigned long long bitboard_t;
         typedef std::pair<bitboard_t, bitboard_t> PairBB;
         typedef enum {WHITE, BLACK} player_t ;
+//	private:
+//  public for testing purposes
+	public:
+		//used for castlings (ro: rocada)
+		bool whiteKingMoved, whiteRookKingMoved, whiteRookQueenMoved;
+		bool blackKingMoved, blackRookKingMoved, blackRookQueenMoved;
 	public:
         /*
          * current player color (no racism involved)
@@ -106,6 +112,7 @@ class ChessBoard {
          * checks if our king is in chess
          */
         std::vector< std::pair<ChessBoard::bitboard_t, int> >isCheck();
+        std::vector< std::pair<ChessBoard::bitboard_t, int> >isCheck(bitboard_t);
 
         /*
          * returns a vector with all the possible moves
@@ -158,6 +165,13 @@ class ChessBoard {
          */
 		bitboard_t getBlackPawnAllMoves(bitboard_t b);
 		bitboard_t getBlackPawnRandomMove(bitboard_t b);
+
+		/*
+		 * checks if a castling is possible
+		 * TODO implement doCastling
+		 */
+		bool canKingsideCastling();
+		bool canQueensideCastling();
 };
 
 #endif
