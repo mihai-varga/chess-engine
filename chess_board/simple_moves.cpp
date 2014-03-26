@@ -69,8 +69,9 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
  */
 vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitboard_t king) {
     ChessBoard::bitboard_t opponentAllMoves = 0ULL;
-    ChessBoard::player_t opponentColor = current_player;
+    ChessBoard::player_t opponentColor = current_player == WHITE ? BLACK : WHITE;
     vector<ChessBoard::bitboard_t> aux;
+    ChessBoard::bitboard_t allOpponentMoves = 0ULL;
     // attacker position  &  attacker bitboard index
     vector< pair<ChessBoard::bitboard_t, int> > attackers;
 	if(king == 0ULL)
@@ -87,16 +88,20 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
 		}
 	}
     if (opponentColor == WHITE) {    
+        std::cout << "PIZDA\n";
         // check queen
-        opponentAllMoves |= getQueenAllMoves(boards[4]); 
-        if (king & getQueenAllMoves(boards[4])) {
-            ChessBoard::bitboard_t queen_pos = split(boards[4])[0];
-            attackers.push_back(make_pair(queen_pos, 4));
+        aux = split(boards[4]);
+        for (unsigned int i = 0; i < aux.size(); i++) {
+            //allOpponentMoves |= getQueenAllMoves(aux[i]);
+            if (king & getQueenAllMoves(aux[i])) {
+                attackers.push_back(make_pair(aux[i], 4));
+            }
         }
         
         // check rooks
         aux = split(boards[1]);
         for (unsigned int i = 0; i < aux.size(); i++) {
+            allOpponentMoves |= getRooksAllMoves(aux[i]);
             if (king & getRooksAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 1));
             }
@@ -105,6 +110,7 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
         // check knights
         aux = split(boards[2]);
         for (unsigned int i = 0; i < aux.size(); i++) {
+            allOpponentMoves |= getKnightAllMoves(aux[i]);
             if (king & getKnightAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 2));
             }
@@ -113,6 +119,7 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
         // check bishops
         aux = split(boards[3]);
         for (unsigned int i = 0; i < aux.size(); i++) {
+            allOpponentMoves |= getBishopAllMoves(aux[i]);
             if (king & getBishopAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 3));
             }
@@ -121,10 +128,12 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
         // check pawns
         aux = split(boards[0]);
         for (unsigned int i = 0; i < aux.size(); i++) {
+            allOpponentMoves |= getWhitePawnAllMoves(aux[i]);
             if (king & getWhitePawnAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 0));
             }
         }
+        printBoard(allOpponentMoves);
     } else {
         // check queen
         if (king & getQueenAllMoves(boards[10])) {
@@ -143,7 +152,6 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
         // check knights
         aux = split(boards[8]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            opponentAllMoves |= getKnightAllMoves(aux[i]);
             if (king & getKnightAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 8));
             }
@@ -152,7 +160,6 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
         // check bishops
         aux = split(boards[9]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            opponentAllMoves |= getBishopAllMoves(aux[i]);
             if (king & getBishopAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 9));
             }
@@ -161,7 +168,6 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
         // check pawns
         aux = split(boards[6]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            opponentAllMoves |= getBlackPawnAllMoves(aux[i]);
             if (king & getBlackPawnAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 6));
             }
@@ -174,6 +180,11 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck() {
 	return this->isCheck(0ULL);
 }
 
+bool ChessBoard::isCheckMate() {
+
+    return false;
+}
+
 /*
  * 0 1 2
  * 3 K 4
@@ -181,6 +192,7 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck() {
  */
 vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboard_t b) {
     vector<ChessBoard::bitboard_t> moves(8, 0);
+    vector<ChessBoard::bitboard_t> finalmoves;
     // trimA and trimH check if the king is on
     // file A or H respectively
     ChessBoard::bitboard_t trimA, trimH;
@@ -194,24 +206,26 @@ vector<ChessBoard::bitboard_t> ChessBoard::getKingMoves(ChessBoard::bitboard_t b
     moves[5] = trimA << 7;
     moves[6] = b << 8;
     moves[7] = trimH << 9;
-    return moves;
+    if (b & ChessBoard::boards[0])
+    {
+        for (unsigned int i = 0; i < 8; i++)
+            if (!(moves[i] & ChessBoard::allWhites))
+                finalmoves.push_back(moves[i]);
+    }
+    else
+    {
+        for (unsigned int i = 0; i < 8; i++)
+            if (!(moves[i] & ChessBoard::allBlacks))
+                finalmoves.push_back(moves[i]);
+    }
+    return finalmoves;
 }
 
 ChessBoard::bitboard_t ChessBoard::getKingAllMoves(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
     vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
-    for (int i = 0; i < 8; i++) {
+    for (unsigned int i = 0; i < moves.size(); i++) {
         ret |= moves[i];
-    }
-    // if moving the white king
-    if (b == ChessBoard::boards[5]) {
-        ret &= ~ChessBoard::allWhites;
-    } else {
-        if (b == ChessBoard::boards[11]) { // if moving the black king
-                ret &= ~ChessBoard::allBlacks;
-        } else {
-            throw 1;
-        }
     }
     return ret;
 }
@@ -220,14 +234,24 @@ ChessBoard::bitboard_t ChessBoard::getKingRandomMove(ChessBoard::bitboard_t b) {
     ChessBoard::bitboard_t ret = 0;
     vector<ChessBoard::bitboard_t> moves = getKingMoves(b);
     srand(time(NULL));
-    ret = moves[rand() % 8];
+    ret = moves[rand() % moves.size()];
     return ret;
 }
 
 ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
     pair<int, int> initialCoords = ChessBoard::getCoords(b);
     ChessBoard::bitboard_t ret = 0;
-    bitboard_t currentPlayerPieces = current_player == WHITE ? allWhites : allBlacks;
+    bitboard_t currentPlayerPieces, opponentPieces;
+    if (b & ChessBoard::boards[1])
+    {
+        currentPlayerPieces = allWhites;
+        opponentPieces = allBlacks;
+    }
+    else
+    {
+        currentPlayerPieces = allBlacks;
+        opponentPieces = allWhites;
+    }
     //return (ChessBoard::maskFile[initialCoords.second-1] ^ ChessBoard::maskRank[initialCoords.first-1]);
     int x = initialCoords.first - 1;
     int y = initialCoords.second - 1;
@@ -241,6 +265,8 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
             i++;
             x--;
         } else {
+            if (tmp & opponentPieces)
+                ret |= tmp;
             break;
         }
     }
@@ -254,6 +280,8 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
             i++;
             x++;
         } else {
+            if (tmp & opponentPieces)
+                ret |= tmp;
             break;
         }
     }
@@ -266,6 +294,8 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
             i++;
             y--;
         } else {
+            if (tmp & opponentPieces)
+                ret |= tmp;
             break;
         }
     }
@@ -279,6 +309,8 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
             i++;
             y++;
         } else {
+            if (tmp & opponentPieces)
+                ret |= tmp;
             break;
         }
     }
@@ -294,6 +326,7 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
  */
 vector<ChessBoard::bitboard_t> ChessBoard::getKnightMoves(ChessBoard::bitboard_t b) {
     vector<ChessBoard::bitboard_t> moves(8, 0);
+    vector<ChessBoard::bitboard_t> finalmoves;
     // trimAB and trimGH check if the knight is on
     // files (A, B) or (G, H) respectively
     ChessBoard::bitboard_t trimAB, trimGH, trimA, trimH;
@@ -309,7 +342,19 @@ vector<ChessBoard::bitboard_t> ChessBoard::getKnightMoves(ChessBoard::bitboard_t
     moves[5] = trimH << 17;
     moves[6] = trimA << 15;
     moves[7] = trimAB << 6;
-    return moves;
+    if (b & ChessBoard::boards[2])
+    {
+        for (int i = 0; i < 8; i++)
+            if (!(moves[i] & ChessBoard::allWhites))
+                finalmoves.push_back(moves[i]);
+    }
+    else
+    {
+        for (int i = 0; i < 8; i++)
+            if (!(moves[i] & ChessBoard::allWhites))
+                finalmoves.push_back(moves[i]);
+    }
+    return finalmoves;
 }
 
 ChessBoard::bitboard_t ChessBoard::getKnightAllMoves(ChessBoard::bitboard_t b) {
@@ -318,16 +363,7 @@ ChessBoard::bitboard_t ChessBoard::getKnightAllMoves(ChessBoard::bitboard_t b) {
     for (int i = 0; i < 8; i++) {
         ret |= moves[i];
     }
-    // if moving a white knight
-    if (b & ChessBoard::boards[2]) {
-        ret &= ~ChessBoard::allWhites;
-    } else {
-        if (b & ChessBoard::boards[8]) { // if moving a black knight
-                ret &= ~ChessBoard::allBlacks;
-        } else {
-            throw 1;
-        }
-    }
+
     return ret;
 }
 
@@ -335,7 +371,7 @@ ChessBoard::bitboard_t ChessBoard::getKnightRandomMove(ChessBoard::bitboard_t b)
     ChessBoard::bitboard_t ret = 0;
     vector<ChessBoard::bitboard_t> moves = getKnightMoves(b);
     srand(time(NULL));
-    ret = moves[rand() % 8];
+    ret = moves[rand() % moves.size()];
     return ret;
 }
 
@@ -343,7 +379,17 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
 {
     pair<int, int> initialCoords = ChessBoard::getCoords(b);
 	bitboard_t ret = 0;
-    bitboard_t currentPlayerPieces = current_player == WHITE ? allWhites : allBlacks;
+    bitboard_t currentPlayerPieces, opponentPieces;
+    if (b & ChessBoard::boards[3])
+    {
+        currentPlayerPieces = allWhites;
+        opponentPieces = allBlacks;
+    }
+    else
+    {
+        currentPlayerPieces = allBlacks;
+        opponentPieces = allWhites;
+    }
 
 	//top,left
 	int x = initialCoords.first;
@@ -358,6 +404,8 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
             x--;
             y--;
         } else {
+            if (tmp & opponentPieces)
+                ret |= tmp;
             break;
         }
 	}
@@ -374,6 +422,8 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
             x--;
             y++;
         } else {
+            if (tmp & opponentPieces)
+                ret |= tmp;
             break;
         }
 	}
@@ -390,6 +440,8 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
             x++;
             y--;
         } else {
+            if (tmp & opponentPieces)
+                ret |= tmp;
             break;
         }
 	}
@@ -406,6 +458,8 @@ ChessBoard::bitboard_t ChessBoard::getBishopAllMoves(ChessBoard::bitboard_t b)
             x++;
             y++;
         } else {
+            if (tmp & opponentPieces)
+                ret |= tmp;
             break;
         }
 	}
@@ -428,9 +482,14 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
 vector<ChessBoard::bitboard_t> ChessBoard::getWhitePawnMoves(ChessBoard::bitboard_t b) {
     vector<ChessBoard::bitboard_t> moves;
     pair<int, int> initial_coords = ChessBoard::getCoords(b);
-    moves.push_back(b << 8);
-    if (initial_coords.first == 2)
-        moves.push_back(b << 16);
+    ChessBoard::printBoard(ChessBoard::allBlacks);
+    ChessBoard::printBoard(b << 8);
+    if (!((b << 8) & ChessBoard::allWhites) && !((b << 8) & ChessBoard::allBlacks))
+    {
+        moves.push_back(b << 8);
+        if ((initial_coords.first == 2) && !((b << 16) & ChessBoard::allWhites) && !((b << 16) & ChessBoard::allBlacks))
+            moves.push_back(b << 16);
+    }
     if (ChessBoard::allBlacks & (b << 7))
         moves.push_back(b << 7);
     if (ChessBoard::allBlacks & (b << 9))
@@ -468,9 +527,12 @@ ChessBoard::bitboard_t ChessBoard::getWhitePawnRandomMove(ChessBoard::bitboard_t
 vector<ChessBoard::bitboard_t> ChessBoard::getBlackPawnMoves(ChessBoard::bitboard_t b) {
     vector<ChessBoard::bitboard_t> moves;
     pair<int, int> initial_coords = ChessBoard::getCoords(b);
-    moves.push_back(b >> 8);
-    if (initial_coords.first == 7)
-        moves.push_back(b >> 16);
+    if (!((b >> 8) & ChessBoard::allWhites) && !((b >> 8) & ChessBoard::allBlacks))
+    {
+        moves.push_back(b >> 8);
+        if ((initial_coords.first == 7) && !((b >> 16) & ChessBoard::allWhites) && !((b >> 16) & ChessBoard::allBlacks))
+            moves.push_back(b >> 16);
+    }
     if (ChessBoard::allBlacks & (b >> 7))
         moves.push_back(b >> 7);
     if (ChessBoard::allBlacks & (b >> 9))
