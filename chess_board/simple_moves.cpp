@@ -112,12 +112,7 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck() {
             }
         }
         printBoard(allOpponentMoves);
-        for (unsigned int i = 0; i < attackers.size(); i++) {
-            std::cout << "SAH COAIE " << attackers[i].second << " ";
-        }
-        std::cout << std::endl;
     } else {
-        std::cout << "PULA\n";
         // check queen
         if (boards[5] & getQueenAllMoves(boards[10])) {
             ChessBoard::bitboard_t queen_pos = split(boards[10])[0];
@@ -155,12 +150,13 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck() {
                 attackers.push_back(make_pair(aux[i], 6));
             }
         }
-        for (unsigned int i = 0; i < attackers.size(); i++) {
-            std::cout << "SAH COAIE " << attackers[i].second << " ";
-        }
-        std::cout << std::endl;
     }
     return attackers;
+}
+
+bool ChessBoard::isCheckMate() {
+
+    return true;
 }
 
 /*
@@ -460,7 +456,6 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
 vector<ChessBoard::bitboard_t> ChessBoard::getWhitePawnMoves(ChessBoard::bitboard_t b) {
     vector<ChessBoard::bitboard_t> moves;
     pair<int, int> initial_coords = ChessBoard::getCoords(b);
-    cout << "alex-suge" << endl;
     ChessBoard::printBoard(ChessBoard::allBlacks);
     ChessBoard::printBoard(b << 8);
     if (!((b << 8) & ChessBoard::allWhites) && !((b << 8) & ChessBoard::allBlacks))
