@@ -116,10 +116,10 @@ void play(ChessBoard &cb) {
 }
 
 int main() {
-    ChessBoard cb;
-    play(cb);
-    //ChessBoard::bitboard_t b = cb.getRooksAllMoves(cb.getSquare('b', 5));
-    //cb.printBoard(b);
-    return 0;   
+	ChessBoard cb;
+	play(cb);
+	//ChessBoard::bitboard_t b = cb.getRooksAllMoves(cb.getSquare('b', 5));
+	//cb.printBoard(b);
+	return 0;      
 }
 
