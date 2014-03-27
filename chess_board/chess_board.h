@@ -113,7 +113,6 @@ class ChessBoard {
          */
         void isCheck(std::vector<std::pair<ChessBoard::bitboard_t, int> >& attackers);
         void isCheck(std::vector<std::pair<ChessBoard::bitboard_t, int> >& attackers, bitboard_t);
-        bool isCheckMate();
 
 		/*
 		 * checks for check mate
