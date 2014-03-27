@@ -132,8 +132,16 @@ class ChessBoard {
 		bitboard_t getKingRandomMove(bitboard_t b);
 
 		bitboard_t getRooksAllMoves(bitboard_t b);
+        void getRooksMoves(std::vector<bitboard_t> &moves, bitboard_t b);
+        bitboard_t getRooksRandomMove (bitboard_t b);
+
 		bitboard_t getBishopAllMoves(bitboard_t b);
-		bitboard_t getQueenAllMoves(bitboard_t b);
+        void getBishopMoves(std::vector<bitboard_t> &moves, bitboard_t b);
+        bitboard_t getBishopRandomMove (bitboard_t b);
+		
+        void getQueenMoves(std::vector<bitboard_t> &moves, bitboard_t b);
+        bitboard_t getQueenAllMoves(bitboard_t b);
+        bitboard_t getQueenRandomMove (bitboard_t b);
 
         /*
          * returns a vector with all the possible moves
