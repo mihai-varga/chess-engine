@@ -102,7 +102,7 @@ class ChessBoard {
          */
         bitboard_t moveToBitboard(std::string move);
 
-        std::vector<bitboard_t> split(bitboard_t b);
+        std::vector<bitboard_t>& split(bitboard_t b);
 
         // updates the board after a new move
         void setMove(bitboard_t from, bitboard_t to);
@@ -111,8 +111,9 @@ class ChessBoard {
         /*
          * checks if our king is in chess
          */
-        std::vector< std::pair<ChessBoard::bitboard_t, int> >isCheck();
-        std::vector< std::pair<ChessBoard::bitboard_t, int> >isCheck(bitboard_t);
+        void isCheck(std::vector<std::pair<ChessBoard::bitboard_t, int> >& attackers);
+        void isCheck(std::vector<std::pair<ChessBoard::bitboard_t, int> >& attackers, bitboard_t);
+        bool isCheckMate();
 
 		/*
 		 * checks for check mate
@@ -123,7 +124,7 @@ class ChessBoard {
          * returns a vector with all the possible moves
          * a king can make
          */
-		std::vector<bitboard_t> getKingMoves(bitboard_t b);
+		void getKingMoves(std::vector<bitboard_t>& moves, bitboard_t b);
         /*
          * returns a bitboard_t with all the possible moves
          * a king can make
@@ -139,7 +140,7 @@ class ChessBoard {
          * returns a vector with all the possible moves
          * a knight can make
          */
-		std::vector<bitboard_t> getKnightMoves(bitboard_t b);
+		void getKnightMoves(std::vector<bitboard_t>& moves, bitboard_t b);
         /*
          * returns a bitboard_t with all the possible moves
          * a knight can make
@@ -151,7 +152,7 @@ class ChessBoard {
          * returns a vector with all the possible moves
          * a white pawn can make
          */
-		std::vector<bitboard_t> getWhitePawnMoves(bitboard_t b);
+		void getWhitePawnMoves(std::vector<bitboard_t>& moves, bitboard_t b);
         /*
          * returns a bitboard_t with all the possible moves
          * a white pawn can make
@@ -163,7 +164,7 @@ class ChessBoard {
          * returns a vector with all the possible moves
          * a black pawn can make
          */
-		std::vector<bitboard_t> getBlackPawnMoves(bitboard_t b);
+		void getBlackPawnMoves(std::vector<bitboard_t>& moves, bitboard_t b);
         /*
          * returns a bitboard_t with all the possible moves
          * a black pawn can make
