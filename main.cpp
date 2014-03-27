@@ -117,9 +117,35 @@ void play(ChessBoard &cb) {
 
 int main() {
 	ChessBoard cb;
-	play(cb);
-	//ChessBoard::bitboard_t b = cb.getRooksAllMoves(cb.getSquare('b', 5));
-	//cb.printBoard(b);
-	return 0;      
+	//play(cb);
+	ChessBoard::bitboard_t b = cb.square[7];
+//	cb.printBoard(b);
+	cb.current_player = cb.WHITE;
+	cb.allPieces &= ~cb.square[1];
+	cb.allPieces &= ~cb.square[2];
+	cb.allPieces &= ~cb.square[3];
+	cb.allPieces &= ~cb.square[58];
+	cb.allPieces &= ~cb.square[57];
+	cb.allPieces &= ~cb.square[59];
+	cb.allBlacks &= cb.allPieces;
+	cb.allWhites &= cb.allPieces;
+	if(cb.isCheck(cb.square[3]).size()>0)
+		printf("asd\n");
+	printf("printez mv\n");
+	cb.printBoard(cb.allPieces);
+	cb.printBoard(cb.allWhites);
+	cb.printBoard(cb.allBlacks);
+	if(cb.canQueensideCastling())
+		printf("asd\n");
+/*	cb.doKingsideCastling();
+	printf("printez mv\n");
+	cb.printBoard(cb.allPieces);
+	cb.printBoard(cb.allWhites);
+	cb.printBoard(cb.allBlacks);
+	cb.printBoard(cb.boards[1]);
+	cb.printBoard(cb.boards[5]);
+	cb.printBoard(cb.boards[7]);
+	cb.printBoard(cb.boards[11]);
+*/	return 0;      
 }
 
