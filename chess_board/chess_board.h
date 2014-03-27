@@ -102,7 +102,7 @@ class ChessBoard {
          */
         bitboard_t moveToBitboard(std::string move);
 
-        std::vector<bitboard_t>& split(bitboard_t b);
+        std::vector<bitboard_t> split(bitboard_t b);
 
         // updates the board after a new move
         void setMove(bitboard_t from, bitboard_t to);

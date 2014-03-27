@@ -166,19 +166,20 @@ string ChessBoard::bitboardToMove(ChessBoard::bitboard_t b) {
     return move;
 }
 
-std::vector<ChessBoard::bitboard_t>& ChessBoard::split(ChessBoard::bitboard_t b) {
+std::vector<ChessBoard::bitboard_t> ChessBoard::split(ChessBoard::bitboard_t b) {
     std::vector<ChessBoard::bitboard_t> v;
+    /*
 	while(b)
 	{
 		v.push_back(b & (-b));
 		b &= (b - 1);
-	}
- /*   for (int i = 0; i < 64; i++) {
+	}*/
+    for (int i = 0; i < 64; i++) {
         if (square[i] & b) {
             v.push_back(square[i]);
         }
     }
- */ 
+ 
 	return v;
 }
 
