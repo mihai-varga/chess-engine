@@ -114,6 +114,11 @@ class ChessBoard {
         std::vector< std::pair<ChessBoard::bitboard_t, int> >isCheck();
         std::vector< std::pair<ChessBoard::bitboard_t, int> >isCheck(bitboard_t);
 
+		/*
+		 * checks for check mate
+		 */
+        bool isCheckMate();
+
         /*
          * returns a vector with all the possible moves
          * a king can make
@@ -168,10 +173,13 @@ class ChessBoard {
 
 		/*
 		 * checks if a castling is possible
+		 * if so, it does it
 		 * TODO implement doCastling
 		 */
 		bool canKingsideCastling();
 		bool canQueensideCastling();
+		bool doKingsideCastling();
+		bool doQueensideCastling();
 };
 
 #endif

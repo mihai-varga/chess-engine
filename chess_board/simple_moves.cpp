@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <time.h>
 
+#include <stdio.h>
+
 using namespace std;
 
 void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
@@ -79,6 +81,7 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
 		if (opponentColor == WHITE)
 		{
 			//set to black king
+			printf("negru\n");
 			king = boards[11];
 		}
 		else
@@ -133,7 +136,7 @@ vector< pair<ChessBoard::bitboard_t, int> > ChessBoard::isCheck(ChessBoard::bitb
                 attackers.push_back(make_pair(aux[i], 0));
             }
         }
-        printBoard(allOpponentMoves);
+//        printBoard(allOpponentMoves);
     } else {
         // check queen
         if (king & getQueenAllMoves(boards[10])) {
@@ -567,6 +570,7 @@ ChessBoard::bitboard_t ChessBoard::getBlackPawnRandomMove(ChessBoard::bitboard_t
 bool ChessBoard::canKingsideCastling()
 {
 	ChessBoard::bitboard_t king;
+	vector<pair<ChessBoard::bitboard_t, int> > attackers;
 	//check if king or king's rook have moved
 	if(current_player == WHITE)
 	{
@@ -581,11 +585,19 @@ bool ChessBoard::canKingsideCastling()
 		king = boards[11];
 	}
 	//check if check from, through or to
-	if(isCheck().size() > 0)
+	isCheck(attackers);
+	if(attackers.size() > 0)
 		return false;
 	if((king<<1 & allPieces) || (king<<2 & allPieces))
 		return false;
-	if((isCheck(king<<1).size() > 0) || (isCheck(king<<2).size() > 0))
+
+	attackers.clear();
+	isCheck(attackers, king<<1);
+	int s1 = attackers.size();
+	attackers.clear();
+	isCheck(attackers, king<<2);
+	int s2 = attackers.size();
+	if(s1 > 0 || s2 > 0)
 		return false;
 	return true;
 }
@@ -594,6 +606,7 @@ bool ChessBoard::canKingsideCastling()
 bool ChessBoard::canQueensideCastling()
 {
 	ChessBoard::bitboard_t king;
+	vector<pair<ChessBoard::bitboard_t, int> > attackers;
 	//check if king or king's rook have moved
 	if(current_player == WHITE)
 	{
@@ -608,11 +621,127 @@ bool ChessBoard::canQueensideCastling()
 		king = boards[11];
 	}
 	//check if check from, through or to
-	if(isCheck().size() > 0)
+	isCheck(attackers);
+	if(attackers.size() > 0)
+	{
+		printf("test 1\n");
 		return false;
+	}
+
 	if((king>>1 & allPieces) || (king>>2 & allPieces) || (king>>3 & allPieces))
+	{
+		printf("test 2\n");
 		return false;
-	if((isCheck(king>>1).size() > 0) || (isCheck(king>>2).size() > 0))
+	}
+	attackers.clear();
+	isCheck(attackers, king>>1);
+	int s1 = attackers.size();
+	attackers.clear();
+	isCheck(attackers, king>>2);
+	int s2 = attackers.size();
+	
+	if(s1 > 0 || s2 > 0)
+	{
+		printf("test 3\n");
 		return false;
+	}
 	return true;
+}
+
+bool ChessBoard::doKingsideCastling()
+{
+	if(!canKingsideCastling())
+	{
+		//this should be checked before calling
+		//doCastling, so this if should be commented
+		return false;
+	}
+	if(current_player == WHITE)
+	{
+		//erasing king and rook from allPieces
+		allPieces &= ~boards[5];
+		//we know that the king's rook has not moved
+		allPieces &= ~square[7];
+		//same for allWhites
+		allWhites &= ~boards[5];
+		allWhites &= ~square[7];
+		
+		boards[1] &= ~square[7];
+		boards[1] |= square[5];
+		boards[5] = boards[5]<<2;
+
+		allPieces |= boards[1] | boards[5];
+		allWhites |= boards[1] | boards[5];
+		
+		return true;
+	}
+	else
+	{
+		//erasing king and rook from allPieces
+		allPieces &= ~boards[11];
+		//we know that the king rook has not moved
+		allPieces &= ~square[63];
+		//same for allWhites
+		allBlacks &= ~boards[11];
+		allBlacks &= ~square[63];
+		
+		boards[7] &= ~square[63];
+		boards[7] |= square[61];
+		boards[11] = boards[11]<<2;
+
+		allPieces |= boards[11] | boards[7];
+		allBlacks |= boards[11] | boards[7];
+		
+		return true;
+	}
+	return false;
+}
+
+bool ChessBoard::doQueensideCastling()
+{
+	if(!canQueensideCastling())
+	{
+		//this should be checked before calling
+		//doCastling, so this if should be commented
+		return false;
+	}
+	if(current_player == WHITE)
+	{
+		//erasing king and rook from allPieces
+		allPieces &= ~boards[5];
+		//we know that the king's rook has not moved
+		allPieces &= ~square[0];
+		//same for allWhites
+		allWhites &= ~boards[5];
+		allWhites &= ~square[0];
+		
+		boards[1] &= ~square[0];
+		boards[1] |= square[3];
+		boards[5] = boards[5]>>2;
+
+		allPieces |= boards[1] | boards[5];
+		allWhites |= boards[1] | boards[5];
+		
+		return true;
+	}
+	else
+	{
+		//erasing king and rook from allPieces
+		allPieces &= ~boards[11];
+		//we know that the king rook has not moved
+		allPieces &= ~square[56];
+		//same for allWhites
+		allBlacks &= ~boards[11];
+		allBlacks &= ~square[56];
+		
+		boards[7] &= ~square[56];
+		boards[7] |= square[59];
+		boards[11] = boards[11]>>2;
+
+		allPieces |= boards[11] | boards[7];
+		allBlacks |= boards[11] | boards[7];
+		
+		return true;
+	}
+	return false;
 }
