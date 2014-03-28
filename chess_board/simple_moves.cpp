@@ -107,6 +107,10 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
         aux = split(boards[1]);
         for (unsigned int i = 0; i < aux.size(); i++) {
             allOpponentMoves |= getRooksAllMoves(aux[i]);
+            vector<ChessBoard::bitboard_t> aux_vect;
+            getRooksMoves (aux_vect, aux[i]);
+            for (unsigned int k = 0; k < aux_vect.size(); k++)
+                ChessBoard::printBoard(aux_vect[k]);
             //ChessBoard::printBoard(getRooksAllMoves(aux[i]));
             if (king & getRooksAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 1));
@@ -126,10 +130,6 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
         aux = split(boards[3]);
         for (unsigned int i = 0; i < aux.size(); i++) {
             allOpponentMoves |= getBishopAllMoves(aux[i]);
-            vector<ChessBoard::bitboard_t> aux_vect;
-            getBishopMoves(aux_vect, aux[i]);
-            for (unsigned int k = 0; k < aux_vect.size(); k++)
-                ChessBoard::printBoard(aux_vect[k]);
             if (king & getBishopAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 3));
             }
@@ -272,11 +272,11 @@ void ChessBoard::getRooksMoves (vector <ChessBoard::bitboard_t> &moves, ChessBoa
             moves.push_back(tmp);
             i++;
             x--;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     x = initialCoords.first+1;
     i = 1;
@@ -287,11 +287,11 @@ void ChessBoard::getRooksMoves (vector <ChessBoard::bitboard_t> &moves, ChessBoa
             moves.push_back(tmp);
             i++;
             x++;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     i = 1;
     while (y > 0)
@@ -301,11 +301,11 @@ void ChessBoard::getRooksMoves (vector <ChessBoard::bitboard_t> &moves, ChessBoa
             moves.push_back(tmp);
             i++;
             y--;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     y = initialCoords.second+1;
     i = 1;
@@ -316,11 +316,11 @@ void ChessBoard::getRooksMoves (vector <ChessBoard::bitboard_t> &moves, ChessBoa
             moves.push_back(tmp);
             i++;
             y++;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
 }
 
@@ -350,11 +350,11 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
             ret |= tmp;
             i++;
             x--;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     x = initialCoords.first+1;
     i = 1;
@@ -365,11 +365,11 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
             ret |= tmp;
             i++;
             x++;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     i = 1;
     while (y > 0)
@@ -379,11 +379,11 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
             ret |= tmp;
             i++;
             y--;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     y = initialCoords.second+1;
     i = 1;
@@ -394,11 +394,11 @@ ChessBoard::bitboard_t ChessBoard::getRooksAllMoves (ChessBoard::bitboard_t b){
             ret |= tmp;
             i++;
             y++;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     return ret;
 }
@@ -686,11 +686,11 @@ void ChessBoard::getQueenMoves(vector<ChessBoard::bitboard_t> &moves, ChessBoard
             i++;
             x--;
             y--;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else 
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
 	}
 	//top,right
 	x = initialCoords.first;
@@ -704,11 +704,11 @@ void ChessBoard::getQueenMoves(vector<ChessBoard::bitboard_t> &moves, ChessBoard
             i++;
             x--;
             y++;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
 	}
 	//bot,left
 	x = initialCoords.first;
@@ -722,11 +722,11 @@ void ChessBoard::getQueenMoves(vector<ChessBoard::bitboard_t> &moves, ChessBoard
             i++;
             x++;
             y--;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else 
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
 	}
 	//bot,right
 	x = initialCoords.first;
@@ -740,11 +740,11 @@ void ChessBoard::getQueenMoves(vector<ChessBoard::bitboard_t> &moves, ChessBoard
             i++;
             x++;
             y++;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else 
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
 	}
 
     x = initialCoords.first - 1;
@@ -758,11 +758,11 @@ void ChessBoard::getQueenMoves(vector<ChessBoard::bitboard_t> &moves, ChessBoard
             moves.push_back(tmp);
             i++;
             x--;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     x = initialCoords.first+1;
     i = 1;
@@ -773,11 +773,11 @@ void ChessBoard::getQueenMoves(vector<ChessBoard::bitboard_t> &moves, ChessBoard
             moves.push_back(tmp);
             i++;
             x++;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     i = 1;
     while (y > 0)
@@ -787,11 +787,11 @@ void ChessBoard::getQueenMoves(vector<ChessBoard::bitboard_t> &moves, ChessBoard
             moves.push_back(tmp);
             i++;
             y--;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     y = initialCoords.second+1;
     i = 1;
@@ -802,11 +802,11 @@ void ChessBoard::getQueenMoves(vector<ChessBoard::bitboard_t> &moves, ChessBoard
             moves.push_back(tmp);
             i++;
             y++;
-        } else {
-            if (tmp & opponentPieces)
-                moves.push_back(tmp);
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
 }
 
@@ -838,11 +838,11 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
             i++;
             x--;
             y--;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
 	}
 	//top,right
 	x = initialCoords.first;
@@ -856,11 +856,11 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
             i++;
             x--;
             y++;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
 	}
 	//bot,left
 	x = initialCoords.first;
@@ -874,11 +874,11 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
             i++;
             x++;
             y--;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
 	}
 	//bot,right
 	x = initialCoords.first;
@@ -892,11 +892,11 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
             i++;
             x++;
             y++;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
 	}
 
     x = initialCoords.first - 1;
@@ -910,11 +910,11 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
             ret |= tmp;
             i++;
             x--;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     x = initialCoords.first+1;
     i = 1;
@@ -925,11 +925,11 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
             ret |= tmp;
             i++;
             x++;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     i = 1;
     while (y > 0)
@@ -939,11 +939,11 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
             ret |= tmp;
             i++;
             y--;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
     y = initialCoords.second+1;
     i = 1;
@@ -954,11 +954,11 @@ ChessBoard::bitboard_t ChessBoard::getQueenAllMoves(ChessBoard::bitboard_t b)
             ret |= tmp;
             i++;
             y++;
-        } else {
-            if (tmp & opponentPieces)
-                ret |= tmp;
+        } 
+        else
             break;
-        }
+        if (tmp & opponentPieces)
+            break;
     }
 
 	return ret;
