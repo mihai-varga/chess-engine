@@ -100,13 +100,6 @@ void ChessBoard::printBoard(ChessBoard::bitboard_t b) {
     cout << endl;
 }
 
-ChessBoard::bitboard_t ChessBoard::getSquare(char c, int i) {
-    if (c > 'h' || c < 'a' || i > 8 || i < 1) throw 1;
-    int ind = c - 'a';
-    ind += (i - 1) * 8;
-    return ChessBoard::square[ind];
-}
-
 std::pair<int, int> ChessBoard::getCoords(ChessBoard::bitboard_t b)
 {
 	//i = line
@@ -141,19 +134,6 @@ int ChessBoard::getBoard(ChessBoard::bitboard_t b) {
     }
     throw "exception";
 }
-
-string ChessBoard::getNextMoveTmp(char *opp_move) {
-    int opp_move_int = (int)(opp_move[1] - '0');
-    string my_move = "";
-    my_move += opp_move[0];
-    my_move += numb[(8 - opp_move_int)];
-    my_move += opp_move[2];
-    opp_move_int = (int)(opp_move[3] - '0');
-    my_move += numb[(8 - opp_move_int)];
-    return my_move;
-}
-
-
 
 string ChessBoard::bitboardToMove(ChessBoard::bitboard_t b) {
     int index = 0;

@@ -71,11 +71,10 @@ class ChessBoard {
          * plots the board given as parameter
          */
 		void printBoard(bitboard_t b);
+
         /*
-         * sets a bit in the given position
-         * and returns the coresponding bitboard
+         * gets the x and y coresponding to bitboard_t b
          */
-		bitboard_t getSquare(char c, int i);
 		std::pair<int, int> getCoords(bitboard_t b);
         /* get the coresponding board
          * @params
@@ -87,9 +86,6 @@ class ChessBoard {
          * @return the index of the board
          */
         int getBoard(bitboard_t b);
-
-        // asta-i pita $$$
-        std::string getNextMoveTmp(char* opponent_move);
 
         /*
          * converts a bitboard to "chess format"
