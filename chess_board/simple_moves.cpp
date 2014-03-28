@@ -68,6 +68,7 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
  * ATTENTION !!!!
  * if king != 0 it checks from that position assuming it is the current player's king
  * TODO implement to check if king is not the current player's king
+ * TODO implement isCheck using rays
  */
 void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
                                  ChessBoard::bitboard_t king) {
