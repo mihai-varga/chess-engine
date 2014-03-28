@@ -107,7 +107,8 @@ class ChessBoard {
         // updates the board after a new move
         void setMove(bitboard_t from, bitboard_t to);
 
-        std::pair<bitboard_t, bitboard_t> getMove ();
+        // returns the move which the algorithm decides to make next
+        std::pair<bitboard_t, bitboard_t> getNextMove ();
         // check if a move is valid
         bool isValid(bitboard_t from, bitboard_t to);
         /*

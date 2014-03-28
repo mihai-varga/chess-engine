@@ -101,15 +101,20 @@ void play(ChessBoard &cb) {
         if (isMove(command)) {
             std::vector<std::pair<ChessBoard::bitboard_t, int> > attackers;
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
-            const char *my_move_const = cb.getNextMoveTmp(command).c_str();
-            char *my_move = strdup(my_move_const);
+            std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
+            std::string from = cb.bitboardToMove(p.first);
+            std::string to = cb.bitboardToMove(p.second);
+            char my_move[4];
+            my_move[0] = from[0];
+            my_move[1] = from[1];
+            my_move[2] = to[0];
+            my_move[3] = to[1];
             cb.isCheck(attackers);
-            if (attackers.size() == 0 && cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
-            //if (cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
-                cb.setMove(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2));
+            if (attackers.size() == 0 &&
+                    cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
+                //cb.setMove(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2));
                 printf("move %s\n", my_move);
-            }
-            else {
+            } else {
                 printf("resign\n");
             }
 

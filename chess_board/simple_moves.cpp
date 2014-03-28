@@ -33,7 +33,7 @@ void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     }
 }
 
-pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getMove()
+pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
 {
     ChessBoard::bitboard_t from, to;
     int start, chessman;
@@ -200,9 +200,6 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
 	}
     if (opponentColor == WHITE) {    
         std::cout << "PIZDA\n";
-        pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = getMove();
-        ChessBoard::printBoard(p.first);
-        ChessBoard::printBoard(p.second);
         // check queen
         aux = split(boards[4]);
         for (unsigned int i = 0; i < aux.size(); i++) {
