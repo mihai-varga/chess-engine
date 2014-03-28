@@ -33,6 +33,113 @@ void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     }
 }
 
+pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getMove()
+{
+    ChessBoard::bitboard_t from, to;
+    int start, chessman;
+    bool find_move = false;
+    srand(time(NULL));
+    if (ChessBoard::current_player == WHITE)
+        start = 0;
+    else
+        start = 6;
+    while (!find_move)
+    {
+        chessman = rand()%6;
+        vector<ChessBoard::bitboard_t> aux_vect;
+        switch(chessman)
+        {
+            case 0: aux_vect = split(ChessBoard::boards[start]);
+                    if (aux_vect.size())
+                    {
+                        from = aux_vect[rand() % aux_vect.size()];
+                        to = getBlackPawnRandomMove(from);
+                        if (to)
+                        {
+                            pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
+                            find_move = true;
+                            cout << chessman << endl;
+                            return move;
+                        }
+                    }
+                    break;
+            case 1: aux_vect = split(ChessBoard::boards[7]);
+                    if (aux_vect.size())
+                    {
+                        from = aux_vect[rand() % aux_vect.size()];
+                        to = getRooksRandomMove(from);
+                        if (to)
+                        {
+                            pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
+                            find_move = true;
+                            ChessBoard::printBoard(from);
+                            cout<< chessman << endl;
+                            return move;
+                        }
+                    }
+                    break;
+            case 2: aux_vect = split(ChessBoard::boards[start + 2]);
+                    if (aux_vect.size())
+                    {
+                        from = aux_vect[rand() % aux_vect.size()];
+                        to = getKnightRandomMove(from);
+                        if (to)
+                        {
+                            pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
+                            find_move = true;
+                            cout << chessman << endl;
+                            return move;
+                        }
+                    }
+                    break;
+            case 3: aux_vect = split(ChessBoard::boards[start + 3]);
+                    if (aux_vect.size())
+                    {
+                        from = aux_vect[rand() % aux_vect.size()];
+                        to = getBishopRandomMove(from);
+                        if (to)
+                        {
+                            pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
+                            find_move = true;
+                            cout << chessman << endl;
+                            return move;
+                        }
+                    }
+                    break;
+            case 4: aux_vect = split(ChessBoard::boards[start + 4]);
+                    if (aux_vect.size())
+                    {
+                        from = aux_vect[rand() % aux_vect.size()];
+                        to = getQueenRandomMove(from);
+                        if (to)
+                        {
+                            pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
+                            find_move = true;
+                            cout << chessman << endl;
+                            return move;
+                        }
+                    }
+                    break;
+            case 5: aux_vect = split(ChessBoard::boards[start + 5]);
+                    if (aux_vect.size())
+                    {
+                        from = aux_vect[rand() % aux_vect.size()];
+                        to = getKingRandomMove(from);
+                        if (to)
+                        {
+                            pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
+                            find_move = true;
+                            cout << chessman << endl;
+                            return move;
+                        }
+                    }
+                    break;
+        }
+    }
+    pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
+    return move;
+}
+
 bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
     if (from == 0 || to == 0) {
         return false;
@@ -93,6 +200,9 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
 	}
     if (opponentColor == WHITE) {    
         std::cout << "PIZDA\n";
+        pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = getMove();
+        ChessBoard::printBoard(p.first);
+        ChessBoard::printBoard(p.second);
         // check queen
         aux = split(boards[4]);
         for (unsigned int i = 0; i < aux.size(); i++) {
@@ -107,10 +217,6 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
         aux = split(boards[1]);
         for (unsigned int i = 0; i < aux.size(); i++) {
             allOpponentMoves |= getRooksAllMoves(aux[i]);
-            vector<ChessBoard::bitboard_t> aux_vect;
-            getRooksMoves (aux_vect, aux[i]);
-            for (unsigned int k = 0; k < aux_vect.size(); k++)
-                ChessBoard::printBoard(aux_vect[k]);
             //ChessBoard::printBoard(getRooksAllMoves(aux[i]));
             if (king & getRooksAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 1));
@@ -243,7 +349,8 @@ ChessBoard::bitboard_t ChessBoard::getKingRandomMove(ChessBoard::bitboard_t b) {
     vector<ChessBoard::bitboard_t> moves;
     getKingMoves(moves, b);
     srand(time(NULL));
-    ret = moves[rand() % moves.size()];
+    if (moves.size())
+        ret = moves[rand() % moves.size()];
     return ret;
 }
 
@@ -409,7 +516,8 @@ ChessBoard::bitboard_t ChessBoard::getRooksRandomMove (ChessBoard::bitboard_t b)
     vector<ChessBoard::bitboard_t> moves;
     getRooksMoves(moves, b);
     srand(time(NULL));
-    ret = moves[rand() % moves.size()];
+    if (moves.size())
+        ret = moves[rand() % moves.size()];
     return ret;
 }
 
@@ -446,7 +554,7 @@ void ChessBoard::getKnightMoves(vector<ChessBoard::bitboard_t>& moves, ChessBoar
     else
     {
         for (int i = 0; i < 8; i++)
-            if (!(moves[i] & ChessBoard::allWhites))
+            if (!(aux_moves[i] & ChessBoard::allBlacks))
                 moves.push_back(aux_moves[i]);
     }
 }
@@ -466,7 +574,8 @@ ChessBoard::bitboard_t ChessBoard::getKnightRandomMove(ChessBoard::bitboard_t b)
     vector<ChessBoard::bitboard_t> moves;
     getKnightMoves(moves, b);
     srand(time(NULL));
-    ret = moves[rand() % moves.size()];
+    if (moves.size())
+        ret = moves[rand() % moves.size()];
     return ret;
 }
 
@@ -655,7 +764,8 @@ ChessBoard::bitboard_t ChessBoard::getBishopRandomMove (ChessBoard::bitboard_t b
     vector<ChessBoard::bitboard_t> moves;
     getBishopMoves(moves, b);
     srand(time(NULL));
-    ret = moves[rand() % moves.size()];
+    if (moves.size())
+        ret = moves[rand() % moves.size()];
     return ret;
 }
 
@@ -970,8 +1080,8 @@ ChessBoard::bitboard_t ChessBoard::getQueenRandomMove (ChessBoard::bitboard_t b)
     vector<ChessBoard::bitboard_t> moves;
     getQueenMoves(moves, b);
     srand(time(NULL));
-    ret = moves[rand() % moves.size()];
-    cout << "aici coaie" << moves.size() << endl;
+    if (moves.size())
+        ret = moves[rand() % moves.size()];
     return ret;
 
 }
@@ -1013,10 +1123,13 @@ ChessBoard::bitboard_t ChessBoard::getWhitePawnAllMoves(ChessBoard::bitboard_t b
 }
  
 ChessBoard::bitboard_t ChessBoard::getWhitePawnRandomMove(ChessBoard::bitboard_t b) {
+    ChessBoard::bitboard_t ret = 0;
     vector<ChessBoard::bitboard_t> moves;
     getWhitePawnMoves(moves, b);
     srand(time(NULL));
-    return moves[rand() % moves.size()];
+    if (moves.size())
+        ret = moves[rand() % moves.size()];
+    return ret;
 }
  
 /*
