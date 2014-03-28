@@ -112,7 +112,6 @@ void play(ChessBoard &cb) {
             cb.isCheck(attackers);
             if (attackers.size() == 0 &&
                     cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
-                //cb.setMove(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2));
                 printf("move %s\n", my_move);
             } else {
                 printf("resign\n");
