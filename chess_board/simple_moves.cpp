@@ -146,6 +146,13 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     }
     // if WHITE moves
     if (current_player == WHITE) {
+        // check if the king will be in check
+        if (from & ChessBoard::boards[5]) {
+            std::vector<std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> > attackers;
+            isCheck(attackers, to);
+            if (attackers.size() != 0)
+                return false;
+        }
         if (from & ChessBoard::allWhites) {
             if (to & ChessBoard::allWhites) {
                 return false;
@@ -155,7 +162,15 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
         }
         return false;
     }
+    // if BLACK moves
     if (current_player == BLACK) {
+        // check if the king will be in check
+        if (from & ChessBoard::boards[11]) {
+            std::vector<std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> > attackers;
+            isCheck(attackers, to);
+            if (attackers.size() != 0)
+                return false;
+        }
         if (from & ChessBoard::allBlacks) {
             if (to & ChessBoard::allBlacks) {
                 return false;
@@ -186,7 +201,7 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
     // attacker position  &  attacker bitboard index
 	if(king == 0ULL)
 	{
-		if (opponentColor == WHITE)
+		if (current_player == BLACK)
 		{
 			//set to black king
 			printf("negru\n");
