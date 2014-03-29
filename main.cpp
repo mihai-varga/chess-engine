@@ -68,15 +68,15 @@ void play(ChessBoard &cb) {
 
         if (!strcmp(command, "go")) {
             //forceMode = false;
-            if (white) {
-                cb.setMove(cb.moveToBitboard("a2"), cb.moveToBitboard("a3"));
-                printf("move a2a3\n");
-            }
-            else {
-                cb.setMove(cb.moveToBitboard("a7"), cb.moveToBitboard("a6"));
-                printf("move a7a6\n");
-            }
-            continue;
+            //if (white) {
+            //    cb.setMove(cb.moveToBitboard("a2"), cb.moveToBitboard("a3"));
+            //    printf("move a2a3\n");
+            //}
+            //else {
+            //    cb.setMove(cb.moveToBitboard("a7"), cb.moveToBitboard("a6"));
+            //    printf("move a7a6\n");
+            //}
+            //continue;
         }
 
         if (!strcmp(command, "white")) {
