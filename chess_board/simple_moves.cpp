@@ -1246,7 +1246,7 @@ bool ChessBoard::canQueensideCastling()
 	attackers.clear();
 	isCheck(attackers, king>>2);
 	int s2 = attackers.size();
-	
+
 	if(s1 > 0 || s2 > 0)
 	{
 		printf("test 3\n");
