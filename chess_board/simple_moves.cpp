@@ -146,6 +146,7 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
 }
 
 bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
+    std::vector<std::pair<ChessBoard::bitboard_t, int> > attackers;
     if (from == 0 || to == 0) {
         return false;
     }
@@ -153,7 +154,6 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     if (current_player == WHITE) {
         // check if the king will be in check
         if (from & ChessBoard::boards[5]) {
-            std::vector<std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> > attackers;
             isCheck(attackers, to);
             if (attackers.size() != 0)
                 return false;
@@ -171,7 +171,6 @@ bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     if (current_player == BLACK) {
         // check if the king will be in check
         if (from & ChessBoard::boards[11]) {
-            std::vector<std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> > attackers;
             isCheck(attackers, to);
             if (attackers.size() != 0)
                 return false;
