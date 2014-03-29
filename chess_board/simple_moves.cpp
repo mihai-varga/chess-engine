@@ -1164,7 +1164,7 @@ void ChessBoard::getBlackPawnMoves(vector<ChessBoard::bitboard_t>& moves, ChessB
 }
  
 ChessBoard::bitboard_t ChessBoard::getBlackPawnAllMoves(ChessBoard::bitboard_t b) {
-    ChessBoard::bitboard_t ret;
+    ChessBoard::bitboard_t ret = 0ULL;
     std::vector<ChessBoard::bitboard_t> moves;
     getBlackPawnMoves(moves, b);
 
@@ -1245,25 +1245,24 @@ bool ChessBoard::canQueensideCastling()
 	isCheck(attackers);
 	if(attackers.size() > 0)
 	{
-		printf("test 1\n");
 		return false;
 	}
 
 	if((king>>1 & allPieces) || (king>>2 & allPieces) || (king>>3 & allPieces))
 	{
-		printf("test 2\n");
 		return false;
 	}
+
 	attackers.clear();
 	isCheck(attackers, king>>1);
 	int s1 = attackers.size();
+
 	attackers.clear();
 	isCheck(attackers, king>>2);
 	int s2 = attackers.size();
 
 	if(s1 > 0 || s2 > 0)
 	{
-		printf("test 3\n");
 		return false;
 	}
 	return true;
@@ -1294,6 +1293,9 @@ bool ChessBoard::doKingsideCastling()
 		allPieces |= boards[1] | boards[5];
 		allWhites |= boards[1] | boards[5];
 		
+		whiteKingMoved = true;
+		whiteRookKingMoved = true;
+
 		return true;
 	}
 	else
@@ -1313,6 +1315,9 @@ bool ChessBoard::doKingsideCastling()
 		allPieces |= boards[11] | boards[7];
 		allBlacks |= boards[11] | boards[7];
 		
+		blackKingMoved = true;
+		blackRookKingMoved = true;
+
 		return true;
 	}
 	return false;
@@ -1342,7 +1347,10 @@ bool ChessBoard::doQueensideCastling()
 
 		allPieces |= boards[1] | boards[5];
 		allWhites |= boards[1] | boards[5];
-		
+	
+		whiteKingMoved = true;
+		whiteRookQueenMoved = true;
+
 		return true;
 	}
 	else
@@ -1362,6 +1370,9 @@ bool ChessBoard::doQueensideCastling()
 		allPieces |= boards[11] | boards[7];
 		allBlacks |= boards[11] | boards[7];
 		
+		blackKingMoved = true;
+		blackRookQueenMoved = true;
+
 		return true;
 	}
 	return false;
