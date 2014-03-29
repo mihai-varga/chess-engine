@@ -15,19 +15,29 @@ void ChessBoard::setMove(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to)
     ChessBoard::allPieces = (ChessBoard::allPieces & ~from) | to;
     // if white is moving
     if (from & ChessBoard::allWhites) {
+        if (index == 0) { // if moving a pawn 
+            if (to & maskRank[7]) { // if the pawn has reached the last rank
+                ChessBoard::boards[index] = ChessBoard::boards[index] & ~to; // delete the pawn
+                ChessBoard::boards[4] = ChessBoard::boards[4] | to; // add the queen
+            }
+        }
         ChessBoard::allWhites = (ChessBoard::allWhites & ~from) | to;
         if (to & ChessBoard::allBlacks) { // if white attacks black
             int index_black = ChessBoard::getBoard(to);
             ChessBoard::boards[index_black] = ChessBoard::boards[index_black] & ~to;
-            //ChessBoard::allPieces = ChessBoard::allPieces & ~to;
             ChessBoard::allBlacks = ChessBoard::allBlacks & ~to;
         }
     } else { // if black is moving
+        if (index == 6) { // if moving a pawn 
+            if (to & maskRank[0]) { // if the pawn has reached the last rank
+                ChessBoard::boards[index] = ChessBoard::boards[index] & ~to; // delete the pawn
+                ChessBoard::boards[10] = ChessBoard::boards[10] | to; // add the queen
+            }
+        }
         ChessBoard::allBlacks = (ChessBoard::allBlacks & ~from) | to;
         if (to & ChessBoard::allWhites) { // if black attacks white
             int index_white = ChessBoard::getBoard(to);
             ChessBoard::boards[index_white] = ChessBoard::boards[index_white] & ~to;
-            //ChessBoard::allPieces = ChessBoard::allPieces & ~to;
             ChessBoard::allWhites = ChessBoard::allWhites & ~to;
         }
     }
