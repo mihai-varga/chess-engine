@@ -104,7 +104,7 @@ void play(ChessBoard &cb) {
             std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
             std::string from = cb.bitboardToMove(p.first);
             std::string to = cb.bitboardToMove(p.second);
-            char my_move[4], old_move[4];
+            char my_move[4];
             my_move[0] = from[0];
             my_move[1] = from[1];
             my_move[2] = to[0];
@@ -113,6 +113,7 @@ void play(ChessBoard &cb) {
             cb.isCheck(attackers);
             if (attackers.size() == 0 &&
                     cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
+                cb.setMove(p.first, p.second);
                 printf("move %s\n", my_move);
             } else {
                 printf("resign\n");
