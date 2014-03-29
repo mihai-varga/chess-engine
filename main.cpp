@@ -120,6 +120,8 @@ void play(ChessBoard &cb) {
             my_move[2] = to[0];
             my_move[3] = to[1];
             my_move[4] = '\0';
+            cb.printBoard(p.first);
+            cb.printBoard(p.second);
             cb.isCheck(attackers);
             if (attackers.size() == 0 &&
                     cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {

@@ -63,12 +63,11 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
                         {
                             pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
                             find_move = true;
-                            cout << chessman << endl;
                             return move;
                         }
                     }
                     break;
-            case 1: aux_vect = split(ChessBoard::boards[7]);
+            case 1: aux_vect = split(ChessBoard::boards[start+1]);
                     if (aux_vect.size())
                     {
                         from = aux_vect[rand() % aux_vect.size()];
@@ -77,8 +76,6 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
                         {
                             pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
                             find_move = true;
-                            ChessBoard::printBoard(from);
-                            cout<< chessman << endl;
                             return move;
                         }
                     }
@@ -92,7 +89,6 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
                         {
                             pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
                             find_move = true;
-                            cout << chessman << endl;
                             return move;
                         }
                     }
@@ -106,7 +102,6 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
                         {
                             pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
                             find_move = true;
-                            cout << chessman << endl;
                             return move;
                         }
                     }
@@ -120,7 +115,6 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
                         {
                             pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
                             find_move = true;
-                            cout << chessman << endl;
                             return move;
                         }
                     }
@@ -134,7 +128,6 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
                         {
                             pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
                             find_move = true;
-                            cout << chessman << endl;
                             return move;
                         }
                     }
@@ -147,6 +140,8 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
 
 bool ChessBoard::isValid(ChessBoard::bitboard_t from, ChessBoard::bitboard_t to) {
     std::vector<std::pair<ChessBoard::bitboard_t, int> > attackers;
+    ChessBoard::printBoard(from);
+    ChessBoard::printBoard(to);
     if (from == 0 || to == 0) {
         return false;
     }
@@ -336,7 +331,7 @@ void ChessBoard::getKingMoves(vector<ChessBoard::bitboard_t>& moves, ChessBoard:
     aux_moves[5] = trimA << 7;
     aux_moves[6] = b << 8;
     aux_moves[7] = trimH << 9;
-    if (b & ChessBoard::boards[0])
+    if (b & ChessBoard::boards[5])
     {
         for (unsigned int i = 0; i < 8; i++)
             if (!(aux_moves[i] & ChessBoard::allWhites))
