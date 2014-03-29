@@ -68,10 +68,20 @@ void play(ChessBoard &cb) {
 
         if (!strcmp(command, "go")) {
             //forceMode = false;
-            //if (white) {
-            //    cb.setMove(cb.moveToBitboard("a2"), cb.moveToBitboard("a3"));
-            //    printf("move a2a3\n");
-            //}
+            if (white) {
+                std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
+                std::string from = cb.bitboardToMove(p.first);
+                std::string to = cb.bitboardToMove(p.second);
+                char my_move[4];
+                my_move[0] = from[0];
+                my_move[1] = from[1];
+                my_move[2] = to[0];
+                my_move[3] = to[1];
+                my_move[4] = '\0';
+
+                cb.setMove(p.first, p.second);
+                printf("move %s\n", my_move);
+            }
             //else {
             //    cb.setMove(cb.moveToBitboard("a7"), cb.moveToBitboard("a6"));
             //    printf("move a7a6\n");
@@ -118,7 +128,8 @@ void play(ChessBoard &cb) {
             } else {
                 printf("resign\n");
             }
-
+            cout << "aici e bai\n";
+            cb.printBoard(cb.allPieces);
         }
     }
 }

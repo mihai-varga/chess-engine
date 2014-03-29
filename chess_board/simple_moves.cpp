@@ -45,9 +45,9 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
         start = 6;
     while (!find_move)
     {
-        do
+        //do
             chessman = rand()%6;
-        while(chessman == 1);
+        //while(chessman == 1);
         vector<ChessBoard::bitboard_t> aux_vect;
         switch(chessman)
         {
