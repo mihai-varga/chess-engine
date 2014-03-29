@@ -45,7 +45,9 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
         start = 6;
     while (!find_move)
     {
-        chessman = rand()%6;
+        do
+            chessman = rand()%6;
+        while(chessman == 1);
         vector<ChessBoard::bitboard_t> aux_vect;
         switch(chessman)
         {
@@ -53,7 +55,10 @@ pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> ChessBoard::getNextMove()
                     if (aux_vect.size())
                     {
                         from = aux_vect[rand() % aux_vect.size()];
-                        to = getBlackPawnRandomMove(from);
+                        if (start == 6)
+                            to = getBlackPawnRandomMove(from);
+                        else
+                            to = getWhitePawnRandomMove(from);
                         if (to)
                         {
                             pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> move(from, to);
