@@ -119,6 +119,11 @@ class ChessBoard {
         bool isCheckMate();
 
         /*
+         * return a move to get out of chess or 0ULL if checkMate
+         */
+        bitboard_t getOutOfCheck();
+
+        /*
          * returns a vector with all the possible moves
          * a king can make
          */
