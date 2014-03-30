@@ -72,15 +72,9 @@ void play(ChessBoard &cb) {
                 pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
                 string from = cb.bitboardToMove(p.first);
                 string to = cb.bitboardToMove(p.second);
-                char my_move[4];
-                my_move[0] = from[0];
-                my_move[1] = from[1];
-                my_move[2] = to[0];
-                my_move[3] = to[1];
-                my_move[4] = '\0';
 
                 cb.setMove(p.first, p.second);
-                printf("move %s\n", my_move);
+                printf("move %s\n", (from + to).c_str());
             }
         }
 
@@ -104,8 +98,10 @@ void play(ChessBoard &cb) {
         }
 
         if (isMove(command)) {
-            vector<pair<ChessBoard::bitboard_t, int> > attackers;
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
+            vector<pair<ChessBoard::bitboard_t, int> > attackers;
+            cb.isCheck(attackers);
+
             pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
             string from = cb.bitboardToMove(p.first);
             string to = cb.bitboardToMove(p.second);
@@ -113,7 +109,6 @@ void play(ChessBoard &cb) {
 
             //cb.printBoard(p.first);
             //cb.printBoard(p.second);
-            cb.isCheck(attackers);
             if (attackers.size() == 0 &&
                     cb.isValid(cb.moveToBitboard(my_move.c_str()), cb.moveToBitboard(my_move.c_str() + 2))) {
                 cb.setMove(p.first, p.second);
