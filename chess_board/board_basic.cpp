@@ -49,12 +49,12 @@ void ChessBoard::initBoard() {
 
 ChessBoard::ChessBoard() {
     current_player = BLACK;
-    boards = std::vector<ChessBoard::bitboard_t>(12, 0);
-    maskRank = std::vector<ChessBoard::bitboard_t>(8, 0);
-    clearRank = std::vector<ChessBoard::bitboard_t>(8, 0);
-    maskFile = std::vector<ChessBoard::bitboard_t>(8, 0);
-    clearFile = std::vector<ChessBoard::bitboard_t>(8, 0);
-    square = std::vector<ChessBoard::bitboard_t>(64, 0);
+    boards = std::vector<bitboard_t>(12, 0);
+    maskRank = std::vector<bitboard_t>(8, 0);
+    clearRank = std::vector<bitboard_t>(8, 0);
+    maskFile = std::vector<bitboard_t>(8, 0);
+    clearFile = std::vector<bitboard_t>(8, 0);
+    square = std::vector<bitboard_t>(64, 0);
 
     // initialize the masks
     for (int i = 0; i < 8; i++) {
@@ -81,11 +81,11 @@ ChessBoard::ChessBoard() {
 
 ChessBoard::~ChessBoard() {}
 
-void ChessBoard::setCurrentPlayer(ChessBoard::player_t p) {
+void ChessBoard::setCurrentPlayer(player_t p) {
     ChessBoard::current_player = p;
 }
 
-void ChessBoard::printBoard(ChessBoard::bitboard_t b) {
+void ChessBoard::printBoard(bitboard_t b) {
     for (int i = 0; i < 64; i++) {
         bitboard_t c = b & (1LL << i);
         if (c) {
@@ -100,7 +100,7 @@ void ChessBoard::printBoard(ChessBoard::bitboard_t b) {
     cout << endl;
 }
 
-std::pair<int, int> ChessBoard::getCoords(ChessBoard::bitboard_t b)
+std::pair<int, int> ChessBoard::getCoords(bitboard_t b)
 {
 	//i = line
 	//j = column
@@ -127,7 +127,7 @@ std::pair<int, int> ChessBoard::getCoords(ChessBoard::bitboard_t b)
 	return coords;
 }
 
-int ChessBoard::getBoard(ChessBoard::bitboard_t b) {
+int ChessBoard::getBoard(bitboard_t b) {
     for (int i = 0; i < 12; i++) {
         if (b & ChessBoard::boards[i])
             return i;
@@ -135,7 +135,7 @@ int ChessBoard::getBoard(ChessBoard::bitboard_t b) {
     throw "exception";
 }
 
-string ChessBoard::bitboardToMove(ChessBoard::bitboard_t b) {
+string ChessBoard::bitboardToMove(bitboard_t b) {
     int index = 0;
     while (index < 64 && (b != 1ULL << index)) {
         index++;
@@ -146,8 +146,8 @@ string ChessBoard::bitboardToMove(ChessBoard::bitboard_t b) {
     return move;
 }
 
-std::vector<ChessBoard::bitboard_t> ChessBoard::split(ChessBoard::bitboard_t b) {
-    std::vector<ChessBoard::bitboard_t> v;
+std::vector<bitboard_t> ChessBoard::split(bitboard_t b) {
+    std::vector<bitboard_t> v;
     while(b)
 	{
 		v.push_back(b & (-b));
@@ -162,7 +162,7 @@ std::vector<ChessBoard::bitboard_t> ChessBoard::split(ChessBoard::bitboard_t b) 
 	return v;
 }
 
-ChessBoard::bitboard_t ChessBoard::moveToBitboard(string move) {
+bitboard_t ChessBoard::moveToBitboard(string move) {
     int col = (int)move[0] - 97;
     int row = (int)move[1] - 49;
     return 1ULL << (row * 8 + col);

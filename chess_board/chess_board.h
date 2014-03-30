@@ -4,11 +4,11 @@
 #include <vector>
 #include <string>
 
+typedef unsigned long long bitboard_t;
+typedef enum {WHITE, BLACK} player_t ;
+typedef std::pair<bitboard_t, bitboard_t> PairBB;
+
 class ChessBoard {
-	public:
-		typedef unsigned long long bitboard_t;
-        typedef std::pair<bitboard_t, bitboard_t> PairBB;
-        typedef enum {WHITE, BLACK} player_t ;
 //	private:
 //  public for testing purposes
 	public:
@@ -110,8 +110,8 @@ class ChessBoard {
         /*
          * checks if our king is in chess
          */
-        void isCheck(std::vector<std::pair<ChessBoard::bitboard_t, int> >& attackers);
-        void isCheck(std::vector<std::pair<ChessBoard::bitboard_t, int> >& attackers, bitboard_t);
+        void isCheck(std::vector<std::pair<bitboard_t, int> >& attackers);
+        void isCheck(std::vector<std::pair<bitboard_t, int> >& attackers, bitboard_t);
 
 		/*
 		 * checks for check mate

@@ -36,7 +36,7 @@ void play(ChessBoard &cb) {
     bool white = false;
     //bool forceMode = false;
 
-    cb.setCurrentPlayer(cb.BLACK);
+    cb.setCurrentPlayer(BLACK);
 
     while (1) {
         scanf("%s", command);
@@ -69,7 +69,7 @@ void play(ChessBoard &cb) {
         if (!strcmp(command, "go")) {
             //forceMode = false;
             if (white) {
-                pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
+                pair<bitboard_t, bitboard_t> p = cb.getNextMove();
                 string from = cb.bitboardToMove(p.first);
                 string to = cb.bitboardToMove(p.second);
 
@@ -80,13 +80,13 @@ void play(ChessBoard &cb) {
 
         if (!strcmp(command, "white")) {
             white = true;
-            cb.setCurrentPlayer(cb.WHITE);
+            cb.setCurrentPlayer(WHITE);
             continue;
         }
 
         if (!strcmp(command, "black")) {
             white = false;
-            cb.setCurrentPlayer(cb.BLACK);
+            cb.setCurrentPlayer(BLACK);
             continue;
         }
 
@@ -99,10 +99,10 @@ void play(ChessBoard &cb) {
 
         if (isMove(command)) {
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
-            vector<pair<ChessBoard::bitboard_t, int> > attackers;
+            vector<pair<bitboard_t, int> > attackers;
             cb.isCheck(attackers);
 
-            pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
+            pair<bitboard_t, bitboard_t> p = cb.getNextMove();
             string from = cb.bitboardToMove(p.first);
             string to = cb.bitboardToMove(p.second);
             string my_move = from + to;
