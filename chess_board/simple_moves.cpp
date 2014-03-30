@@ -207,13 +207,13 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
     ChessBoard::player_t opponentColor = current_player == WHITE ? BLACK : WHITE;
     vector<ChessBoard::bitboard_t> aux;
     ChessBoard::bitboard_t allOpponentMoves = 0ULL;
+    attackers.clear();
     // attacker position  &  attacker bitboard index
 	if(king == 0ULL)
 	{
 		if (current_player == BLACK)
 		{
 			//set to black king
-			printf("negru\n");
 			king = boards[11];
 		}
 		else
@@ -223,12 +223,9 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
 		}
 	}
     if (opponentColor == WHITE) {    
-        std::cout << "PIZDA\n";
         // check queen
         aux = split(boards[4]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            allOpponentMoves |= getQueenAllMoves(aux[i]);
-            //ChessBoard::printBoard(getQueenRandomMove(aux[i]));
             if (king & getQueenAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 4));
             }
@@ -237,8 +234,6 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
         // check rooks
         aux = split(boards[1]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            allOpponentMoves |= getRooksAllMoves(aux[i]);
-            //ChessBoard::printBoard(getRooksAllMoves(aux[i]));
             if (king & getRooksAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 1));
             }
@@ -247,7 +242,6 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
         // check knights
         aux = split(boards[2]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            allOpponentMoves |= getKnightAllMoves(aux[i]);
             if (king & getKnightAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 2));
             }
@@ -256,7 +250,6 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
         // check bishops
         aux = split(boards[3]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            allOpponentMoves |= getBishopAllMoves(aux[i]);
             if (king & getBishopAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 3));
             }
@@ -265,7 +258,6 @@ void ChessBoard::isCheck(vector< pair<ChessBoard::bitboard_t, int> >& attackers,
         // check pawns
         aux = split(boards[0]);
         for (unsigned int i = 0; i < aux.size(); i++) {
-            allOpponentMoves |= getWhitePawnAllMoves(aux[i]);
             if (king & getWhitePawnAllMoves(aux[i])) {
                 attackers.push_back(make_pair(aux[i], 0));
             }
