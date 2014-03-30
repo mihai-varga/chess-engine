@@ -69,9 +69,9 @@ void play(ChessBoard &cb) {
         if (!strcmp(command, "go")) {
             //forceMode = false;
             if (white) {
-                std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
-                std::string from = cb.bitboardToMove(p.first);
-                std::string to = cb.bitboardToMove(p.second);
+                pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
+                string from = cb.bitboardToMove(p.first);
+                string to = cb.bitboardToMove(p.second);
                 char my_move[4];
                 my_move[0] = from[0];
                 my_move[1] = from[1];
@@ -82,11 +82,6 @@ void play(ChessBoard &cb) {
                 cb.setMove(p.first, p.second);
                 printf("move %s\n", my_move);
             }
-            //else {
-            //    cb.setMove(cb.moveToBitboard("a7"), cb.moveToBitboard("a6"));
-            //    printf("move a7a6\n");
-            //}
-            //continue;
         }
 
         if (!strcmp(command, "white")) {
@@ -109,24 +104,20 @@ void play(ChessBoard &cb) {
         }
 
         if (isMove(command)) {
-            std::vector<std::pair<ChessBoard::bitboard_t, int> > attackers;
+            vector<pair<ChessBoard::bitboard_t, int> > attackers;
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
-            std::pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
-            std::string from = cb.bitboardToMove(p.first);
-            std::string to = cb.bitboardToMove(p.second);
-            char my_move[4];
-            my_move[0] = from[0];
-            my_move[1] = from[1];
-            my_move[2] = to[0];
-            my_move[3] = to[1];
-            my_move[4] = '\0';
-            cb.printBoard(p.first);
-            cb.printBoard(p.second);
+            pair<ChessBoard::bitboard_t, ChessBoard::bitboard_t> p = cb.getNextMove();
+            string from = cb.bitboardToMove(p.first);
+            string to = cb.bitboardToMove(p.second);
+            string my_move = from + to;
+
+            //cb.printBoard(p.first);
+            //cb.printBoard(p.second);
             cb.isCheck(attackers);
             if (attackers.size() == 0 &&
-                    cb.isValid(cb.moveToBitboard(my_move), cb.moveToBitboard(my_move + 2))) {
+                    cb.isValid(cb.moveToBitboard(my_move.c_str()), cb.moveToBitboard(my_move.c_str() + 2))) {
                 cb.setMove(p.first, p.second);
-                printf("move %s\n", my_move);
+                printf("move %s\n", my_move.c_str());
             } else {
                 printf("resign\n");
             }
