@@ -97,10 +97,6 @@ void play(ChessBoard &cb) {
 
         if (isMove(command)) {
             printf("----------------\n");
-            printf("incerc sa fac mutarea %s dar esueaza lamentabil\n", command);
-            printf("MUTAREA EFECTIV ESTE:\n");
-            cb.printBoard(cb.moveToBitboard(command));
-            cb.printBoard(cb.moveToBitboard(command+2));
             printf("Regina este asa:");
             cb.printBoard(cb.boards[4]);
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
@@ -129,11 +125,16 @@ void play(ChessBoard &cb) {
             string to = cb.bitboardToMove(my_move_bit.second);
             string my_move = from + to;
 
+
+            printf("incerc sa fac mutarea %s dar esueaza lamentabil\n", my_move.c_str());
+            printf("MUTAREA EFECTIV ESTE:\n");
+            cb.printBoard(my_move_bit.first);
+            cb.printBoard(my_move_bit.second);
             if (cb.isValid(cb.moveToBitboard(my_move.c_str()), cb.moveToBitboard(my_move.c_str() + 2))) {
                 cb.setMove(my_move_bit.first, my_move_bit.second);
                 printf("move %s\n", my_move.c_str());
-            } 
-            else {
+            } else {
+                printf("PENISSSS\n");
                 printf("resign\n");
             }
             //cb.printBoard(cb.allPieces);
