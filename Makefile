@@ -11,10 +11,13 @@ build:
 	$(CC) -o $(EXE) $(SRC) $(CFLAGS)
 
 white: $(EXE)
-	xboard -debug  -fcp $(DIR)/$(EXE)  -mode TwoMachines
+	xboard -debug -fcp $(DIR)/$(EXE) -mode TwoMachines
 
 black: $(EXE)
-	xboard -debug  -scp $(DIR)/$(EXE)  -mode TwoMachines
+	xboard -debug -scp $(DIR)/$(EXE) -mode TwoMachines
+
+human: $(EXE)
+	xboard -debug -fcp $(DIR)/$(EXE)
 
 clean:
 	rm $(EXE)

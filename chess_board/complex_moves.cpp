@@ -66,42 +66,132 @@ bitboard_t getPath(bitboard_t from, bitboard_t to, int type) {
     return path;
 }
 
-bitboard_t ChessBoard::getOutOfCheck() {
-    vector<pair<bitboard_t, int> > attackers;
-    isCheck(attackers);
-    vector<bitboard_t> pieces, all_pieces;
+pair<bitboard_t, bitboard_t> ChessBoard::getOutOfCheck(vector<pair<bitboard_t, int> > &attackers) {
+    vector<bitboard_t> pieces, all_pieces, moves;
+    vector<pair<bitboard_t, bitboard_t> > all_moves; // from -> to
+    bitboard_t king_pos;
+    int inc;
 
     if (attackers.size() == 1) {
         // maybe we can capture the attacking piece
         if (current_player == WHITE) {
-            // get all white pieces togheter
-            for (int i = 0; i <= 5; i++) {
-                pieces = split(boards[i]);
-                all_pieces.insert(all_pieces.begin(), pieces.begin(), pieces.end());
-            }
+            king_pos = boards[5];
+            inc = 0;
         }
         else {
-            // get all black pieces togheter
-            for (int i = 0; i <= 5; i++) {
-                pieces = split(boards[i]);
-                all_pieces.insert(all_pieces.begin(), pieces.begin(), pieces.end());
+            king_pos = boards[11];
+            inc = 6;
+        }
+
+        // ----------- computing all moves -------------
+        // pawns
+        moves.clear();
+        pieces = split(boards[inc++]);
+        for (unsigned int i = 0; i < pieces.size(); i++) {
+            getWhitePawnMoves(moves, pieces[i]);
+            for (unsigned int j = 0; j < moves.size(); j++) {
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
             }
         }
 
+        // rooks
+        moves.clear();
+        pieces = split(boards[inc++]);
+        for (unsigned int i = 0; i < pieces.size(); i++) {
+            getRooksMoves(moves, pieces[i]);
+            for (unsigned int j = 0; j < moves.size(); j++) {
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
+            }
+        }
+
+        // kinghts
+        moves.clear();
+        pieces = split(boards[inc++]);
+        for (unsigned int i = 0; i < pieces.size(); i++) {
+            getKingMoves(moves, pieces[i]);
+            for (unsigned int j = 0; j < moves.size(); j++) {
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
+            }
+        }
+
+        // bishops
+        moves.clear();
+        pieces = split(boards[inc++]);
+        for (unsigned int i = 0; i < pieces.size(); i++) {
+            getRooksMoves(moves, pieces[i]);
+            for (unsigned int j = 0; j < moves.size(); j++) {
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
+            }
+        }
+
+        // queen
+        moves.clear();
+        getQueenMoves(moves, boards[inc]);
+        for (unsigned int j = 0; j < moves.size(); j++) {
+            all_moves.push_back(make_pair(boards[inc], moves[j]));
+        }
+        inc++;
+
+        // king 
+        moves.clear();
+        getKingMoves(moves, boards[inc]);
+        for (unsigned int j = 0; j < moves.size(); j++) {
+            all_moves.push_back(make_pair(boards[inc], moves[j]));
+        }
+        // ----------- computing all moves -> done -------------
+
         // try to capture with a piece
-        for (unsigned int i = 0; i < all_pieces.size(); i++) {
-            if (isValid(pieces[i], attackers[0].first)) {
-                return pieces[i];
+        for (unsigned int i = 0; i < all_moves.size(); i++) {
+            if (all_moves[i].second == attackers[0].first &&
+                    isValid(all_moves[i].first, all_moves[i].second)) {
+                return all_moves[i];
+            }
+        }
+
+        //try to move a piece between the nazgul and its prey
+        bitboard_t path = 0ULL;
+        switch (attackers[0].second) {
+            case 0: // white pawn
+            case 6: // black pawn
+                path = getPath(attackers[0].first, king_pos, 1);
+                break;
+            case 1: // white rook
+            case 7: // black rook
+                path |= getPath(attackers[0].first, king_pos, 1);
+                path |= getPath(attackers[0].first, king_pos, 2);
+                break;
+            case 3: // white bishop
+            case 9: // black bishop
+                path = getPath(attackers[0].first, king_pos, 0);
+                break;
+            case 4: // white queen
+            case 10: // black queen
+                path |= getPath(attackers[0].first, king_pos, 0);
+                path |= getPath(attackers[0].first, king_pos, 1);
+                path |= getPath(attackers[0].first, king_pos, 2);
+                break;
+        }
+
+        vector<bitboard_t> attack_blocking = split(path);
+        for (unsigned int i = 0; i < all_moves.size(); i++) {
+            for (unsigned int j = 0; j < attack_blocking.size(); j++) {
+                if (all_moves[i].second == attack_blocking[i] &&
+                        isValid(all_moves[i].first, all_moves[i].second)) {
+                    return all_moves[i];
+                }
             }
         }
     }
-    // we try to move the king
+
+    // There are more than 1 attackers or we couldn't caputer/block 
+    // the attacker so we try to move the king
     vector<bitboard_t> king_moves;
-    if (current_player == WHITE) {
-        getKingMoves(king_moves, boards[5]);
+    getKingMoves(king_moves, king_pos);
+    for (unsigned int i = 0; i > king_moves.size(); i++) {
+        if (isValid(king_pos, king_moves[i])) {
+            return make_pair(king_pos, king_moves[i]);
+        }
     }
-    else {
-        getKingMoves(king_moves, boards[11]);
-    }
-    return 0ULL;
+    // check mate
+    return make_pair(0ULL, 0ULL);
 }

@@ -33,7 +33,6 @@ void play(ChessBoard &cb) {
     //signal(SIGINT, signal_handler);
     
     char command[256];
-    bool white = false;
     //bool forceMode = false;
 
     cb.setCurrentPlayer(BLACK);
@@ -68,7 +67,7 @@ void play(ChessBoard &cb) {
 
         if (!strcmp(command, "go")) {
             //forceMode = false;
-            if (white) {
+            if (cb.current_player == WHITE) {
                 pair<bitboard_t, bitboard_t> p = cb.getNextMove();
                 string from = cb.bitboardToMove(p.first);
                 string to = cb.bitboardToMove(p.second);
@@ -79,13 +78,11 @@ void play(ChessBoard &cb) {
         }
 
         if (!strcmp(command, "white")) {
-            white = true;
             cb.setCurrentPlayer(WHITE);
             continue;
         }
 
         if (!strcmp(command, "black")) {
-            white = false;
             cb.setCurrentPlayer(BLACK);
             continue;
         }
@@ -101,23 +98,32 @@ void play(ChessBoard &cb) {
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
             vector<pair<bitboard_t, int> > attackers;
             cb.isCheck(attackers);
+            pair<bitboard_t, bitboard_t> my_move_bit;
 
-            pair<bitboard_t, bitboard_t> p = cb.getNextMove();
-            string from = cb.bitboardToMove(p.first);
-            string to = cb.bitboardToMove(p.second);
+            if (attackers.size() != 0) {
+                // Check
+                my_move_bit = cb.getOutOfCheck(attackers);
+                if (my_move_bit.first == 0ULL) {
+                    // check mate
+                    printf("resign\n");
+                    continue;
+                }
+            }
+            else {
+                my_move_bit = cb.getNextMove();
+            }
+
+            string from = cb.bitboardToMove(my_move_bit.first);
+            string to = cb.bitboardToMove(my_move_bit.second);
             string my_move = from + to;
 
-            //cb.printBoard(p.first);
-            //cb.printBoard(p.second);
-            if (attackers.size() == 0 &&
-                    cb.isValid(cb.moveToBitboard(my_move.c_str()), cb.moveToBitboard(my_move.c_str() + 2))) {
-                cb.setMove(p.first, p.second);
+            if (cb.isValid(cb.moveToBitboard(my_move.c_str()), cb.moveToBitboard(my_move.c_str() + 2))) {
+                cb.setMove(my_move_bit.first, my_move_bit.second);
                 printf("move %s\n", my_move.c_str());
             } else {
                 printf("resign\n");
             }
-            cout << "aici e bai\n";
-            cb.printBoard(cb.allPieces);
+            //cb.printBoard(cb.allPieces);
         }
     }
 }
