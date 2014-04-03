@@ -109,7 +109,7 @@ void play(ChessBoard &cb) {
             else {
                 my_move_bit = cb.getNextMove();
             }
-            
+
             string from = cb.bitboardToMove(my_move_bit.first);
             string to = cb.bitboardToMove(my_move_bit.second);
             string my_move = from + to;

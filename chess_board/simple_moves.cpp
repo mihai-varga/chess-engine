@@ -1068,7 +1068,7 @@ void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
     pieces = split(boards[inc]);
     for (unsigned int i = 0; i < pieces.size(); i++) {
         moves.clear();
-        getKingMoves(moves, pieces[i]);
+        getKnightMoves(moves, pieces[i]);
         for (unsigned int j = 0; j < moves.size(); j++) {
             all_moves.push_back(make_pair(pieces[i], moves[j]));
         }
