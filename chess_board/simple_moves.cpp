@@ -12,14 +12,11 @@ using namespace std;
 void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     int index = getBoard(from);
     int index_opponent = getBoard(to);
-    printf("Index este aici: %d\n", index);
-    printf("Regina este asa:\n");
     printBoard(boards[4]);
     boards[index] = (boards[index] & ~from) | to;
     allPieces = (allPieces & ~from) | to;
     // if white is moving
     if (from & allWhites) {
-        printf("LABAAAAAAAAAAAAAA\n");
         if (index == 0) { // if moving a pawn 
             if (to & maskRank[7]) { // if the pawn has reached the last rank
                 boards[index] = boards[index] & ~to; // delete the pawn
@@ -29,15 +26,11 @@ void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
         allWhites = (allWhites & ~from) | to;
         //if (to & allBlacks) { // if white attacks black
         if (index_opponent >= 0) { // if white attacks black
-            printf("NU STIU DE CE DRACU SUNT AICI\n");
-            printBoard(boards[4]);
-            printf("Index_black este aici: %d\n", index);
             boards[index_opponent] = boards[index_opponent] & ~to;
             allBlacks = allBlacks & ~to;
             printBoard(boards[4]);
         }
     } else { // if black is moving
-        printf("VAGIIIIIIIIIIIIIIN\n");
         if (index == 6) { // if moving a pawn 
             if (to & maskRank[0]) { // if the pawn has reached the last rank
                 boards[index] = boards[index] & ~to; // delete the pawn
