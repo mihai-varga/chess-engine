@@ -105,21 +105,16 @@ void play(ChessBoard &cb) {
                 // Check
                 my_move_bit = cb.getOutOfCheck(attackers);
                 printf("am fost in sah\n");
-                if (my_move_bit.first == 0ULL) {
-                    // check mate
-                    printf("resign\n");
-                    continue;
-                }
             }
             else {
                 my_move_bit = cb.getNextMove();
             }
-
+            
             string from = cb.bitboardToMove(my_move_bit.first);
             string to = cb.bitboardToMove(my_move_bit.second);
             string my_move = from + to;
 
-            if (cb.isValid(cb.moveToBitboard(my_move.c_str()), cb.moveToBitboard(my_move.c_str() + 2))) {
+            if (my_move_bit.first != 0ULL) {
                 cb.setMove(my_move_bit.first, my_move_bit.second);
                 printf("move %s\n", my_move.c_str());
             } else {

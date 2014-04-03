@@ -183,6 +183,11 @@ class ChessBoard {
 		bitboard_t getBlackPawnAllMoves(bitboard_t b);
 		bitboard_t getBlackPawnRandomMove(bitboard_t b);
 
+        /*
+         * Toate mutarile valide posibile: from -> to
+         */
+        void getAllMoves(std::vector<std::pair<bitboard_t, bitboard_t> > &moves);
+
 		/*
 		 * checks if a castling is possible
 		 * if so, it does it

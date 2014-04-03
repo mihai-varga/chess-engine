@@ -141,7 +141,7 @@ string ChessBoard::bitboardToMove(bitboard_t b) {
         index++;
     }
     string move;
-    move += alph[index % 8];
+    move += index == 0 ? alph[0] : alph[index % 8];
     move += numb[index / 8];
     return move;
 }

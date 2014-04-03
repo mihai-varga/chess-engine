@@ -70,75 +70,17 @@ pair<bitboard_t, bitboard_t> ChessBoard::getOutOfCheck(vector<pair<bitboard_t, i
     vector<bitboard_t> pieces, all_pieces, moves;
     vector<pair<bitboard_t, bitboard_t> > all_moves; // from -> to
     bitboard_t king_pos;
-    int inc;
 
     if (attackers.size() == 1) {
         // maybe we can capture the attacking piece
         if (current_player == WHITE) {
             king_pos = boards[5];
-            inc = 0;
         }
         else {
             king_pos = boards[11];
-            inc = 6;
         }
 
-        // ----------- computing all moves -------------
-        // pawns
-        moves.clear();
-        pieces = split(boards[inc++]);
-        for (unsigned int i = 0; i < pieces.size(); i++) {
-            getWhitePawnMoves(moves, pieces[i]);
-            for (unsigned int j = 0; j < moves.size(); j++) {
-                all_moves.push_back(make_pair(pieces[i], moves[j]));
-            }
-        }
-
-        // rooks
-        moves.clear();
-        pieces = split(boards[inc++]);
-        for (unsigned int i = 0; i < pieces.size(); i++) {
-            getRooksMoves(moves, pieces[i]);
-            for (unsigned int j = 0; j < moves.size(); j++) {
-                all_moves.push_back(make_pair(pieces[i], moves[j]));
-            }
-        }
-
-        // kinghts
-        moves.clear();
-        pieces = split(boards[inc++]);
-        for (unsigned int i = 0; i < pieces.size(); i++) {
-            getKingMoves(moves, pieces[i]);
-            for (unsigned int j = 0; j < moves.size(); j++) {
-                all_moves.push_back(make_pair(pieces[i], moves[j]));
-            }
-        }
-
-        // bishops
-        moves.clear();
-        pieces = split(boards[inc++]);
-        for (unsigned int i = 0; i < pieces.size(); i++) {
-            getRooksMoves(moves, pieces[i]);
-            for (unsigned int j = 0; j < moves.size(); j++) {
-                all_moves.push_back(make_pair(pieces[i], moves[j]));
-            }
-        }
-
-        // queen
-        moves.clear();
-        getQueenMoves(moves, boards[inc]);
-        for (unsigned int j = 0; j < moves.size(); j++) {
-            all_moves.push_back(make_pair(boards[inc], moves[j]));
-        }
-        inc++;
-
-        // king 
-        moves.clear();
-        getKingMoves(moves, boards[inc]);
-        for (unsigned int j = 0; j < moves.size(); j++) {
-            all_moves.push_back(make_pair(boards[inc], moves[j]));
-        }
-        // ----------- computing all moves -> done -------------
+        getAllMoves(all_moves);
 
         // try to capture with a piece
         for (unsigned int i = 0; i < all_moves.size(); i++) {
@@ -175,16 +117,17 @@ pair<bitboard_t, bitboard_t> ChessBoard::getOutOfCheck(vector<pair<bitboard_t, i
         vector<bitboard_t> attack_blocking = split(path);
         for (unsigned int i = 0; i < all_moves.size(); i++) {
             for (unsigned int j = 0; j < attack_blocking.size(); j++) {
-                if (all_moves[i].second == attack_blocking[i] &&
-                        isValid(all_moves[i].first, all_moves[i].second)) {
+                if (all_moves[i].second == attack_blocking[i] && // block 
+                        all_moves[i].first != king_pos && // not the king 
+                        isValid(all_moves[i].first, all_moves[i].second)) { // no more check
                     return all_moves[i];
                 }
             }
         }
     }
 
-    // There are more than 1 attackers or we couldn't caputer/block 
-    // the attacker so we try to move the king
+    // There are more than 1 attackers or we couldn't caputer/block the attacker
+    // so we try to move the king
     vector<bitboard_t> king_moves;
     getKingMoves(king_moves, king_pos);
     for (unsigned int i = 0; i > king_moves.size(); i++) {

@@ -48,229 +48,27 @@ void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
 
 pair<bitboard_t, bitboard_t> ChessBoard::getNextMove()
 {
-    bitboard_t from, to;
-    int start, chessman;
-    bool find_move = false;
+    vector<pair<bitboard_t, bitboard_t> > all_moves;
+    getAllMoves(all_moves);
+    if (all_moves.size() == 0)
+        return make_pair(0ULL, 0ULL);
+
+    // 10 attempts to make a random move
     srand(time(NULL));
-    if (current_player == WHITE)
-        start = 0;
-    else
-        start = 6;
-    while (!find_move)
-    {
-        //do
-            chessman = rand()%6;
-        //while(chessman == 1);
-        vector<int> valid_pieces;
-        if (start == 6)
-        {
-            vector<bitboard_t> aux = split(boards[6]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getBlackPawnAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(0);
-                    break;
-                }
-        }
-        else
-        {
-            vector<bitboard_t> aux = split(boards[0]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getWhitePawnAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(0);
-                    break;
-                }
-        }
-        if (start == 6)
-        {
-            vector<bitboard_t> aux = split(boards[7]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getRooksAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(1);
-                    break;
-                }
-        }
-        else
-        {
-            vector<bitboard_t> aux = split(boards[1]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getRooksAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(1);
-                    break;
-                }
-        }
-        if (start == 6)
-        {
-            vector<bitboard_t> aux = split(boards[8]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getKnightAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(2);
-                    break;
-                }
-        }
-        else
-        {
-            vector<bitboard_t> aux = split(boards[2]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getKnightAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(2);
-                    break;
-                }
-        }
-        if (start == 6)
-        {
-            vector<bitboard_t> aux = split(boards[9]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getBishopAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(3);
-                    break;
-                }
-        }
-        else
-        {
-            vector<bitboard_t> aux = split(boards[3]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getBishopAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(3);
-                    break;
-                }
-        }
-        if (start == 6)
-        {
-            vector<bitboard_t> aux = split(boards[10]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getQueenAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(4);
-                    break;
-                }
-        }
-        else
-        {
-            vector<bitboard_t> aux = split(boards[4]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getQueenAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(4);
-                    break;
-                }
-        }
-        if (start == 6)
-        {
-            vector<bitboard_t> aux = split(boards[11]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getKingAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(5);
-                    break;
-                }
-        }
-        else
-        {
-            vector<bitboard_t> aux = split(boards[5]);
-            for (unsigned int i = 0; i < aux.size(); i++)
-                if (getKingAllMoves(aux[i]))
-                {
-                    valid_pieces.push_back(5);
-                    break;
-                }
-        }
-        chessman = valid_pieces[rand () % valid_pieces.size()];
-        vector<bitboard_t> aux_vect;
-        switch(chessman)
-        {
-            case 0: aux_vect = split(boards[start]);
-                    if (aux_vect.size())
-                    {
-                        from = aux_vect[rand() % aux_vect.size()];
-                        if (start == 6)
-                            to = getBlackPawnRandomMove(from);
-                        else
-                            to = getWhitePawnRandomMove(from);
-                        if (to)
-                        {
-                            pair<bitboard_t, bitboard_t> move(from, to);
-                            find_move = true;
-                            return move;
-                        }
-                    }
-                    break;
-            case 1: aux_vect = split(boards[start+1]);
-                    if (aux_vect.size())
-                    {
-                        from = aux_vect[rand() % aux_vect.size()];
-                        to = getRooksRandomMove(from);
-                        if (to)
-                        {
-                            pair<bitboard_t, bitboard_t> move(from, to);
-                            find_move = true;
-                            return move;
-                        }
-                    }
-                    break;
-            case 2: aux_vect = split(boards[start + 2]);
-                    if (aux_vect.size())
-                    {
-                        from = aux_vect[rand() % aux_vect.size()];
-                        to = getKnightRandomMove(from);
-                        if (to)
-                        {
-                            pair<bitboard_t, bitboard_t> move(from, to);
-                            find_move = true;
-                            return move;
-                        }
-                    }
-                    break;
-            case 3: aux_vect = split(boards[start + 3]);
-                    if (aux_vect.size())
-                    {
-                        from = aux_vect[rand() % aux_vect.size()];
-                        to = getBishopRandomMove(from);
-                        if (to)
-                        {
-                            pair<bitboard_t, bitboard_t> move(from, to);
-                            find_move = true;
-                            return move;
-                        }
-                    }
-                    break;
-            case 4: aux_vect = split(boards[start + 4]);
-                    if (aux_vect.size())
-                    {
-                        from = aux_vect[rand() % aux_vect.size()];
-                        to = getQueenRandomMove(from);
-                        if (to)
-                        {
-                            pair<bitboard_t, bitboard_t> move(from, to);
-                            find_move = true;
-                            return move;
-                        }
-                    }
-                    break;
-            case 5: aux_vect = split(boards[start + 5]);
-                    if (aux_vect.size())
-                    {
-                        from = aux_vect[rand() % aux_vect.size()];
-                        to = getKingRandomMove(from);
-                        if (to)
-                        {
-                            pair<bitboard_t, bitboard_t> move(from, to);
-                            find_move = true;
-                            return move;
-                        }
-                    }
-                    break;
+    for (int i = 0; i < 10; i++) {
+        int rand_move = rand() % all_moves.size();
+        if (isValid(all_moves[rand_move].first, all_moves[rand_move].second)) {
+            return all_moves[rand_move];
         }
     }
-    pair<bitboard_t, bitboard_t> move(from, to);
-    return move;
+
+    // iterate over all moves
+    for (unsigned int i = 0; i < all_moves.size(); i++) {
+        if (isValid(all_moves[i].first, all_moves[i].second)) {
+            return all_moves[i];
+        }
+    }
+    return make_pair(0ULL, 0ULL);
 }
 
 bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
@@ -1226,4 +1024,80 @@ bool ChessBoard::doQueensideCastling()
 		return true;
 	}
 	return false;
+}
+
+void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
+    vector<bitboard_t> pieces, moves;
+    all_moves.clear();
+    int inc;
+
+    if (current_player == WHITE) {
+        inc = 0;
+    }
+    else {
+        inc = 6;
+    }
+
+    // pawns
+    pieces = split(boards[inc]);
+    for (unsigned int i = 0; i < pieces.size(); i++) {
+        moves.clear();
+        if (current_player == WHITE)
+            getWhitePawnMoves(moves, pieces[i]);
+        else
+            getBlackPawnMoves(moves, pieces[i]);
+
+        for (unsigned int j = 0; j < moves.size(); j++) {
+            all_moves.push_back(make_pair(pieces[i], moves[j]));
+        }
+    }
+    inc++;
+
+    // rooks
+    pieces = split(boards[inc]);
+    for (unsigned int i = 0; i < pieces.size(); i++) {
+        moves.clear();
+        getRooksMoves(moves, pieces[i]);
+        for (unsigned int j = 0; j < moves.size(); j++) {
+            all_moves.push_back(make_pair(pieces[i], moves[j]));
+        }
+    }
+    inc++;
+
+    // kinghts
+    pieces = split(boards[inc]);
+    for (unsigned int i = 0; i < pieces.size(); i++) {
+        moves.clear();
+        getKingMoves(moves, pieces[i]);
+        for (unsigned int j = 0; j < moves.size(); j++) {
+            all_moves.push_back(make_pair(pieces[i], moves[j]));
+        }
+    }
+    inc++;
+
+    // bishops
+    pieces = split(boards[inc]);
+    for (unsigned int i = 0; i < pieces.size(); i++) {
+        moves.clear();
+        getRooksMoves(moves, pieces[i]);
+        for (unsigned int j = 0; j < moves.size(); j++) {
+            all_moves.push_back(make_pair(pieces[i], moves[j]));
+        }
+    }
+    inc++;
+
+    // queen
+    moves.clear();
+    getQueenMoves(moves, boards[inc]);
+    for (unsigned int j = 0; j < moves.size(); j++) {
+        all_moves.push_back(make_pair(boards[inc], moves[j]));
+    }
+    inc++;
+
+    // king 
+    moves.clear();
+    getKingMoves(moves, boards[inc]);
+    for (unsigned int j = 0; j < moves.size(); j++) {
+        all_moves.push_back(make_pair(boards[inc], moves[j]));
+    }
 }
