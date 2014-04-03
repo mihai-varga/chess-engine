@@ -223,11 +223,12 @@ void ChessBoard::isCheck(vector< pair<bitboard_t, int> >& attackers,
 	}
     if (opponentColor == WHITE) {    
         // check queen
-        aux = split(boards[4]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getQueenAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 4));
-            }
+        printf("dar regina ma atacazzzzzzzzzzzzzzz\n");
+        //printBoard(king);
+        //printBoard(boards[4]);
+        if (king & getQueenAllMoves(boards[4])) {
+            printf("dar regina ma ataca\n");
+            attackers.push_back(make_pair(boards[4], 4));
         }
         
         // check rooks

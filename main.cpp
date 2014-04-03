@@ -36,6 +36,7 @@ void play(ChessBoard &cb) {
     //bool forceMode = false;
 
     cb.setCurrentPlayer(BLACK);
+    vector<pair<bitboard_t, int> > attackers;
 
     while (1) {
         scanf("%s", command);
@@ -95,14 +96,20 @@ void play(ChessBoard &cb) {
         }
 
         if (isMove(command)) {
+            printf("----------------\n");
+            cb.printBoard(cb.boards[4]);
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
-            vector<pair<bitboard_t, int> > attackers;
+            cb.printBoard(cb.boards[4]);
+            printf("----------------\n");
+            attackers.clear();
             cb.isCheck(attackers);
             pair<bitboard_t, bitboard_t> my_move_bit;
+            //cb.printBoard(cb.allPieces);
 
             if (attackers.size() != 0) {
                 // Check
                 my_move_bit = cb.getOutOfCheck(attackers);
+                printf("am fost in sah\n");
                 if (my_move_bit.first == 0ULL) {
                     // check mate
                     printf("resign\n");
@@ -120,7 +127,8 @@ void play(ChessBoard &cb) {
             if (cb.isValid(cb.moveToBitboard(my_move.c_str()), cb.moveToBitboard(my_move.c_str() + 2))) {
                 cb.setMove(my_move_bit.first, my_move_bit.second);
                 printf("move %s\n", my_move.c_str());
-            } else {
+            } 
+            else {
                 printf("resign\n");
             }
             //cb.printBoard(cb.allPieces);
