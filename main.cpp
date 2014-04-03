@@ -97,6 +97,11 @@ void play(ChessBoard &cb) {
 
         if (isMove(command)) {
             printf("----------------\n");
+            printf("incerc sa fac mutarea %s dar esueaza lamentabil\n", command);
+            printf("MUTAREA EFECTIV ESTE:\n");
+            cb.printBoard(cb.moveToBitboard(command));
+            cb.printBoard(cb.moveToBitboard(command+2));
+            printf("Regina este asa:");
             cb.printBoard(cb.boards[4]);
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
             cb.printBoard(cb.boards[4]);
