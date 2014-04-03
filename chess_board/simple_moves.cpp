@@ -206,7 +206,6 @@ void ChessBoard::isCheck(vector< pair<bitboard_t, int> >& attackers,
     //bitboard_t opponentAllMoves = 0ULL;
     player_t opponentColor = current_player == WHITE ? BLACK : WHITE;
     vector<bitboard_t> aux;
-    bitboard_t allOpponentMoves = 0ULL;
     attackers.clear();
     // attacker position  &  attacker bitboard index
 	if(king == 0ULL)
