@@ -9,54 +9,54 @@ typedef enum {WHITE, BLACK} player_t ;
 typedef std::pair<bitboard_t, bitboard_t> PairBB;
 
 class ChessBoard {
-//	private:
+//  private:
 //  public for testing purposes
-	public:
-		//used for castlings (ro: rocada)
-		bool whiteKingMoved, whiteRookKingMoved, whiteRookQueenMoved;
-		bool blackKingMoved, blackRookKingMoved, blackRookQueenMoved;
-	public:
+    public:
+        //used for castlings (ro: rocada)
+        bool whiteKingMoved, whiteRookKingMoved, whiteRookQueenMoved;
+        bool blackKingMoved, blackRookKingMoved, blackRookQueenMoved;
+    public:
         /*
          * current player color (no racism involved)
          */
         player_t current_player;
-		/*
-		 *  0 - white pawns
-		 *  1 - white rooks
-		 *  2 - white knights
-		 *  3 - white bishops
-		 *  4 - white queen
-		 *  5 - white king
-		 *  __________________
-		 *
-		 *  6 - black pawns
-		 *  7 - black rooks
-		 *  8 - black knights
-		 *  9 - black bishops
-		 * 10 - black queen
-		 * 11 - black king
-		 */
-		std::vector<bitboard_t> boards;
-		bitboard_t allWhites, allBlacks, allPieces;
-		/*
-		 * rank = row
-		 * file = column
-		 */
-		std::vector<bitboard_t> maskRank;
-		std::vector<bitboard_t> clearRank;
-		std::vector<bitboard_t> maskFile;
-		std::vector<bitboard_t> clearFile;
-		/*
-		 * A1 B1 C1 D1 E1 F1 G1 H1
-		 * A2 B2 C2 D2 E2 F2 G2 H2
-		 * A3 B3 C3 D3 E3 F3 G3 H3
-		 * A4 B4 C4 D4 E4 F4 G4 H4
-		 * A5 B5 C5 D5 E5 F5 G5 H5
-		 * A6 B6 C6 D6 E6 F6 G6 H6
-		 * A7 B7 C7 D7 E7 F7 G7 H7
-		 * A8 B8 C8 D8 E8 F8 G8 H8
-		 */
-		std::vector<bitboard_t> square;
+        /*
+         *  0 - white pawns
+         *  1 - white rooks
+         *  2 - white knights
+         *  3 - white bishops
+         *  4 - white queen
+         *  5 - white king
+         *  __________________
+         *
+         *  6 - black pawns
+         *  7 - black rooks
+         *  8 - black knights
+         *  9 - black bishops
+         * 10 - black queen
+         * 11 - black king
+         */
+        std::vector<bitboard_t> boards;
+        bitboard_t allWhites, allBlacks, allPieces;
+        /*
+         * rank = row
+         * file = column
+         */
+        std::vector<bitboard_t> maskRank;
+        std::vector<bitboard_t> clearRank;
+        std::vector<bitboard_t> maskFile;
+        std::vector<bitboard_t> clearFile;
+        /*
+         * A1 B1 C1 D1 E1 F1 G1 H1
+         * A2 B2 C2 D2 E2 F2 G2 H2
+         * A3 B3 C3 D3 E3 F3 G3 H3
+         * A4 B4 C4 D4 E4 F4 G4 H4
+         * A5 B5 C5 D5 E5 F5 G5 H5
+         * A6 B6 C6 D6 E6 F6 G6 H6
+         * A7 B7 C7 D7 E7 F7 G7 H7
+         * A8 B8 C8 D8 E8 F8 G8 H8
+         */
+        std::vector<bitboard_t> square;
 
     private:
         static char alph[8];
@@ -70,12 +70,12 @@ class ChessBoard {
         /*
          * plots the board given as parameter
          */
-		void printBoard(bitboard_t b);
+        void printBoard(bitboard_t b);
 
         /*
          * gets the x and y coresponding to bitboard_t b
          */
-		std::pair<int, int> getCoords(bitboard_t b);
+        std::pair<int, int> getCoords(bitboard_t b);
         /* get the coresponding board
          * @params
          *      b  the piece for which we want 
@@ -113,9 +113,9 @@ class ChessBoard {
         void isCheck(std::vector<std::pair<bitboard_t, int> >& attackers);
         void isCheck(std::vector<std::pair<bitboard_t, int> >& attackers, bitboard_t);
 
-		/*
-		 * checks for check mate
-		 */
+        /*
+         * checks for check mate
+         */
         bool isCheckMate();
 
         /*
@@ -127,22 +127,22 @@ class ChessBoard {
          * returns a vector with all the possible moves
          * a king can make
          */
-		void getKingMoves(std::vector<bitboard_t>& moves, bitboard_t b);
+        void getKingMoves(std::vector<bitboard_t>& moves, bitboard_t b);
         /*
          * returns a bitboard_t with all the possible moves
          * a king can make
          */
-		bitboard_t getKingAllMoves(bitboard_t b);
-		bitboard_t getKingRandomMove(bitboard_t b);
+        bitboard_t getKingAllMoves(bitboard_t b);
+        bitboard_t getKingRandomMove(bitboard_t b);
 
-		bitboard_t getRooksAllMoves(bitboard_t b);
+        bitboard_t getRooksAllMoves(bitboard_t b);
         void getRooksMoves(std::vector<bitboard_t> &moves, bitboard_t b);
         bitboard_t getRooksRandomMove (bitboard_t b);
 
-		bitboard_t getBishopAllMoves(bitboard_t b);
+        bitboard_t getBishopAllMoves(bitboard_t b);
         void getBishopMoves(std::vector<bitboard_t> &moves, bitboard_t b);
         bitboard_t getBishopRandomMove (bitboard_t b);
-		
+        
         void getQueenMoves(std::vector<bitboard_t> &moves, bitboard_t b);
         bitboard_t getQueenAllMoves(bitboard_t b);
         bitboard_t getQueenRandomMove (bitboard_t b);
@@ -151,52 +151,52 @@ class ChessBoard {
          * returns a vector with all the possible moves
          * a knight can make
          */
-		void getKnightMoves(std::vector<bitboard_t>& moves, bitboard_t b);
+        void getKnightMoves(std::vector<bitboard_t>& moves, bitboard_t b);
         /*
          * returns a bitboard_t with all the possible moves
          * a knight can make
          */
-		bitboard_t getKnightAllMoves(bitboard_t b);
-		bitboard_t getKnightRandomMove(bitboard_t b);
+        bitboard_t getKnightAllMoves(bitboard_t b);
+        bitboard_t getKnightRandomMove(bitboard_t b);
 
         /*
          * returns a vector with all the possible moves
          * a white pawn can make
          */
-		void getWhitePawnMoves(std::vector<bitboard_t>& moves, bitboard_t b);
+        void getWhitePawnMoves(std::vector<bitboard_t>& moves, bitboard_t b);
         /*
          * returns a bitboard_t with all the possible moves
          * a white pawn can make
          */
-		bitboard_t getWhitePawnAllMoves(bitboard_t b);
-		bitboard_t getWhitePawnRandomMove(bitboard_t b);
+        bitboard_t getWhitePawnAllMoves(bitboard_t b);
+        bitboard_t getWhitePawnRandomMove(bitboard_t b);
 
         /*
          * returns a vector with all the possible moves
          * a black pawn can make
          */
-		void getBlackPawnMoves(std::vector<bitboard_t>& moves, bitboard_t b);
+        void getBlackPawnMoves(std::vector<bitboard_t>& moves, bitboard_t b);
         /*
          * returns a bitboard_t with all the possible moves
          * a black pawn can make
          */
-		bitboard_t getBlackPawnAllMoves(bitboard_t b);
-		bitboard_t getBlackPawnRandomMove(bitboard_t b);
+        bitboard_t getBlackPawnAllMoves(bitboard_t b);
+        bitboard_t getBlackPawnRandomMove(bitboard_t b);
 
         /*
          * Toate mutarile valide posibile: from -> to
          */
         void getAllMoves(std::vector<std::pair<bitboard_t, bitboard_t> > &moves);
 
-		/*
-		 * checks if a castling is possible
-		 * if so, it does it
-		 * TODO implement doCastling
-		 */
-		bool canKingsideCastling();
-		bool canQueensideCastling();
-		bool doKingsideCastling();
-		bool doQueensideCastling();
+        /*
+         * checks if a castling is possible
+         * if so, it does it
+         * TODO implement doCastling
+         */
+        bool canKingsideCastling();
+        bool canQueensideCastling();
+        bool doKingsideCastling();
+        bool doQueensideCastling();
 };
 
 #endif
