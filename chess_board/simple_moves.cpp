@@ -58,6 +58,128 @@ pair<bitboard_t, bitboard_t> ChessBoard::getNextMove()
         //do
             chessman = rand()%6;
         //while(chessman == 1);
+        vector<int> valid_pieces;
+        if (start == 6)
+        {
+            vector<bitboard_t> aux = split(boards[6]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getBlackPawnAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(0);
+                    break;
+                }
+        }
+        else
+        {
+            vector<bitboard_t> aux = split(boards[0]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getWhitePawnAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(0);
+                    break;
+                }
+        }
+        if (start == 6)
+        {
+            vector<bitboard_t> aux = split(boards[7]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getRooksAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(1);
+                    break;
+                }
+        }
+        else
+        {
+            vector<bitboard_t> aux = split(boards[1]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getRooksAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(1);
+                    break;
+                }
+        }
+        if (start == 6)
+        {
+            vector<bitboard_t> aux = split(boards[8]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getKnightAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(2);
+                    break;
+                }
+        }
+        else
+        {
+            vector<bitboard_t> aux = split(boards[2]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getKnightAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(2);
+                    break;
+                }
+        }
+        if (start == 6)
+        {
+            vector<bitboard_t> aux = split(boards[9]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getBishopAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(3);
+                    break;
+                }
+        }
+        else
+        {
+            vector<bitboard_t> aux = split(boards[3]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getBishopAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(3);
+                    break;
+                }
+        }
+        if (start == 6)
+        {
+            vector<bitboard_t> aux = split(boards[10]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getQueenAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(4);
+                    break;
+                }
+        }
+        else
+        {
+            vector<bitboard_t> aux = split(boards[4]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getQueenAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(4);
+                    break;
+                }
+        }
+        if (start == 6)
+        {
+            vector<bitboard_t> aux = split(boards[11]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getKingAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(5);
+                    break;
+                }
+        }
+        else
+        {
+            vector<bitboard_t> aux = split(boards[5]);
+            for (unsigned int i = 0; i < aux.size(); i++)
+                if (getKingAllMoves(aux[i]))
+                {
+                    valid_pieces.push_back(5);
+                    break;
+                }
+        }
+        chessman = valid_pieces[rand () % valid_pieces.size()];
         vector<bitboard_t> aux_vect;
         switch(chessman)
         {
