@@ -12,7 +12,7 @@ using namespace std;
 void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     int index = getBoard(from);
     int index_opponent = getBoard(to);
-    printBoard(boards[4]);
+    //printBoard(boards[4]);
     boards[index] = (boards[index] & ~from) | to;
     allPieces = (allPieces & ~from) | to;
     // if white is moving
@@ -28,7 +28,7 @@ void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
         if (index_opponent >= 0) { // if white attacks black
             boards[index_opponent] = boards[index_opponent] & ~to;
             allBlacks = allBlacks & ~to;
-            printBoard(boards[4]);
+            //printBoard(boards[4]);
         }
     } else { // if black is moving
         if (index == 6) { // if moving a pawn 
@@ -226,11 +226,9 @@ void ChessBoard::isCheck(vector< pair<bitboard_t, int> >& attackers,
 	}
     if (opponentColor == WHITE) {    
         // check queen
-        printf("dar regina ma atacazzzzzzzzzzzzzzz\n");
         //printBoard(king);
         //printBoard(boards[4]);
         if (king & getQueenAllMoves(boards[4])) {
-            printf("dar regina ma ataca\n");
             attackers.push_back(make_pair(boards[4], 4));
         }
         
