@@ -150,8 +150,8 @@ pair<bitboard_t, bitboard_t> ChessBoard::getNextMove()
 
 bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
     std::vector<std::pair<bitboard_t, int> > attackers;
-    printBoard(from);
-    printBoard(to);
+    //printBoard(from);
+    //printBoard(to);
     if (from == 0 || to == 0) {
         return false;
     }
@@ -262,7 +262,7 @@ void ChessBoard::isCheck(vector< pair<bitboard_t, int> >& attackers,
                 attackers.push_back(make_pair(aux[i], 0));
             }
         }
-        printBoard(allOpponentMoves);
+        //printBoard(allOpponentMoves);
     } else {
         // check queen
         if (king & getQueenAllMoves(boards[10])) {
