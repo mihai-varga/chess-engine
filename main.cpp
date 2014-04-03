@@ -96,15 +96,10 @@ void play(ChessBoard &cb) {
         }
 
         if (isMove(command)) {
-            printf("----------------\n");
-            cb.printBoard(cb.boards[4]);
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
-            cb.printBoard(cb.boards[4]);
-            printf("----------------\n");
             attackers.clear();
             cb.isCheck(attackers);
             pair<bitboard_t, bitboard_t> my_move_bit;
-            //cb.printBoard(cb.allPieces);
 
             if (attackers.size() != 0) {
                 // Check
@@ -127,11 +122,9 @@ void play(ChessBoard &cb) {
             if (cb.isValid(cb.moveToBitboard(my_move.c_str()), cb.moveToBitboard(my_move.c_str() + 2))) {
                 cb.setMove(my_move_bit.first, my_move_bit.second);
                 printf("move %s\n", my_move.c_str());
-            } 
-            else {
+            } else {
                 printf("resign\n");
             }
-            //cb.printBoard(cb.allPieces);
         }
     }
 }

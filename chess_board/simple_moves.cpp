@@ -11,6 +11,8 @@ using namespace std;
 
 void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     int index = getBoard(from);
+    int index_opponent = getBoard(to);
+    printBoard(boards[4]);
     boards[index] = (boards[index] & ~from) | to;
     allPieces = (allPieces & ~from) | to;
     // if white is moving
@@ -22,10 +24,11 @@ void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
             }
         }
         allWhites = (allWhites & ~from) | to;
-        if (to & allBlacks) { // if white attacks black
-            int index_black = getBoard(to);
-            boards[index_black] = boards[index_black] & ~to;
+        //if (to & allBlacks) { // if white attacks black
+        if (index_opponent >= 0) { // if white attacks black
+            boards[index_opponent] = boards[index_opponent] & ~to;
             allBlacks = allBlacks & ~to;
+            printBoard(boards[4]);
         }
     } else { // if black is moving
         if (index == 6) { // if moving a pawn 
@@ -35,9 +38,9 @@ void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
             }
         }
         allBlacks = (allBlacks & ~from) | to;
-        if (to & allWhites) { // if black attacks white
-            int index_white = getBoard(to);
-            boards[index_white] = boards[index_white] & ~to;
+        //if (to & allWhites) { // if black attacks white
+        if (index_opponent >= 0) { // if black attacks white 
+            boards[index_opponent] = boards[index_opponent] & ~to;
             allWhites = allWhites & ~to;
         }
     }
@@ -469,12 +472,14 @@ void ChessBoard::getKingMoves(vector<bitboard_t>& moves, bitboard_t b) {
     }
 }
 
+// return all VALID moves
 bitboard_t ChessBoard::getKingAllMoves(bitboard_t b) {
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
     getKingMoves(moves, b);
     for (unsigned int i = 0; i < moves.size(); i++) {
-        ret |= moves[i];
+        if (isValid(b, moves[i]))
+            ret |= moves[i];
     }
     return ret;
 }
@@ -566,81 +571,14 @@ void ChessBoard::getRooksMoves (vector <bitboard_t> &moves, bitboard_t b){
     }
 }
 
+// return all VALID moves
 bitboard_t ChessBoard::getRooksAllMoves (bitboard_t b){
-    pair<int, int> initialCoords = getCoords(b);
     bitboard_t ret = 0;
-    bitboard_t currentPlayerPieces, opponentPieces;
-    if (b & boards[1])
-    {
-        currentPlayerPieces = allWhites;
-        opponentPieces = allBlacks;
-    }
-    else
-    {
-        currentPlayerPieces = allBlacks;
-        opponentPieces = allWhites;
-    }
-    //return (maskFile[initialCoords.second-1] ^ maskRank[initialCoords.first-1]);
-    int x = initialCoords.first - 1;
-    int y = initialCoords.second - 1;
-    x--;
-    int i = 1;
-    while (x >= 0)
-    {
-        bitboard_t tmp = b >> (8 * i);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x--;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-    }
-    x = initialCoords.first+1;
-    i = 1;
-    while (x < 9)
-    {
-        bitboard_t tmp = b << (8 * i);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x++;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-    }
-    i = 1;
-    while (y > 0)
-    {
-        bitboard_t tmp = b >> i;
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            y--;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-    }
-    y = initialCoords.second+1;
-    i = 1;
-    while (y < 9)
-    {
-        bitboard_t tmp = b << i;
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            y++;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
+    vector<bitboard_t> moves;
+    getRooksMoves(moves, b);
+    for (unsigned int i = 0; i < moves.size(); i++) {
+        if (isValid(b, moves[i]))
+            ret |= moves[i];
     }
     return ret;
 }
@@ -694,12 +632,14 @@ void ChessBoard::getKnightMoves(vector<bitboard_t>& moves, bitboard_t b) {
     }
 }
 
+// return all VALID moves
 bitboard_t ChessBoard::getKnightAllMoves(bitboard_t b) {
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
     getKnightMoves(moves, b);
     for (unsigned int i = 0; i < moves.size(); i++) {
-        ret |= moves[i];
+        if (isValid(b, moves[i]))
+            ret |= moves[i];
     }
     return ret;
 }
@@ -802,95 +742,18 @@ void ChessBoard::getBishopMoves(vector<bitboard_t> &moves, bitboard_t b)
             break;
 	}
 }
+
+// return all VALID moves
 bitboard_t ChessBoard::getBishopAllMoves(bitboard_t b)
 {
-    pair<int, int> initialCoords = getCoords(b);
-	bitboard_t ret = 0;
-    bitboard_t currentPlayerPieces, opponentPieces;
-    if (b & boards[3])
-    {
-        currentPlayerPieces = allWhites;
-        opponentPieces = allBlacks;
+    bitboard_t ret = 0;
+    vector<bitboard_t> moves;
+    getBishopMoves(moves, b);
+    for (unsigned int i = 0; i < moves.size(); i++) {
+        if (isValid(b, moves[i]))
+            ret |= moves[i];
     }
-    else
-    {
-        currentPlayerPieces = allBlacks;
-        opponentPieces = allWhites;
-    }
-
-	//top,left
-	int x = initialCoords.first;
-	int y = initialCoords.second;
-	int i = 1;
-	while(x > 1 && y > 1)
-	{
-        bitboard_t tmp = b >> (i * 9);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x--;
-            y--;
-        }
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-	}
-	//top,right
-	x = initialCoords.first;
-	y = initialCoords.second;
-	i = 1;
-	while(x > 1 && y < 8)
-	{
-        bitboard_t tmp = b >> (i * 7);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x--;
-            y++;
-        }
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-	}
-	//bot,left
-	x = initialCoords.first;
-	y = initialCoords.second;
-	i = 1;
-	while(x < 8 && y > 1)
-	{
-        bitboard_t tmp = b << (i * 7);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x++;
-            y--;
-        }
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-	}
-	//bot,right
-	x = initialCoords.first;
-	y = initialCoords.second;
-	i = 1;
-	while(x < 8 && y < 8)
-	{
-        bitboard_t tmp = b << (i * 9);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x++;
-            y++;
-        }
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-	}
-	return ret;
+    return ret;
 }
 
 bitboard_t ChessBoard::getBishopRandomMove (bitboard_t b)
@@ -1055,158 +918,17 @@ void ChessBoard::getQueenMoves(vector<bitboard_t> &moves, bitboard_t b)
     }
 }
 
+// return all VALID moves
 bitboard_t ChessBoard::getQueenAllMoves(bitboard_t b)
 {
-    pair<int, int> initialCoords = getCoords(b);
-	bitboard_t ret = 0;
-    bitboard_t currentPlayerPieces, opponentPieces;
-    if (b & boards[4])
-    {
-        currentPlayerPieces = allWhites;
-        opponentPieces = allBlacks;
+    bitboard_t ret = 0;
+    vector<bitboard_t> moves;
+    getQueenMoves(moves, b);
+    for (unsigned int i = 0; i < moves.size(); i++) {
+        if (isValid(b, moves[i]))
+            ret |= moves[i];
     }
-    else
-    {
-        currentPlayerPieces = allBlacks;
-        opponentPieces = allWhites;
-    }
-
-	//top,left
-	int x = initialCoords.first;
-	int y = initialCoords.second;
-	int i = 1;
-	while(x > 1 && y > 1)
-	{
-        bitboard_t tmp = b >> (i * 9);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x--;
-            y--;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-	}
-	//top,right
-	x = initialCoords.first;
-	y = initialCoords.second;
-	i = 1;
-	while(x > 1 && y < 8)
-	{
-        bitboard_t tmp = b >> (i * 7);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x--;
-            y++;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-	}
-	//bot,left
-	x = initialCoords.first;
-	y = initialCoords.second;
-	i = 1;
-	while(x < 8 && y > 1)
-	{
-        bitboard_t tmp = b << (i * 7);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x++;
-            y--;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-	}
-	//bot,right
-	x = initialCoords.first;
-	y = initialCoords.second;
-	i = 1;
-	while(x < 8 && y < 8)
-	{
-        bitboard_t tmp = b << (i * 9);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x++;
-            y++;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-	}
-
-    x = initialCoords.first - 1;
-    y = initialCoords.second - 1;
-    x--;
-    i = 1;
-    while (x >= 0)
-    {
-        bitboard_t tmp = b >> (8 * i);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x--;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-    }
-    x = initialCoords.first+1;
-    i = 1;
-    while (x < 9)
-    {
-        bitboard_t tmp = b << (8 * i);
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            x++;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-    }
-    i = 1;
-    while (y > 0)
-    {
-        bitboard_t tmp = b >> i;
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            y--;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-    }
-    y = initialCoords.second+1;
-    i = 1;
-    while (y < 9)
-    {
-        bitboard_t tmp = b << i;
-        if (!(tmp & currentPlayerPieces)) {
-            ret |= tmp;
-            i++;
-            y++;
-        } 
-        else
-            break;
-        if (tmp & opponentPieces)
-            break;
-    }
-
-	return ret;
+    return ret;
 }
 
 bitboard_t ChessBoard::getQueenRandomMove (bitboard_t b)
@@ -1241,6 +963,7 @@ void ChessBoard::getWhitePawnMoves(vector<bitboard_t>& moves, bitboard_t b) {
         moves.push_back(b << 9);
 }
  
+// return all VALID moves
 bitboard_t ChessBoard::getWhitePawnAllMoves(bitboard_t b) {
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
@@ -1248,11 +971,13 @@ bitboard_t ChessBoard::getWhitePawnAllMoves(bitboard_t b) {
     if ((moves.size() > 1) && (moves[0] & allWhites) && ((moves[0] << 8) & moves[1]))
     {
         for (unsigned int i = 2; i < moves.size(); i++)
-            ret |= moves[i];
+            if (isValid(b, moves[i]))
+                ret |= moves[i];
         return ret;
     }
     for (unsigned int i = 0; i < moves.size(); i++)
-        ret |= moves[i];
+        if (isValid(b, moves[i]))
+            ret |= moves[i];
     ret &= ~allWhites;
     return ret;
 }
@@ -1287,6 +1012,7 @@ void ChessBoard::getBlackPawnMoves(vector<bitboard_t>& moves, bitboard_t b) {
         moves.push_back(b >> 9);
 }
  
+// return all VALID moves
 bitboard_t ChessBoard::getBlackPawnAllMoves(bitboard_t b) {
     bitboard_t ret = 0ULL;
     std::vector<bitboard_t> moves;
@@ -1295,11 +1021,13 @@ bitboard_t ChessBoard::getBlackPawnAllMoves(bitboard_t b) {
     if ((moves.size() > 1) && (moves[0] & allBlacks) && ((moves[0] << 8) & moves[1]))
     {
         for (unsigned int i = 2; i < moves.size(); i++)
-            ret |= moves[i];
+            if (isValid(b, moves[i]))
+                ret |= moves[i];
         return ret;
     }
     for (unsigned int i = 0; i < moves.size(); i++)
-        ret |= moves[i];
+        if (isValid(b, moves[i]))
+            ret |= moves[i];
     ret &= ~allBlacks;
     return ret;
 }

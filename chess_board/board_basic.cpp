@@ -132,7 +132,7 @@ int ChessBoard::getBoard(bitboard_t b) {
         if (b & boards[i])
             return i;
     }
-    throw "exception";
+    return -1;
 }
 
 string ChessBoard::bitboardToMove(bitboard_t b) {
