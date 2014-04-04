@@ -148,6 +148,8 @@ void ChessBoard::isCheck(vector< pair<bitboard_t, int> >& attackers,
         // check queen
         //printBoard(king);
         //printBoard(boards[4]);
+            cout << "coaie" << endl;
+            printBoard(getQueenAllMoves(boards[4]));
         if (king & getQueenAllMoves(boards[4])) {
             attackers.push_back(make_pair(boards[4], 4));
         }
@@ -274,8 +276,7 @@ bitboard_t ChessBoard::getKingAllMoves(bitboard_t b) {
     vector<bitboard_t> moves;
     getKingMoves(moves, b);
     for (unsigned int i = 0; i < moves.size(); i++) {
-        if (isValid(b, moves[i]))
-            ret |= moves[i];
+        ret |= moves[i];
     }
     return ret;
 }
@@ -373,8 +374,7 @@ bitboard_t ChessBoard::getRooksAllMoves (bitboard_t b){
     vector<bitboard_t> moves;
     getRooksMoves(moves, b);
     for (unsigned int i = 0; i < moves.size(); i++) {
-        if (isValid(b, moves[i]))
-            ret |= moves[i];
+        ret |= moves[i];
     }
     return ret;
 }
@@ -434,8 +434,7 @@ bitboard_t ChessBoard::getKnightAllMoves(bitboard_t b) {
     vector<bitboard_t> moves;
     getKnightMoves(moves, b);
     for (unsigned int i = 0; i < moves.size(); i++) {
-        if (isValid(b, moves[i]))
-            ret |= moves[i];
+        ret |= moves[i];
     }
     return ret;
 }
@@ -546,8 +545,7 @@ bitboard_t ChessBoard::getBishopAllMoves(bitboard_t b)
     vector<bitboard_t> moves;
     getBishopMoves(moves, b);
     for (unsigned int i = 0; i < moves.size(); i++) {
-        if (isValid(b, moves[i]))
-            ret |= moves[i];
+        ret |= moves[i];
     }
     return ret;
 }
@@ -720,9 +718,9 @@ bitboard_t ChessBoard::getQueenAllMoves(bitboard_t b)
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
     getQueenMoves(moves, b);
+    cout << "pizda" << moves.size() << endl;
     for (unsigned int i = 0; i < moves.size(); i++) {
-        if (isValid(b, moves[i]))
-            ret |= moves[i];
+        ret |= moves[i];
     }
     return ret;
 }
@@ -767,13 +765,11 @@ bitboard_t ChessBoard::getWhitePawnAllMoves(bitboard_t b) {
     if ((moves.size() > 1) && (moves[0] & allWhites) && ((moves[0] << 8) & moves[1]))
     {
         for (unsigned int i = 2; i < moves.size(); i++)
-            if (isValid(b, moves[i]))
-                ret |= moves[i];
+            ret |= moves[i];
         return ret;
     }
     for (unsigned int i = 0; i < moves.size(); i++)
-        if (isValid(b, moves[i]))
-            ret |= moves[i];
+        ret |= moves[i];
     ret &= ~allWhites;
     return ret;
 }
@@ -817,13 +813,11 @@ bitboard_t ChessBoard::getBlackPawnAllMoves(bitboard_t b) {
     if ((moves.size() > 1) && (moves[0] & allBlacks) && ((moves[0] << 8) & moves[1]))
     {
         for (unsigned int i = 2; i < moves.size(); i++)
-            if (isValid(b, moves[i]))
-                ret |= moves[i];
+            ret |= moves[i];
         return ret;
     }
     for (unsigned int i = 0; i < moves.size(); i++)
-        if (isValid(b, moves[i]))
-            ret |= moves[i];
+        ret |= moves[i];
     ret &= ~allBlacks;
     return ret;
 }
