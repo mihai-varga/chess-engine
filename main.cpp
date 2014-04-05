@@ -128,7 +128,7 @@ void play(ChessBoard &cb) {
 }
 
 int main() {
-	ChessBoard cb;
-	play(cb);
-	return 0;      
+    ChessBoard cb;
+    play(cb);
+    return 0;      
 }

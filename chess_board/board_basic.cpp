@@ -42,9 +42,9 @@ void ChessBoard::initBoard() {
         allBlacks |= boards[i + 6];
     }
     allPieces = allWhites | allBlacks;
-	//initialize booleans for castlings
-	whiteKingMoved = whiteRookKingMoved = whiteRookQueenMoved = false;
-	blackKingMoved = blackRookKingMoved = blackRookQueenMoved = false;
+    //initialize booleans for castlings
+    whiteKingMoved = whiteRookKingMoved = whiteRookQueenMoved = false;
+    blackKingMoved = blackRookKingMoved = blackRookQueenMoved = false;
 }
 
 ChessBoard::ChessBoard() {
@@ -102,29 +102,29 @@ void ChessBoard::printBoard(bitboard_t b) {
 
 pair<int, int> ChessBoard::getCoords(bitboard_t b)
 {
-	//i = line
-	//j = column
-	int i = 1, j = 1;
-	while(1)
-	{
-		if(b >> 8 == 0) {
-			break;
-		}
-		i++;
-		b = b >> 8;
-	}
-	//mask with 1 on first column
-	while(1)
-	{
-		if(b >> 1 == 0) {
-			break;
-		}
-		j++;
-		b = b >> 1;
-	}
+    //i = line
+    //j = column
+    int i = 1, j = 1;
+    while(1)
+    {
+        if(b >> 8 == 0) {
+            break;
+        }
+        i++;
+        b = b >> 8;
+    }
+    //mask with 1 on first column
+    while(1)
+    {
+        if(b >> 1 == 0) {
+            break;
+        }
+        j++;
+        b = b >> 1;
+    }
 
-	pair<int, int> coords = make_pair(i, j);
-	return coords;
+    pair<int, int> coords = make_pair(i, j);
+    return coords;
 }
 
 int ChessBoard::getBoard(bitboard_t b) {
@@ -149,11 +149,11 @@ string ChessBoard::bitboardToMove(bitboard_t b) {
 vector<bitboard_t> ChessBoard::split(bitboard_t b) {
     vector<bitboard_t> v;
     while(b)
-	{
-		v.push_back(b & (-b));
-		b &= (b - 1);
-	}
-	return v;
+    {
+        v.push_back(b & (-b));
+        b &= (b - 1);
+    }
+    return v;
 }
 
 bitboard_t ChessBoard::moveToBitboard(string move) {
