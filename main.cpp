@@ -14,23 +14,35 @@ bool isMove(char *command) {
             (command[3] >= '1' && command[3] <= '8'));
 }
 
+/*
+ * Checks and sets the castling move
+ */
+void checkCastling(char *command, ChessBoard &cb) {
+    if (!strcmp(command, "e1g1")) {
+        cb.setMove(1ULL << 7, 1ULL << 5);
+        return;
+    }
+    if (!strcmp(command, "e1c1")) {
+        cb.setMove(1ULL, 1ULL << 3);
+        return;
+    }
+    if (!strcmp(command, "e8g8")) {
+        cb.setMove(1ULL << 63, 1ULL << 61);
+        return;
+    }
+    if (!strcmp(command, "e8c8")) {
+        cb.setMove(1ULL << 56, 1ULL << 59);
+        return;
+    }
+}
+
+
+
 void signal_handler(int signal) {}
 
 void play(ChessBoard &cb) {
-    /**
-     * Comenzi posibile: winboard, xboard, new, force, go, white, 
-     * black, quit, resign, move
-     *
-     * Xboard poate sa trimita un semnal de intrerupere, il putem prinde
-     * cu:  signal(SIGINT, signal_handler)
-     * dar putem sa trimitem un msg lui Xboard sa nu mai trimita sigint,
-     * daca avem voie, facem asa pentru ca e mai frumos. O sa intrebam pe
-     * forum
-     * */
-
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
-    //signal(SIGINT, signal_handler);
     
     char command[256];
     //bool forceMode = false;
@@ -97,6 +109,7 @@ void play(ChessBoard &cb) {
 
         if (isMove(command)) {
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
+            checkCastling(command, cb);
             pair<bitboard_t, bitboard_t> my_move_bit;
 
             my_move_bit = cb.getNextMove();
