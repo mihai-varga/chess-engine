@@ -18,19 +18,20 @@ bool isMove(char *command) {
  * Checks and sets the castling move
  */
 void checkCastling(char *command, ChessBoard &cb) {
-    if (!strcmp(command, "e1g1")) {
+    bitboard_t piece = cb.moveToBitboard(command);
+    if (!strcmp(command, "e1g1") && (piece & cb.boards[5])) {
         cb.setMove(1ULL << 7, 1ULL << 5);
         return;
     }
-    if (!strcmp(command, "e1c1")) {
+    if (!strcmp(command, "e1c1") && (piece & cb.boards[5])) {
         cb.setMove(1ULL, 1ULL << 3);
         return;
     }
-    if (!strcmp(command, "e8g8")) {
+    if (!strcmp(command, "e8g8") && (piece & cb.boards[11])) {
         cb.setMove(1ULL << 63, 1ULL << 61);
         return;
     }
-    if (!strcmp(command, "e8c8")) {
+    if (!strcmp(command, "e8c8") && (piece & cb.boards[11])) {
         cb.setMove(1ULL << 56, 1ULL << 59);
         return;
     }
@@ -107,8 +108,8 @@ void play(ChessBoard &cb) {
         }
 
         if (isMove(command)) {
-            cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
             checkCastling(command, cb);
+            cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
             if (forceMode)
                 continue;
             pair<bitboard_t, bitboard_t> my_move_bit;
@@ -135,4 +136,3 @@ int main() {
 	play(cb);
 	return 0;      
 }
-
