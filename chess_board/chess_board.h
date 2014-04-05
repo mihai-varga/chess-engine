@@ -122,11 +122,6 @@ class ChessBoard {
         bool isCheckMate();
 
         /*
-         * return a move to get out of chess or 0ULL if checkMate
-         */
-        std::pair<bitboard_t, bitboard_t> getOutOfCheck(std::vector<std::pair<bitboard_t, int> > &attackers);
-
-        /*
          * returns a vector with all the possible moves
          * a king can make
          */
