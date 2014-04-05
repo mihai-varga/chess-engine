@@ -20,7 +20,7 @@ human: $(EXE)
 	xboard -debug -fcp $(DIR)/$(EXE) -mode MachineWhite
 
 solomid: $(EXE)
-	xboard -debug -fcp $(DIR)/$(EXE) -scp $(DIR)/$(EXE) -mode MachineWhite
+	xboard -debug -fcp $(DIR)/$(EXE) -scp $(DIR)/$(EXE) -mode TwoMachines
 
 clean:
 	rm $(EXE)
