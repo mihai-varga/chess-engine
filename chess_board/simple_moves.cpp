@@ -196,7 +196,7 @@ void ChessBoard::getKingMoves(vector<bitboard_t>& moves, bitboard_t b) {
     aux_moves[5] = trimA << 7;
     aux_moves[6] = b << 8;
     aux_moves[7] = trimH << 9;
-    if (b & boards[5])
+    if (b & allWhites) 
     {
         for (unsigned int i = 0; i < 8; i++)
             if (!(aux_moves[i] & allWhites))
@@ -210,7 +210,6 @@ void ChessBoard::getKingMoves(vector<bitboard_t>& moves, bitboard_t b) {
     }
 }
 
-// return all VALID moves
 bitboard_t ChessBoard::getKingAllMoves(bitboard_t b) {
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
@@ -234,7 +233,7 @@ bitboard_t ChessBoard::getKingRandomMove(bitboard_t b) {
 void ChessBoard::getRooksMoves (vector <bitboard_t> &moves, bitboard_t b){
     pair<int, int> initialCoords = getCoords(b);
     bitboard_t currentPlayerPieces, opponentPieces;
-    if (b & boards[1])
+    if (b & allWhites)
     {
         currentPlayerPieces = allWhites;
         opponentPieces = allBlacks;
@@ -307,7 +306,6 @@ void ChessBoard::getRooksMoves (vector <bitboard_t> &moves, bitboard_t b){
     }
 }
 
-// return all VALID moves
 bitboard_t ChessBoard::getRooksAllMoves (bitboard_t b){
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
@@ -367,7 +365,6 @@ void ChessBoard::getKnightMoves(vector<bitboard_t>& moves, bitboard_t b) {
     }
 }
 
-// return all VALID moves
 bitboard_t ChessBoard::getKnightAllMoves(bitboard_t b) {
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
@@ -392,7 +389,7 @@ void ChessBoard::getBishopMoves(vector<bitboard_t> &moves, bitboard_t b)
 {
     pair<int, int> initialCoords = getCoords(b);
     bitboard_t currentPlayerPieces, opponentPieces;
-    if (b & boards[3])
+    if (b & allWhites)
     {
         currentPlayerPieces = allWhites;
         opponentPieces = allBlacks;
@@ -477,7 +474,6 @@ void ChessBoard::getBishopMoves(vector<bitboard_t> &moves, bitboard_t b)
 	}
 }
 
-// return all VALID moves
 bitboard_t ChessBoard::getBishopAllMoves(bitboard_t b)
 {
     bitboard_t ret = 0;
@@ -504,7 +500,7 @@ void ChessBoard::getQueenMoves(vector<bitboard_t> &moves, bitboard_t b)
 {
     pair<int, int> initialCoords = getCoords(b);
     bitboard_t currentPlayerPieces, opponentPieces;
-    if (b & boards[4])
+    if (b & allWhites)
     {
         currentPlayerPieces = allWhites;
         opponentPieces = allBlacks;
@@ -651,7 +647,6 @@ void ChessBoard::getQueenMoves(vector<bitboard_t> &moves, bitboard_t b)
     }
 }
 
-// return all VALID moves
 bitboard_t ChessBoard::getQueenAllMoves(bitboard_t b)
 {
     bitboard_t ret = 0;
@@ -689,13 +684,12 @@ void ChessBoard::getWhitePawnMoves(vector<bitboard_t>& moves, bitboard_t b) {
         if ((initial_coords.first == 2) && !((b << 16) & allWhites) && !((b << 16) & allBlacks))
             moves.push_back(b << 16);
     }
-    if ((allBlacks & (b << 7)) && ((b & maskFile[7]) == 0))
+    if ((allBlacks & (b << 7)) && ((b & maskFile[0]) == 0))
         moves.push_back(b << 7);
-    if ((allBlacks & (b << 9)) && ((b & maskFile[0]) == 0))
+    if ((allBlacks & (b << 9)) && ((b & maskFile[7]) == 0))
         moves.push_back(b << 9);
 }
  
-// return all VALID moves
 bitboard_t ChessBoard::getWhitePawnAllMoves(bitboard_t b) {
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
@@ -742,7 +736,6 @@ void ChessBoard::getBlackPawnMoves(vector<bitboard_t>& moves, bitboard_t b) {
         moves.push_back(b >> 9);
 }
  
-// return all VALID moves
 bitboard_t ChessBoard::getBlackPawnAllMoves(bitboard_t b) {
     bitboard_t ret = 0ULL;
     std::vector<bitboard_t> moves;

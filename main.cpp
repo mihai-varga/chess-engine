@@ -119,6 +119,7 @@ void play(ChessBoard &cb) {
 int main() {
 	ChessBoard cb;
 	play(cb);
+    printf("AM PULA SCULATA\n");
 	return 0;      
 }
 
