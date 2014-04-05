@@ -141,6 +141,11 @@ bool ChessBoard::isCheck(bitboard_t king) {
         }
     }
 
+    // check king
+    tmp = getKingAllMoves(king);
+    if (tmp & boards[base + 5])
+        return true;
+
     // check knights
     tmp = getKnightAllMoves(king);
     if (tmp & boards[base + 2])
