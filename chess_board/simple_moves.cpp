@@ -89,6 +89,10 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
     // check if the king will be in check
     setMove(from, to);
     ret = !isCheck();
+    // TODO: aici am putea sa facem asa: daca mutarea e valida atunci nu facem "undo"
+    //       altfel facem "undo"
+    //       se va face modificarea asta DOAR DACA peste tot in program unde se apeleaza isValid
+    //       imediat dupa aia se face setMove
 
     // "undo" the move
     allPieces = old_allPieces;
