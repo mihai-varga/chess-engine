@@ -142,10 +142,12 @@ bool ChessBoard::isCheck(bitboard_t king) {
     if (tmp & boards[base + 4])
         return true;
 
+    tmp = getRooksAllMoves(king);
     // check rooks
     if (tmp & boards[base + 1])
         return true;
 
+    tmp = getBishopAllMoves(king);
     // check bishops
     if (tmp & boards[base + 3])
         return true;
