@@ -77,13 +77,19 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
     if (from == 0 || to == 0) {
         return false;
     }
+    bitboard_t old_allPieces, old_allWhites, old_allBlacks;
+    vector<bitboard_t> old_boards(12);
+    old_allPieces = allPieces;
+    old_allWhites = allWhites;
+    old_allBlacks = allBlacks;
+    for (int i = 0; i < 12; i++)
+        old_boards[i] = boards[i];
     // if WHITE moves
     if (current_player == WHITE) {
         // check if the king will be in check
-        if (from & boards[5]) {
-            if (isCheck(to))
-                return false;
-        }
+
+        if (isCheck(to))
+            return false;
         if (from & allWhites) {
             if (to & allWhites) {
                 return false;
@@ -96,18 +102,25 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
     // if BLACK moves
     if (current_player == BLACK) {
         // check if the king will be in check
-        if (from & boards[11]) {
-            if (isCheck(to))
-                return false;
+        setMove(from, to);
+        if (isCheck(boards[11]))
+        {
+            allPieces = old_allPieces;
+            allWhites = old_allWhites;
+            allBlacks = old_allBlacks;
+            for (int i = 0; i < 12; i++)
+                boards[i] = old_boards[i];
+            return false;
         }
-        if (from & allBlacks) {
-            if (to & allBlacks) {
-                return false;
-            } else {
-                return true;
-            }
+        else
+        {
+            allPieces = old_allPieces;
+            allWhites = old_allWhites;
+            allBlacks = old_allBlacks;
+            for (int i = 0; i < 12; i++)
+                boards[i] = old_boards[i];
+            return true;
         }
-        return false;
     }
     return false;
 }
@@ -661,7 +674,6 @@ bitboard_t ChessBoard::getQueenAllMoves(bitboard_t b)
     bitboard_t ret = 0;
     vector<bitboard_t> moves;
     getQueenMoves(moves, b);
-    cout << "pizda" << moves.size() << endl;
     for (unsigned int i = 0; i < moves.size(); i++) {
         ret |= moves[i];
     }
@@ -694,9 +706,9 @@ void ChessBoard::getWhitePawnMoves(vector<bitboard_t>& moves, bitboard_t b) {
         if ((initial_coords.first == 2) && !((b << 16) & allWhites) && !((b << 16) & allBlacks))
             moves.push_back(b << 16);
     }
-    if (allBlacks & (b << 7))
+    if ((allBlacks & (b << 7)) && ((b & maskFile[7]) == 0))
         moves.push_back(b << 7);
-    if (allBlacks & (b << 9))
+    if ((allBlacks & (b << 9)) && ((b & maskFile[0]) == 0))
         moves.push_back(b << 9);
 }
  
@@ -741,9 +753,9 @@ void ChessBoard::getBlackPawnMoves(vector<bitboard_t>& moves, bitboard_t b) {
         if ((initial_coords.first == 7) && !((b >> 16) & allWhites) && !((b >> 16) & allBlacks))
             moves.push_back(b >> 16);
     }
-    if (allBlacks & (b >> 7))
+    if ((allWhites & (b >> 7)) && ((b & maskFile[7]) == 0))
         moves.push_back(b >> 7);
-    if (allBlacks & (b >> 9))
+    if ((allWhites & (b >> 9)) && ((b & maskFile[0]) == 0))
         moves.push_back(b >> 9);
 }
  
