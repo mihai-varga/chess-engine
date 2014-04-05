@@ -124,40 +124,11 @@ bool ChessBoard::isCheck(bitboard_t king) {
 			king = boards[11];
             base = 0; // opponent's pieces
         } else {
-            printf("BOGDAN ARE PUTZA MICA\n");
 			//set to white king
 			king = boards[5];
             base = 6; // opponent's pieces
-            printBoard(boards[5]);
         }
     }
-
-    // check king
-    tmp = getKingAllMoves(king);
-    if (tmp & boards[base + 5])
-        return true;
-
-    // check knights
-    tmp = getKnightAllMoves(king);
-    printf("MIHAI ARE PUTZA MICA\n");
-    printBoard(tmp);
-    if (tmp & boards[base + 2])
-        return true;
-
-    tmp = getQueenAllMoves(king);
-    // check queen
-    if (tmp & boards[base + 4])
-        return true;
-
-    tmp = getRooksAllMoves(king);
-    // check rooks
-    if (tmp & boards[base + 1])
-        return true;
-
-    tmp = getBishopAllMoves(king);
-    // check bishops
-    if (tmp & boards[base + 3])
-        return true;
 
     // check pawns
     if (current_player == WHITE) {
@@ -167,6 +138,32 @@ bool ChessBoard::isCheck(bitboard_t king) {
     }
     if (tmp & boards[base + 0])
         return true;
+
+    tmp = getRooksAllMoves(king);
+    // check rooks
+    if (tmp & boards[base + 1])
+        return true;
+
+    // check knights
+    tmp = getKnightAllMoves(king);
+    if (tmp & boards[base + 2])
+        return true;
+
+    tmp = getBishopAllMoves(king);
+    // check bishops
+    if (tmp & boards[base + 3])
+        return true;
+
+    tmp = getQueenAllMoves(king);
+    // check queen
+    if (tmp & boards[base + 4])
+        return true;
+
+    // check king
+    tmp = getKingAllMoves(king);
+    if (tmp & boards[base + 5])
+        return true;
+
     return false;
 }
     
