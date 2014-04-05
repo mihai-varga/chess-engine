@@ -118,49 +118,86 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
  *
  */
 bool ChessBoard::isCheck(bitboard_t king) {
-    bitboard_t opponentAllMoves = 0ULL;
+    //bitboard_t opponentAllMoves = 0ULL;
+    bitboard_t tmp = 0ULL;
     vector<bitboard_t> aux;
-    int inc;
+    int base; // used for indexing the boards of the opponent
+    if (current_player == WHITE) {
+        base = 6;
+    } else {
+        base = 0;
+    }
 
     // attacker position  &  attacker bitboard index
 	if(king == 0ULL) {
-		if (current_player == BLACK)
+		if (current_player == BLACK) {
 			//set to black king
 			king = boards[11];
-		else
+            base = 0;
+        } else {
 			//set to white king
 			king = boards[5];
+            base = 6;
+        }
     }
 
-    if (current_player == WHITE)
-        inc = 6;
-    else
-        inc = 0;
+    // check knights
+    tmp = getKnightAllMoves(king);
+    if (tmp & boards[base + 2])
+        return true;
+
+    tmp = getQueenAllMoves(king);
+    // check queen
+    if (tmp & boards[base + 4])
+        return true;
+
+    // check rooks
+    if (tmp & boards[base + 1])
+        return true;
+
+    // check bishops
+    if (tmp & boards[base + 3])
+        return true;
 
     // check pawns
-    aux = split(boards[inc++]);
-    for (unsigned int i = 0; i < aux.size(); i++) {
-        opponentAllMoves |= getWhitePawnAllMoves(aux[i]);
+    if (current_player == WHITE) {
+        tmp = getWhitePawnAllMoves(king);
+    }  else {
+        tmp = getBlackPawnAllMoves(king);
     }
-    // check rooks
-    aux = split(boards[inc++]);
-    for (unsigned int i = 0; i < aux.size(); i++) {
-        opponentAllMoves |= getRooksAllMoves(aux[i]);
-    }
-    // check knights
-    aux = split(boards[inc++]);
-    for (unsigned int i = 0; i < aux.size(); i++) {
-        opponentAllMoves |= getKnightAllMoves(aux[i]);
-    }
-    // check bishops
-    aux = split(boards[inc++]);
-    for (unsigned int i = 0; i < aux.size(); i++) {
-        opponentAllMoves |= getBishopAllMoves(aux[i]);
-    }
-    // check queen
-    opponentAllMoves |= getQueenAllMoves(boards[inc]); 
+    if (tmp & boards[base + 0])
+        return true;
+    return false;
 
-    return (opponentAllMoves & king) == 0ULL;
+    //if (current_player == WHITE)
+    //    inc = 6;
+    //else
+    //    inc = 0;
+
+    //// check pawns
+    //aux = split(boards[inc++]);
+    //for (unsigned int i = 0; i < aux.size(); i++) {
+    //    opponentAllMoves |= getWhitePawnAllMoves(aux[i]);
+    //}
+    //// check rooks
+    //aux = split(boards[inc++]);
+    //for (unsigned int i = 0; i < aux.size(); i++) {
+    //    opponentAllMoves |= getRooksAllMoves(aux[i]);
+    //}
+    //// check knights
+    //aux = split(boards[inc++]);
+    //for (unsigned int i = 0; i < aux.size(); i++) {
+    //    opponentAllMoves |= getKnightAllMoves(aux[i]);
+    //}
+    //// check bishops
+    //aux = split(boards[inc++]);
+    //for (unsigned int i = 0; i < aux.size(); i++) {
+    //    opponentAllMoves |= getBishopAllMoves(aux[i]);
+    //}
+    //// check queen
+    //opponentAllMoves |= getQueenAllMoves(boards[inc]); 
+
+    //return (opponentAllMoves & king) == 0ULL;
 }
     
 
@@ -170,7 +207,6 @@ bool ChessBoard::isCheck() {
 
 
 bool ChessBoard::isCheckMate() {
-
     return false;
 }
 
