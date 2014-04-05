@@ -45,7 +45,7 @@ void play(ChessBoard &cb) {
     setbuf(stdout, NULL);
     
     char command[256];
-    //bool forceMode = false;
+    bool forceMode = false;
 
     cb.setCurrentPlayer(BLACK);
     vector<pair<bitboard_t, int> > attackers;
@@ -69,25 +69,24 @@ void play(ChessBoard &cb) {
         }
 
         if (!strcmp(command, "new")) {
+            forceMode = false;
             cb.initBoard();
             continue;
         }
 
         if (!strcmp(command, "force")) {
-            //forceMode = true;
+            forceMode = true;
             continue;
         }
 
         if (!strcmp(command, "go")) {
-            //forceMode = false;
-            if (cb.current_player == WHITE) {
-                pair<bitboard_t, bitboard_t> p = cb.getNextMove();
-                string from = cb.bitboardToMove(p.first);
-                string to = cb.bitboardToMove(p.second);
+            forceMode = false;
+            pair<bitboard_t, bitboard_t> p = cb.getNextMove();
+            string from = cb.bitboardToMove(p.first);
+            string to = cb.bitboardToMove(p.second);
 
-                cb.setMove(p.first, p.second);
-                printf("move %s\n", (from + to).c_str());
-            }
+            cb.setMove(p.first, p.second);
+            printf("move %s\n", (from + to).c_str());
         }
 
         if (!strcmp(command, "white")) {
@@ -110,6 +109,8 @@ void play(ChessBoard &cb) {
         if (isMove(command)) {
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
             checkCastling(command, cb);
+            if (forceMode)
+                continue;
             pair<bitboard_t, bitboard_t> my_move_bit;
 
             my_move_bit = cb.getNextMove();
