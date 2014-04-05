@@ -168,36 +168,6 @@ bool ChessBoard::isCheck(bitboard_t king) {
     if (tmp & boards[base + 0])
         return true;
     return false;
-
-    //if (current_player == WHITE)
-    //    inc = 6;
-    //else
-    //    inc = 0;
-
-    //// check pawns
-    //aux = split(boards[inc++]);
-    //for (unsigned int i = 0; i < aux.size(); i++) {
-    //    opponentAllMoves |= getWhitePawnAllMoves(aux[i]);
-    //}
-    //// check rooks
-    //aux = split(boards[inc++]);
-    //for (unsigned int i = 0; i < aux.size(); i++) {
-    //    opponentAllMoves |= getRooksAllMoves(aux[i]);
-    //}
-    //// check knights
-    //aux = split(boards[inc++]);
-    //for (unsigned int i = 0; i < aux.size(); i++) {
-    //    opponentAllMoves |= getKnightAllMoves(aux[i]);
-    //}
-    //// check bishops
-    //aux = split(boards[inc++]);
-    //for (unsigned int i = 0; i < aux.size(); i++) {
-    //    opponentAllMoves |= getBishopAllMoves(aux[i]);
-    //}
-    //// check queen
-    //opponentAllMoves |= getQueenAllMoves(boards[inc]); 
-
-    //return (opponentAllMoves & king) == 0ULL;
 }
     
 
@@ -278,7 +248,6 @@ void ChessBoard::getRooksMoves (vector <bitboard_t> &moves, bitboard_t b){
         currentPlayerPieces = allBlacks;
         opponentPieces = allWhites;
     }
-    //return (maskFile[initialCoords.second-1] ^ maskRank[initialCoords.first-1]);
     int x = initialCoords.first - 1;
     int y = initialCoords.second - 1;
     x--;

@@ -153,12 +153,6 @@ vector<bitboard_t> ChessBoard::split(bitboard_t b) {
 		v.push_back(b & (-b));
 		b &= (b - 1);
 	}
-    //for (int i = 0; i < 64; i++) {
-    //    if (square[i] & b) {
-    //        v.push_back(square[i]);
-    //    }
-    //}
-
 	return v;
 }
 
