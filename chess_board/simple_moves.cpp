@@ -104,14 +104,13 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
  *
  */
 bool ChessBoard::isCheck(bitboard_t king) {
-    //bitboard_t opponentAllMoves = 0ULL;
     bitboard_t tmp = 0ULL;
     vector<bitboard_t> aux;
     int base; // used for indexing the boards of the opponent
     if (current_player == WHITE) {
-        base = 6;
+        base = 6; // opponent's pieces
     } else {
-        base = 0;
+        base = 0; // opponent's pieces
     }
 
     // attacker position  &  attacker bitboard index
@@ -119,11 +118,13 @@ bool ChessBoard::isCheck(bitboard_t king) {
 		if (current_player == BLACK) {
 			//set to black king
 			king = boards[11];
-            base = 0;
+            base = 0; // opponent's pieces
         } else {
+            printf("BOGDAN ARE PUTZA MICA\n");
 			//set to white king
 			king = boards[5];
-            base = 6;
+            base = 6; // opponent's pieces
+            printBoard(boards[5]);
         }
     }
 
@@ -134,6 +135,8 @@ bool ChessBoard::isCheck(bitboard_t king) {
 
     // check knights
     tmp = getKnightAllMoves(king);
+    printf("MIHAI ARE PUTZA MICA\n");
+    printBoard(tmp);
     if (tmp & boards[base + 2])
         return true;
 
@@ -350,7 +353,7 @@ void ChessBoard::getKnightMoves(vector<bitboard_t>& moves, bitboard_t b) {
     aux_moves[5] = trimH << 17;
     aux_moves[6] = trimA << 15;
     aux_moves[7] = trimAB << 6;
-    if (b & boards[2])
+    if (b & allWhites)
     {
         for (int i = 0; i < 8; i++)
             if (!(aux_moves[i] & allWhites))

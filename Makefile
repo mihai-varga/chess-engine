@@ -17,7 +17,6 @@ black: $(EXE)
 	xboard -debug -scp $(DIR)/$(EXE) -mode TwoMachines
 
 human: $(EXE)
-	xboard -debug -fcp $(DIR)/$(EXE)
-
+	xboard -debug -fcp $(DIR)/$(EXE) -mode MachineWhite
 clean:
 	rm $(EXE)
