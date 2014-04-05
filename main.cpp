@@ -37,10 +37,6 @@ void checkCastling(char *command, ChessBoard &cb) {
     }
 }
 
-
-
-void signal_handler(int signal) {}
-
 void play(ChessBoard &cb) {
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);

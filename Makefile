@@ -16,8 +16,12 @@ white: $(EXE)
 black: $(EXE)
 	xboard -debug -scp $(DIR)/$(EXE) -mode TwoMachines
 
-human: $(EXE)
+hblack: $(EXE)
 	xboard -debug -fcp $(DIR)/$(EXE) -mode MachineWhite
+
+hwhite: $(EXE)
+	xboard -debug -fcp $(DIR)/$(EXE)
+
 
 solomid: $(EXE)
 	xboard -debug -fcp $(DIR)/$(EXE) -scp $(DIR)/$(EXE) -mode TwoMachines
