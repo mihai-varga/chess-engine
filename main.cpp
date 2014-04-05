@@ -105,7 +105,7 @@ void play(ChessBoard &cb) {
             string to = cb.bitboardToMove(my_move_bit.second);
             string my_move = from + to;
 
-            if (my_move_bit.first != 0ULL) {
+            if (my_move_bit.first != 0ULL && my_move_bit.second != 0ULL) {
                 cb.setMove(my_move_bit.first, my_move_bit.second);
                 printf("move %s\n", my_move.c_str());
             } else {
@@ -119,7 +119,6 @@ void play(ChessBoard &cb) {
 int main() {
 	ChessBoard cb;
 	play(cb);
-    printf("AM PULA SCULATA\n");
 	return 0;      
 }
 
