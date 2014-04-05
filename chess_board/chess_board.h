@@ -100,8 +100,11 @@ class ChessBoard {
 
         std::vector<bitboard_t> split(bitboard_t b);
 
-        // updates the board after a new move
-        void setMove(bitboard_t from, bitboard_t to);
+        /* updates the board after a new move
+         * @return   true, if the player performs an attack on the opponent
+         *           false, otherwise
+         */
+        bool setMove(bitboard_t from, bitboard_t to);
 
         // returns the move which the algorithm decides to make next
         std::pair<bitboard_t, bitboard_t> getNextMove ();

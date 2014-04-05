@@ -9,10 +9,13 @@
 
 using namespace std;
 
-void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
+/* @return   true, if the player performs an attack on the opponent
+ *           false, otherwise
+ */
+bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     int index = getBoard(from);
     int index_opponent = getBoard(to);
-    //printBoard(boards[4]);
+    bool isAttack = false;
     boards[index] = (boards[index] & ~from) | to;
     allPieces = (allPieces & ~from) | to;
     // if white is moving
@@ -24,11 +27,10 @@ void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
             }
         }
         allWhites = (allWhites & ~from) | to;
-        //if (to & allBlacks) { // if white attacks black
         if (index_opponent >= 0) { // if white attacks black
+            isAttack = true;
             boards[index_opponent] = boards[index_opponent] & ~to;
             allBlacks = allBlacks & ~to;
-            //printBoard(boards[4]);
         }
     } else { // if black is moving
         if (index == 6) { // if moving a pawn 
@@ -38,12 +40,13 @@ void ChessBoard::setMove(bitboard_t from, bitboard_t to) {
             }
         }
         allBlacks = (allBlacks & ~from) | to;
-        //if (to & allWhites) { // if black attacks white
         if (index_opponent >= 0) { // if black attacks white 
+            isAttack = true;
             boards[index_opponent] = boards[index_opponent] & ~to;
             allWhites = allWhites & ~to;
         }
     }
+    return isAttack;
 }
 
 pair<bitboard_t, bitboard_t> ChessBoard::getNextMove()
@@ -72,8 +75,7 @@ pair<bitboard_t, bitboard_t> ChessBoard::getNextMove()
 }
 
 bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
-    //printBoard(from);
-    //printBoard(to);
+    bool ret;
     if (from == 0 || to == 0) {
         return false;
     }
@@ -82,47 +84,18 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
     old_allPieces = allPieces;
     old_allWhites = allWhites;
     old_allBlacks = allBlacks;
-    for (int i = 0; i < 12; i++)
-        old_boards[i] = boards[i];
-    // if WHITE moves
-    if (current_player == WHITE) {
-        // check if the king will be in check
+    old_boards = boards;
 
-        if (isCheck(to))
-            return false;
-        if (from & allWhites) {
-            if (to & allWhites) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-    // if BLACK moves
-    if (current_player == BLACK) {
-        // check if the king will be in check
-        setMove(from, to);
-        if (isCheck(boards[11]))
-        {
-            allPieces = old_allPieces;
-            allWhites = old_allWhites;
-            allBlacks = old_allBlacks;
-            for (int i = 0; i < 12; i++)
-                boards[i] = old_boards[i];
-            return false;
-        }
-        else
-        {
-            allPieces = old_allPieces;
-            allWhites = old_allWhites;
-            allBlacks = old_allBlacks;
-            for (int i = 0; i < 12; i++)
-                boards[i] = old_boards[i];
-            return true;
-        }
-    }
-    return false;
+    // check if the king will be in check
+    setMove(from, to);
+    ret = !isCheck();
+
+    // "undo" the move
+    allPieces = old_allPieces;
+    allWhites = old_allWhites;
+    allBlacks = old_allBlacks;
+    boards = old_boards;
+    return ret;
 }
 
 
