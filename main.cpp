@@ -97,18 +97,9 @@ void play(ChessBoard &cb) {
 
         if (isMove(command)) {
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
-            attackers.clear();
-            cb.isCheck(attackers);
             pair<bitboard_t, bitboard_t> my_move_bit;
 
-            if (attackers.size() != 0) {
-                // Check
-                my_move_bit = cb.getOutOfCheck(attackers);
-                printf("am fost in sah\n");
-            }
-            else {
-                my_move_bit = cb.getNextMove();
-            }
+            my_move_bit = cb.getNextMove();
 
             string from = cb.bitboardToMove(my_move_bit.first);
             string to = cb.bitboardToMove(my_move_bit.second);
@@ -118,6 +109,7 @@ void play(ChessBoard &cb) {
                 cb.setMove(my_move_bit.first, my_move_bit.second);
                 printf("move %s\n", my_move.c_str());
             } else {
+                // it must be Check Mate
                 printf("resign\n");
             }
         }

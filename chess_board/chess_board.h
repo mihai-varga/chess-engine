@@ -110,8 +110,8 @@ class ChessBoard {
         /*
          * checks if our king is in chess
          */
-        void isCheck(std::vector<std::pair<bitboard_t, int> >& attackers);
-        void isCheck(std::vector<std::pair<bitboard_t, int> >& attackers, bitboard_t);
+        bool isCheck();
+        bool isCheck(bitboard_t);
 
         /*
          * checks for check mate

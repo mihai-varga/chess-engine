@@ -72,7 +72,6 @@ pair<bitboard_t, bitboard_t> ChessBoard::getNextMove()
 }
 
 bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
-    std::vector<std::pair<bitboard_t, int> > attackers;
     //printBoard(from);
     //printBoard(to);
     if (from == 0 || to == 0) {
@@ -82,8 +81,7 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
     if (current_player == WHITE) {
         // check if the king will be in check
         if (from & boards[5]) {
-            isCheck(attackers, to);
-            if (attackers.size() != 0)
+            if (isCheck(to))
                 return false;
         }
         if (from & allWhites) {
@@ -99,8 +97,7 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
     if (current_player == BLACK) {
         // check if the king will be in check
         if (from & boards[11]) {
-            isCheck(attackers, to);
-            if (attackers.size() != 0)
+            if (isCheck(to))
                 return false;
         }
         if (from & allBlacks) {
@@ -119,117 +116,58 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
 /*
  * checks if current's player king is in check
  *
- * ATTENTION !!!!
- * if king != 0 it checks from that position assuming it is the current player's king
- * TODO implement to check if king is not the current player's king
- * TODO implement isCheck using rays
  */
-void ChessBoard::isCheck(vector< pair<bitboard_t, int> >& attackers,
-                                 bitboard_t king) {
-    //bitboard_t opponentAllMoves = 0ULL;
-    player_t opponentColor = current_player == WHITE ? BLACK : WHITE;
+bool ChessBoard::isCheck(bitboard_t king) {
+    bitboard_t opponentAllMoves = 0ULL;
     vector<bitboard_t> aux;
-    attackers.clear();
+    int inc;
+
     // attacker position  &  attacker bitboard index
-	if(king == 0ULL)
-	{
+	if(king == 0ULL) {
 		if (current_player == BLACK)
-		{
 			//set to black king
 			king = boards[11];
-		}
 		else
-		{
 			//set to white king
 			king = boards[5];
-		}
-	}
-    if (opponentColor == WHITE) {    
-        // check queen
-        //printBoard(king);
-        //printBoard(boards[4]);
-            cout << "coaie" << endl;
-            printBoard(getQueenAllMoves(boards[4]));
-        if (king & getQueenAllMoves(boards[4])) {
-            attackers.push_back(make_pair(boards[4], 4));
-        }
-        
-        // check rooks
-        aux = split(boards[1]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getRooksAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 1));
-            }
-        }
-
-        // check knights
-        aux = split(boards[2]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getKnightAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 2));
-            }
-        }
-
-        // check bishops
-        aux = split(boards[3]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getBishopAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 3));
-            }
-        }
-
-        // check pawns
-        aux = split(boards[0]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getWhitePawnAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 0));
-            }
-        }
-        //printBoard(allOpponentMoves);
-    } else {
-        // check queen
-        if (king & getQueenAllMoves(boards[10])) {
-            bitboard_t queen_pos = split(boards[10])[0];
-            attackers.push_back(make_pair(queen_pos, 10));
-        }
-        
-        // check rooks
-        aux = split(boards[7]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getRooksAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 7));
-            }
-        }
-
-        // check knights
-        aux = split(boards[8]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getKnightAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 8));
-            }
-        }
-
-        // check bishops
-        aux = split(boards[9]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getBishopAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 9));
-            }
-        }
-
-        // check pawns
-        aux = split(boards[6]);
-        for (unsigned int i = 0; i < aux.size(); i++) {
-            if (king & getBlackPawnAllMoves(aux[i])) {
-                attackers.push_back(make_pair(aux[i], 6));
-            }
-        }
     }
+
+    if (current_player == WHITE)
+        inc = 6;
+    else
+        inc = 0;
+
+    // check pawns
+    aux = split(boards[inc++]);
+    for (unsigned int i = 0; i < aux.size(); i++) {
+        opponentAllMoves |= getWhitePawnAllMoves(aux[i]);
+    }
+    // check rooks
+    aux = split(boards[inc++]);
+    for (unsigned int i = 0; i < aux.size(); i++) {
+        opponentAllMoves |= getRooksAllMoves(aux[i]);
+    }
+    // check knights
+    aux = split(boards[inc++]);
+    for (unsigned int i = 0; i < aux.size(); i++) {
+        opponentAllMoves |= getKnightAllMoves(aux[i]);
+    }
+    // check bishops
+    aux = split(boards[inc++]);
+    for (unsigned int i = 0; i < aux.size(); i++) {
+        opponentAllMoves |= getBishopAllMoves(aux[i]);
+    }
+    // check queen
+    opponentAllMoves |= getQueenAllMoves(boards[inc]); 
+
+    return (opponentAllMoves & king) == 0ULL;
+}
+    
+
+bool ChessBoard::isCheck() {
+	return this->isCheck(0ULL);
 }
 
-void ChessBoard::isCheck(vector< pair<bitboard_t, int> >& attackers) {
-	this->isCheck(attackers, 0ULL);
-}
 
 bool ChessBoard::isCheckMate() {
 
@@ -833,7 +771,6 @@ bitboard_t ChessBoard::getBlackPawnRandomMove(bitboard_t b) {
 bool ChessBoard::canKingsideCastling()
 {
 	bitboard_t king;
-	vector<pair<bitboard_t, int> > attackers;
 	//check if king or king's rook have moved
 	if(current_player == WHITE)
 	{
@@ -848,19 +785,12 @@ bool ChessBoard::canKingsideCastling()
 		king = boards[11];
 	}
 	//check if check from, through or to
-	isCheck(attackers);
-	if(attackers.size() > 0)
+	if(isCheck())
 		return false;
 	if((king<<1 & allPieces) || (king<<2 & allPieces))
 		return false;
 
-	attackers.clear();
-	isCheck(attackers, king<<1);
-	int s1 = attackers.size();
-	attackers.clear();
-	isCheck(attackers, king<<2);
-	int s2 = attackers.size();
-	if(s1 > 0 || s2 > 0)
+    if (isCheck(king<<1) || isCheck(king<<2))
 		return false;
 	return true;
 }
@@ -869,7 +799,6 @@ bool ChessBoard::canKingsideCastling()
 bool ChessBoard::canQueensideCastling()
 {
 	bitboard_t king;
-	vector<pair<bitboard_t, int> > attackers;
 	//check if king or king's rook have moved
 	if(current_player == WHITE)
 	{
@@ -884,9 +813,7 @@ bool ChessBoard::canQueensideCastling()
 		king = boards[11];
 	}
 	//check if check from, through or to
-	isCheck(attackers);
-	if(attackers.size() > 0)
-	{
+    if (isCheck()) {
 		return false;
 	}
 
@@ -895,16 +822,7 @@ bool ChessBoard::canQueensideCastling()
 		return false;
 	}
 
-	attackers.clear();
-	isCheck(attackers, king>>1);
-	int s1 = attackers.size();
-
-	attackers.clear();
-	isCheck(attackers, king>>2);
-	int s2 = attackers.size();
-
-	if(s1 > 0 || s2 > 0)
-	{
+    if (isCheck(king>>1) || isCheck(king>>2)) {
 		return false;
 	}
 	return true;
