@@ -79,6 +79,8 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
     if (from == 0 || to == 0) {
         return false;
     }
+	if(split(from).size() > 1 || split(to).size() > 1)
+		return false;
     bitboard_t old_allPieces, old_allWhites, old_allBlacks;
     vector<bitboard_t> old_boards(12);
     old_allPieces = allPieces;
