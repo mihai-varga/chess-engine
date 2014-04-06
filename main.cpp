@@ -120,8 +120,24 @@ void play(ChessBoard &cb) {
                 cb.setMove(my_move_bit.first, my_move_bit.second);
                 printf("move %s\n", my_move.c_str());
             } else {
-                // it must be Check Mate
-                printf("resign\n");
+                // checks for mate or stalemate
+                string result;
+                if (cb.isCheck()) 
+                {
+                    //it is mate
+                    if (cb.current_player == WHITE)
+                        result = "0-1 {Black mates}";
+                    else
+                        result = "1-0 {White mates}";
+                }
+                else
+                {
+                    //it is stalemate
+                    result = "1/2-1/2 {Stalemate}";
+                }
+                printf("%s\n", result.c_str());
+
+                //printf("resign\n");
             }
         }
     }
@@ -130,5 +146,5 @@ void play(ChessBoard &cb) {
 int main() {
     ChessBoard cb;
     play(cb);
-    return 0;      
+    return 0;
 }
