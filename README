@@ -39,5 +39,7 @@ Reprezentarea tablei:
 Mutarea pieselor:
     - mutarea este aleatoare, se genereaza toate mutarile posibile. Dintre acestea se
       alege cate o mutare (de maxim 10 ori) pana cand aceasta este valida. Daca se 
-      depasesc cele 10 incercari, se itereaza printre mutari pentru a gasi una valida,
-      daca nu se gaseste nici una, este sah mat.
+      depasesc cele 10 incercari, se itereaza printre mutari pentru a gasi una valida.
+    - in cazul care nu se gaseste nicio mutare valida iar regele este in sah, inseamna
+      ca este sah mat. Daca regele nu este in sah, atunci rezultatul este pat. Se fac 
+      afisarile corespunzatoare.
