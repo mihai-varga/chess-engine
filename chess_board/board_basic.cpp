@@ -162,8 +162,34 @@ bitboard_t ChessBoard::moveToBitboard(string move) {
     return 1ULL << (row * 8 + col);
 }
 
-int ChessBoard::evaluate(player_t player)
-{
+int ChessBoard::evaluate(player_t player) {
     //TODO
-    return 0;
+    player_t old = current_player;
+    vector<pair<bitboard_t, bitboard_t> > white_moves, black_moves;
+    current_player = WHITE;
+    getAllMoves(white_moves);
+    current_player = BLACK;
+    getAllMoves(black_moves);
+    current_player = old;
+
+    if ((player == WHITE && white_moves.size() == 0)
+            || (player == BLACK && black_moves.size() == 0))
+        return INT_MIN;
+
+    if ((player == WHITE && black_moves.size() == 0)
+            || (player == BLACK && white_moves.size() == 0))
+        return INT_MAX;
+
+
+    int score = 0;
+    score += 200 * (split(boards[5]).size() - split(boards[11]).size()); // king
+    score += 20 * (split(boards[4]).size() - split(boards[10]).size()); // quuens
+    score += 4 * (split(boards[3]).size() - split(boards[9]).size()); // bishops
+    score += 5 * (split(boards[2]).size() - split(boards[8]).size()); // kights
+    score += 7 * (split(boards[2]).size() - split(boards[7]).size()); // rooks
+    score += 1 * (split(boards[1]).size() - split(boards[6]).size()); // pawns
+    score += 0.1 * (white_moves.size() - black_moves.size());
+    
+    score = player == WHITE ? score : -score;
+    return score;
 }
