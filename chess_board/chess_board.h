@@ -78,9 +78,9 @@ class ChessBoard {
         std::pair<int, int> getCoords(bitboard_t b);
         /* get the coresponding board
          * @params
-         *      b  the piece for which we want 
+         *      b  the piece for which we want
          *         to determine the type (by picking
-         *         the right board that holds a 
+         *         the right board that holds a
          *         certain kind of piece e.g. kings,
          *         pawns etc.)
          * @return the index of the board
@@ -189,12 +189,18 @@ class ChessBoard {
         /*
          * checks if a castling is possible
          * if so, it does it
-         * TODO implement doCastling
          */
         bool canKingsideCastling();
         bool canQueensideCastling();
         bool doKingsideCastling();
         bool doQueensideCastling();
+
+        /*
+         * evaluates the game from 'player''s point of view
+         * returns -Inf if the player lost, +Inf if he won
+         * or intermediate values. *maybe* 0 for draw, stalemate, etc
+         */
+        int evaluate(player_t player);
 };
 
 #endif

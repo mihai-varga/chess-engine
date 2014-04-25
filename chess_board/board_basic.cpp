@@ -161,3 +161,9 @@ bitboard_t ChessBoard::moveToBitboard(string move) {
     int row = (int)move[1] - 49;
     return 1ULL << (row * 8 + col);
 }
+
+int ChessBoard::evaluate(player_t player)
+{
+    //TODO
+    return 0;
+}
