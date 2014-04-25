@@ -91,11 +91,11 @@ bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
  * checks if current's player king is in check
  *
  */
-bool ChessBoard::isCheck(bitboard_t king) {
+bool ChessBoard::isCheck(bitboard_t king, player_t player) {
     bitboard_t tmp = 0ULL;
     vector<bitboard_t> aux;
     int base; // used for indexing the boards of the opponent
-    if (current_player == WHITE) {
+    if (player == WHITE) {
         base = 6; // opponent's pieces
     } else {
         base = 0; // opponent's pieces
@@ -103,7 +103,7 @@ bool ChessBoard::isCheck(bitboard_t king) {
 
     // attacker position  &  attacker bitboard index
     if(king == 0ULL) {
-        if (current_player == BLACK) {
+        if (player == BLACK) {
             //set to black king
             king = boards[11];
             base = 0; // opponent's pieces
@@ -115,7 +115,7 @@ bool ChessBoard::isCheck(bitboard_t king) {
     }
 
     // check pawns
-    if (current_player == WHITE) {
+    if (player == WHITE) {
         tmp = getWhitePawnAllMoves(king);
     }  else {
         tmp = getBlackPawnAllMoves(king);
@@ -151,11 +151,17 @@ bool ChessBoard::isCheck(bitboard_t king) {
     return false;
 }
     
-
-bool ChessBoard::isCheck() {
-    return this->isCheck(0ULL);
+bool ChessBoard::isCheck(bitboard_t king) {
+    return this->isCheck(king, current_player);
 }
 
+bool ChessBoard::isCheck() {
+    return this->isCheck(0ULL, current_player);
+}
+
+bool ChessBoard::isCheck(player_t player) {
+    return this->isCheck(0ULL, player);
+}
 
 bool ChessBoard::isCheckMate() {
     return false;

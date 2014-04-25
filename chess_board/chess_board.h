@@ -114,7 +114,9 @@ class ChessBoard {
          * checks if our king is in chess
          */
         bool isCheck();
+        bool isCheck(player_t player);
         bool isCheck(bitboard_t);
+        bool isCheck(bitboard_t, player_t player);
 
         /*
          * checks for check mate
