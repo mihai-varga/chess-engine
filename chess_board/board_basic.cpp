@@ -224,6 +224,7 @@ int ChessBoard::evaluate(player_t player) {
     score += 500 * (pieces[1].size() - pieces[7].size()); // rooks
     score += 100 * (pieces[0].size() - pieces[6].size()); // pawns
     score += 10 * (white_moves.size() - black_moves.size());
+    score += white_pos_score - black_pos_score;
     
     score = player == WHITE ? score : -score;
     return score;
