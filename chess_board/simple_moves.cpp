@@ -49,29 +49,15 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     return isAttack;
 }
 
-pair<bitboard_t, bitboard_t> ChessBoard::getNextMove()
-{
+pair<bitboard_t, bitboard_t> ChessBoard::getNextMove() {
     vector<pair<bitboard_t, bitboard_t> > all_moves;
     getAllMoves(all_moves);
     if (all_moves.size() == 0)
         return make_pair(0ULL, 0ULL);
 
-    // 10 attempts to make a random move
     srand(time(NULL));
-    for (int i = 0; i < 10; i++) {
-        int rand_move = rand() % all_moves.size();
-        if (isValid(all_moves[rand_move].first, all_moves[rand_move].second)) {
-            return all_moves[rand_move];
-        }
-    }
-
-    // iterate over all moves
-    for (unsigned int i = 0; i < all_moves.size(); i++) {
-        if (isValid(all_moves[i].first, all_moves[i].second)) {
-            return all_moves[i];
-        }
-    }
-    return make_pair(0ULL, 0ULL);
+    int rand_move = rand() % all_moves.size();
+    return all_moves[rand_move];
 }
 
 bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
@@ -952,7 +938,8 @@ void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
             getBlackPawnMoves(moves, pieces[i]);
 
         for (unsigned int j = 0; j < moves.size(); j++) {
-            all_moves.push_back(make_pair(pieces[i], moves[j]));
+            if (isValid(pieces[i], moves[j]))
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
         }
     }
     inc++;
@@ -963,7 +950,8 @@ void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
         moves.clear();
         getRooksMoves(moves, pieces[i]);
         for (unsigned int j = 0; j < moves.size(); j++) {
-            all_moves.push_back(make_pair(pieces[i], moves[j]));
+            if (isValid(pieces[i], moves[j]))
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
         }
     }
     inc++;
@@ -974,7 +962,8 @@ void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
         moves.clear();
         getKnightMoves(moves, pieces[i]);
         for (unsigned int j = 0; j < moves.size(); j++) {
-            all_moves.push_back(make_pair(pieces[i], moves[j]));
+            if (isValid(pieces[i], moves[j]))
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
         }
     }
     inc++;
@@ -985,7 +974,8 @@ void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
         moves.clear();
         getBishopMoves(moves, pieces[i]);
         for (unsigned int j = 0; j < moves.size(); j++) {
-            all_moves.push_back(make_pair(pieces[i], moves[j]));
+            if (isValid(pieces[i], moves[j]))
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
         }
     }
     inc++;
@@ -996,7 +986,8 @@ void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
         moves.clear();
         getQueenMoves(moves, pieces[i]);
         for (unsigned int j = 0; j < moves.size(); j++) {
-            all_moves.push_back(make_pair(pieces[i], moves[j]));
+            if (isValid(pieces[i], moves[j]))
+                all_moves.push_back(make_pair(pieces[i], moves[j]));
         }
     }
     inc++;
@@ -1005,6 +996,7 @@ void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
     moves.clear();
     getKingMoves(moves, boards[inc]);
     for (unsigned int j = 0; j < moves.size(); j++) {
-        all_moves.push_back(make_pair(boards[inc], moves[j]));
+        if (isValid(boards[inc], moves[j]))
+            all_moves.push_back(make_pair(boards[inc], moves[j]));
     }
 }
