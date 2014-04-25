@@ -163,7 +163,6 @@ bitboard_t ChessBoard::moveToBitboard(string move) {
 }
 
 int ChessBoard::evaluate(player_t player) {
-    //TODO
     player_t old = current_player;
     vector<pair<bitboard_t, bitboard_t> > white_moves, black_moves;
     current_player = WHITE;
