@@ -1,5 +1,5 @@
-CC=g++
-CFLAGS= -g -Wall
+CC=g++  
+CFLAGS= -g -Wall -std=c++0x
 EXE=main
 SRC=main.cpp chess_board/*.cpp
 DIR=$(shell pwd | sed 's/ /\\ /g')

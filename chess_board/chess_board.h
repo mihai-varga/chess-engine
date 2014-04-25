@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 typedef unsigned long long bitboard_t;
 typedef enum {WHITE, BLACK} player_t ;
@@ -61,6 +62,7 @@ class ChessBoard {
     private:
         static char alph[8];
         static char numb[8];
+        std::unordered_map<unsigned long long, int> indexes;
     public:
         ChessBoard();
         ~ChessBoard();
