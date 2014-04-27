@@ -207,6 +207,8 @@ class ChessBoard {
          * or intermediate values. *maybe* 0 for draw, stalemate, etc
          */
         int evaluate(player_t player);
+        int evaluate_white();
+        int evaluate_black();
 };
 
 #endif
