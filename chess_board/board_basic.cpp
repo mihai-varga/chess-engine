@@ -218,13 +218,14 @@ int ChessBoard::evaluate(player_t player) {
 
 
     int score = 0;
-    score += 900 * (pieces[4].size() - pieces[10].size()); // quuens
+    score += 900 * (pieces[4].size() - pieces[10].size()); // queens
     score += 330 * (pieces[3].size() - pieces[9].size()); // bishops
     score += 320 * (pieces[2].size() - pieces[8].size()); // kights
     score += 500 * (pieces[1].size() - pieces[7].size()); // rooks
     score += 100 * (pieces[0].size() - pieces[6].size()); // pawns
     score += 10 * (white_moves.size() - black_moves.size());
     score += white_pos_score - black_pos_score;
+    cout << "scor alb " << white_pos_score << "\nscor niggas" << black_pos_score << "\n";
     
     score = player == WHITE ? score : -score;
     return score;
