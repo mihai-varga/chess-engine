@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 
+#define Inf 123456789
+
 typedef unsigned long long bitboard_t;
 typedef enum {WHITE, BLACK} player_t ;
 typedef std::pair<bitboard_t, bitboard_t> PairBB;

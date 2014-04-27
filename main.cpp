@@ -4,7 +4,6 @@
 #include <csignal>
 #include <iostream>
 #include "chess_board/chess_board.h"
-#include "minimax.h"
 
 using namespace std;
 

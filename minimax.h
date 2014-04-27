@@ -26,9 +26,13 @@ pair<int, PairBB> minimax_abeta(ChessBoard cb, player_t player, int depth, int a
 	{
         newCb = cb;
         newCb.setMove(moves[i].first, moves[i].second);
+        pair<int, PairBB> aux;
 
-        pair<int, PairBB> aux = minimax_abeta(newCb, player,
-                depth - 1, -beta, -alfa);
+        if (player == WHITE)
+            aux = minimax_abeta(newCb, BLACK, depth - 1, -beta, -alfa);
+        else
+            aux = minimax_abeta(newCb, WHITE, depth - 1, -beta, -alfa);
+
 		score = -1 * aux.first;
 		if(score >= beta)
         {

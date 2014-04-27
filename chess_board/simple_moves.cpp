@@ -1,4 +1,5 @@
 #include "chess_board.h"
+#include "../minimax.h"
 #include <iostream>
 #include <vector>
 #include <climits>
@@ -51,13 +52,18 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
 
 pair<bitboard_t, bitboard_t> ChessBoard::getNextMove() {
     vector<pair<bitboard_t, bitboard_t> > all_moves;
+    pair<int, PairBB> final_res;
+    final_res = minimax_abeta (*this, current_player, 3, -Inf, Inf);
+    cout << "pula asta mutam\n";
+    printBoard (final_res.second.first);
+    printBoard (final_res.second.second);
     getAllMoves(all_moves);
     if (all_moves.size() == 0)
         return make_pair(0ULL, 0ULL);
 
     srand(time(NULL));
     int rand_move = rand() % all_moves.size();
-    return all_moves[rand_move];
+    return final_res.second;
 }
 
 bool ChessBoard::isValid(bitboard_t from, bitboard_t to) {
