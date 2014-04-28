@@ -242,6 +242,7 @@ int ChessBoard::evaluate_white ()
     getAllMoves(white_moves);
     current_player = BLACK;
     getAllMoves(black_moves);
+    current_player = WHITE;
 
     vector<bitboard_t> pieces[12];
     for (int i = 0; i < 12; i++)
@@ -300,6 +301,7 @@ int ChessBoard::evaluate_black()
     getAllMoves(black_moves);
     current_player = WHITE;
     getAllMoves(white_moves);
+    current_player = BLACK;
 
     vector<bitboard_t> pieces[12];
     for (int i = 0; i < 12; i++)
