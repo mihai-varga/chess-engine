@@ -21,6 +21,12 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     allPieces = (allPieces & ~from) | to;
     // if white is moving
     if (from & allWhites) {
+        if (from & boards[5])
+            whiteKingMoved = true;
+        if (from & moveToBitboard("a1"))
+            whiteRookQueenMoved = true;
+        if (from & moveToBitboard("h1"))
+            whiteRookKingMoved = true;
         if (index == 0) { // if moving a pawn 
             if (to & maskRank[7]) { // if the pawn has reached the last rank
                 boards[index] = boards[index] & ~to; // delete the pawn
@@ -34,6 +40,12 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
             allBlacks = allBlacks & ~to;
         }
     } else { // if black is moving
+        if (from & boards[11])
+            blackKingMoved = true;
+        if (from & moveToBitboard("a8"))
+            blackRookQueenMoved = true;
+        if (from & moveToBitboard("h8"))
+            blackRookKingMoved = true;
         if (index == 6) { // if moving a pawn 
             if (to & maskRank[0]) { // if the pawn has reached the last rank
                 boards[index] = boards[index] & ~to; // delete the pawn
