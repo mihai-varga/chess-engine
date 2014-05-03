@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #define Inf 123456789
+#define END_OF_EARLY_GAME 10
 
 typedef unsigned long long bitboard_t;
 typedef enum {WHITE, BLACK} player_t ;

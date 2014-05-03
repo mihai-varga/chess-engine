@@ -1,4 +1,5 @@
 #include "chess_board/chess_board.h"
+#include <iostream>
 
 using namespace std;
 
@@ -26,6 +27,7 @@ pair<int, PairBB> negamax_abeta(ChessBoard cb, player_t player, int depth, int a
 	{
         newCb = cb;
         newCb.setMove(moves[i].first, moves[i].second);
+        newCb.move_index++;
         pair<int, PairBB> aux;
 
         if (player == WHITE)

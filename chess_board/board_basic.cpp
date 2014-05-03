@@ -1,5 +1,6 @@
 #include "chess_board.h"
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <climits>
 #include <cstdlib>
@@ -78,9 +79,12 @@ ChessBoard::ChessBoard() {
     }
     //initialize square lookup table
     for (int i = 0; i < 64; i++) {
-//        square[i] = 0;
         square[i] = 1LL << i;
     }
+
+    //set the move index to 1
+    move_index = 0;
+
     initBoard();
 }
 
@@ -178,9 +182,16 @@ int ChessBoard::evaluate_white ()
 {
     //different move vectors for each color
     vector<pair<bitboard_t, bitboard_t> > white_moves, black_moves;
-    getAllMoves(white_moves);
+    int white_moves_size = 1, black_moves_size = 1;
+    if (isCheck(WHITE)) {
+        getAllMoves(white_moves);
+        white_moves_size = white_moves.size();
+    }
     current_player = BLACK;
-    getAllMoves(black_moves);
+    if (isCheck(BLACK)) {
+        getAllMoves(black_moves);
+        black_moves_size = black_moves.size();
+    }
     current_player = WHITE;
 
     vector<bitboard_t> pieces[12];
@@ -188,10 +199,10 @@ int ChessBoard::evaluate_white ()
         pieces[i] = split(boards[i]);
 
     //if one player does not have any more moves, it's mate
-    if (white_moves.size() == 0)
+    if (white_moves_size == 0)
         return INT_MIN;
 
-    if (black_moves.size() == 0)
+    if (black_moves_size == 0)
         return INT_MAX;
 
     int white_pos_score = 0, black_pos_score = 0;
@@ -229,9 +240,29 @@ int ChessBoard::evaluate_white ()
     score += 320 * (pieces[2].size() - pieces[8].size()); // kights
     score += 500 * (pieces[1].size() - pieces[7].size()); // rooks
     score += 100 * (pieces[0].size() - pieces[6].size()); // pawns
-    score += 10 * (white_moves.size() - black_moves.size());
-    score += white_pos_score - black_pos_score;
-    
+    //score += 10 * (white_moves.size() - black_moves.size());
+    if (this->move_index > END_OF_EARLY_GAME)
+        score += white_pos_score - black_pos_score;
+
+    // King's Indian Defense (here are evaluated the moves for BLACK)
+    if (this->move_index <= END_OF_EARLY_GAME) {
+        if (moveToBitboard("f6") & boards[8]) {
+            score -= 50;
+        }
+        if (moveToBitboard("g6") & boards[6]) {
+            score -= 50;
+        }
+        if (moveToBitboard("d5") & boards[6]) {
+            score -= 50;
+        }
+        if (moveToBitboard("g7") & boards[9]) {
+            score -= 50;
+        }
+        if ((moveToBitboard("g8") & boards[11]) && (moveToBitboard("f8") & boards[7])) {
+            score -= 50;
+        }
+    }
+
     return score;
 }
 
@@ -239,20 +270,26 @@ int ChessBoard::evaluate_black()
 {
     //different move vectors for each color
     vector<pair<bitboard_t, bitboard_t> > white_moves, black_moves;
-    getAllMoves(black_moves);
+    int white_moves_size = 1, black_moves_size = 1;
+    if (isCheck(BLACK)) {
+        getAllMoves(black_moves);
+        black_moves_size = black_moves.size();
+    }
     current_player = WHITE;
-    getAllMoves(white_moves);
-    current_player = BLACK;
+    if (isCheck(WHITE)) {
+        getAllMoves(white_moves);
+        white_moves_size = white_moves.size();
+    }
 
     vector<bitboard_t> pieces[12];
     for (int i = 0; i < 12; i++)
         pieces[i] = split(boards[i]);
 
     //if one player does not have any more moves, it's mate
-    if (black_moves.size() == 0)
+    if (black_moves_size == 0)
         return INT_MIN;
 
-    if (white_moves.size() == 0)
+    if (white_moves_size == 0)
         return INT_MAX;
 
     int white_pos_score = 0, black_pos_score = 0;
@@ -290,8 +327,34 @@ int ChessBoard::evaluate_black()
     score += 320 * (pieces[8].size() - pieces[2].size()); // kights
     score += 500 * (pieces[7].size() - pieces[1].size()); // rooks
     score += 100 * (pieces[6].size() - pieces[0].size()); // pawns
-    score += 10 * (black_moves.size() - white_moves.size());
-    score += black_pos_score - white_pos_score;
-    
+    //score += 10 * (black_moves.size() - white_moves.size());
+    if (this->move_index > END_OF_EARLY_GAME)
+        score += 100 * (black_pos_score - white_pos_score);
+
+    // King's Indian Attack Opening (here are evaluated the moves for WHITE)
+    if (this->move_index <= END_OF_EARLY_GAME) {
+        if (moveToBitboard("f3") & boards[2]) {
+            score -= 60;
+        }
+        if (moveToBitboard("d2") & boards[2]) {
+            score -= 60;
+        }
+        if (moveToBitboard("e4") & boards[0]) {
+            score -= 50;
+        }
+        if (moveToBitboard("d3") & boards[0]) {
+            score -= 50;
+        }
+        if (moveToBitboard("g3") & boards[0]) {
+            score -= 50;
+        }
+        if (moveToBitboard("g2") & boards[3]) {
+            score -= 50;
+        }
+        if ((moveToBitboard("g1") & boards[5]) && (moveToBitboard("f2") & boards[1])) {
+            score -= 50;
+        }
+    }
+
     return score;
 }
