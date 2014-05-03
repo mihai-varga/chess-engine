@@ -7,7 +7,6 @@
 #include <vector>
 
 using namespace std;
-vector<char*> pastMoves;
 
 bool isMove(char *command) {
     return ((command[0] >= 'a' && command[0] <= 'h') &&
@@ -23,27 +22,28 @@ void checkCastling(char *command, ChessBoard &cb) {
     bitboard_t piece = cb.moveToBitboard(command);
     if (!strcmp(command, "e1g1") && (piece & cb.boards[5])) {
         cb.setMove(1ULL << 7, 1ULL << 5);
-        pastMoves.push_back(command);
+        cb.move_index++;
         return;
     }
     if (!strcmp(command, "e1c1") && (piece & cb.boards[5])) {
         cb.setMove(1ULL, 1ULL << 3);
-        pastMoves.push_back(command);
+        cb.move_index++;
         return;
     }
     if (!strcmp(command, "e8g8") && (piece & cb.boards[11])) {
         cb.setMove(1ULL << 63, 1ULL << 61);
-        pastMoves.push_back(command);
+        cb.move_index++;
         return;
     }
     if (!strcmp(command, "e8c8") && (piece & cb.boards[11])) {
         cb.setMove(1ULL << 56, 1ULL << 59);
-        pastMoves.push_back(command);
+        cb.move_index++;
         return;
     }
 }
 
 void play(ChessBoard &cb) {
+    int ret;
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
     
@@ -54,12 +54,18 @@ void play(ChessBoard &cb) {
     vector<pair<bitboard_t, int> > attackers;
 
     while (1) {
-        scanf("%s", command);
+        ret = scanf("%s", command);
+        if (ret < 0)
+            fprintf(stderr, "Command error");
 
         if (!strcmp(command, "xboard")) {
-            scanf("%s", command); // protover
+            ret = scanf("%s", command); // protover
+            if (ret < 0)
+                fprintf(stderr, "Command error");
             if (!strcmp(command, "protover")) {
-                scanf("%s", command); // 2
+                ret = scanf("%s", command); // 2
+                if (ret < 0)
+                    fprintf(stderr, "Command error");
                 printf("feature myname=\"Piept de sahist\"\n");
                 printf("feature sigint=0\n"); // nu mai trimite SIGINT 
                 printf("feature done=1\n");
@@ -91,7 +97,7 @@ void play(ChessBoard &cb) {
             cb.setMove(p.first, p.second);
             char *move = strdup(from.c_str());
             strcat(move, to.c_str());
-            pastMoves.push_back(move);
+            cb.move_index++;
             printf("move %s\n", (from + to).c_str());
         }
 
@@ -115,7 +121,7 @@ void play(ChessBoard &cb) {
         if (isMove(command)) {
             checkCastling(command, cb);
             cb.setMove(cb.moveToBitboard(command), cb.moveToBitboard(command + 2));
-            pastMoves.push_back(command);
+            cb.move_index++;
             if (forceMode)
                 continue;
             pair<bitboard_t, bitboard_t> my_move_bit;
@@ -128,8 +134,7 @@ void play(ChessBoard &cb) {
 
             if (my_move_bit.first != 0ULL && my_move_bit.second != 0ULL) {
                 cb.setMove(my_move_bit.first, my_move_bit.second);
-                char *tmp = strdup(my_move.c_str());
-                pastMoves.push_back(tmp);
+                cb.move_index++;
                 printf("move %s\n", my_move.c_str());
             } else {
                 // checks for mate or stalemate

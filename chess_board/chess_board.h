@@ -61,6 +61,12 @@ class ChessBoard {
          */
         std::vector<bitboard_t> square;
 
+        /*
+         * the index of the current move; records the number of moves
+         * that have been made by both players
+         */
+        int move_index;
+
     private:
         static char alph[8];
         static char numb[8];

@@ -52,7 +52,10 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
 
 pair<bitboard_t, bitboard_t> ChessBoard::getNextMove() {
     pair<int, PairBB> final_res;
-    final_res = negamax_abeta (*this, current_player, 3, -Inf, Inf);
+    if (move_index < 3)
+        final_res = negamax_abeta (*this, current_player, 1, -Inf, Inf);
+    else
+        final_res = negamax_abeta (*this, current_player, 4, -Inf, Inf);
     return final_res.second;
 }
 
