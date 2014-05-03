@@ -8,7 +8,7 @@ using namespace std;
  * care poate fi obtinut de jucatorul aflat la mutare,
  * iar y este mutarea propriu-zisa
  */
-pair<int, PairBB> minimax_abeta(ChessBoard cb, player_t player, int depth, int alfa, int beta)
+pair<int, PairBB> negamax_abeta(ChessBoard cb, player_t player, int depth, int alfa, int beta)
 {
     PairBB bestMove(0ULL, 0ULL);
 
@@ -31,12 +31,12 @@ pair<int, PairBB> minimax_abeta(ChessBoard cb, player_t player, int depth, int a
         if (player == WHITE)
         {
             newCb.current_player = BLACK;
-            aux = minimax_abeta(newCb, BLACK, depth - 1, -beta, -alfa);
+            aux = negamax_abeta(newCb, BLACK, depth - 1, -beta, -alfa);
         }
         else
         {
             newCb.current_player = WHITE;
-            aux = minimax_abeta(newCb, WHITE, depth - 1, -beta, -alfa);
+            aux = negamax_abeta(newCb, WHITE, depth - 1, -beta, -alfa);
         }
 
 		score = -1 * aux.first;

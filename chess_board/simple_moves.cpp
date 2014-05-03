@@ -1,5 +1,5 @@
 #include "chess_board.h"
-#include "../minimax.h"
+#include "../negamax.h"
 #include <iostream>
 #include <vector>
 #include <climits>
@@ -52,7 +52,7 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
 
 pair<bitboard_t, bitboard_t> ChessBoard::getNextMove() {
     pair<int, PairBB> final_res;
-    final_res = minimax_abeta (*this, current_player, 3, -Inf, Inf);
+    final_res = negamax_abeta (*this, current_player, 3, -Inf, Inf);
     return final_res.second;
 }
 
