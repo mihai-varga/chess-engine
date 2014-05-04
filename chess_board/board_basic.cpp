@@ -172,27 +172,21 @@ bitboard_t ChessBoard::moveToBitboard(string move) {
 }
 
 int ChessBoard::evaluate(player_t player) {
-    if (player == WHITE)
-        return evaluate_white();
-    else
-        return evaluate_black();
-}
-
-int ChessBoard::evaluate_white ()
-{
     //different move vectors for each color
     vector<pair<bitboard_t, bitboard_t> > white_moves, black_moves;
     int white_moves_size = 1, black_moves_size = 1;
+    player_t old = current_player;
     if (isCheck(WHITE)) {
+        current_player = WHITE;
         getAllMoves(white_moves);
         white_moves_size = white_moves.size();
     }
-    current_player = BLACK;
     if (isCheck(BLACK)) {
+        current_player = BLACK;
         getAllMoves(black_moves);
         black_moves_size = black_moves.size();
     }
-    current_player = WHITE;
+    current_player = old;
 
     vector<bitboard_t> pieces[12];
     for (int i = 0; i < 12; i++)
@@ -200,38 +194,38 @@ int ChessBoard::evaluate_white ()
 
     //if one player does not have any more moves, it's mate
     if (white_moves_size == 0)
-        return INT_MIN;
+        return player == WHITE ? INT_MIN : INT_MAX;
 
     if (black_moves_size == 0)
-        return INT_MAX;
+        return player == BLACK ? INT_MIN : INT_MAX;
 
     int white_pos_score = 0, black_pos_score = 0;
 
     for (unsigned int i = 0; i < pieces[0].size(); i++)
-        white_pos_score += white_pawn_pos[63 - indexes[pieces[0][i]]];
+        white_pos_score += pawn_pos[63 - indexes[pieces[0][i]]];
     for (unsigned int i = 0; i < pieces[1].size(); i++)
-        white_pos_score += white_rook_pos[63 - indexes[pieces[1][i]]];
+        white_pos_score += rook_pos[63 - indexes[pieces[1][i]]];
     for (unsigned int i = 0; i < pieces[2].size(); i++)
-        white_pos_score += white_knight_pos[63 - indexes[pieces[2][i]]];
+        white_pos_score += knight_pos[63 - indexes[pieces[2][i]]];
     for (unsigned int i = 0; i < pieces[3].size(); i++)
-        white_pos_score += white_bishop_pos[63 - indexes[pieces[3][i]]];
+        white_pos_score += bishop_pos[63 - indexes[pieces[3][i]]];
     for (unsigned int i = 0; i < pieces[4].size(); i++)
-        white_pos_score += white_queen_pos[63 - indexes[pieces[4][i]]];
+        white_pos_score += queen_pos[63 - indexes[pieces[4][i]]];
     for (unsigned int i = 0; i < pieces[5].size(); i++)
-        white_pos_score += white_king_pos[63 - indexes[pieces[5][i]]];
+        white_pos_score += king_pos[63 - indexes[pieces[5][i]]];
 
     for (unsigned int i = 0; i < pieces[6].size(); i++)
-        black_pos_score += black_pawn_pos[indexes[pieces[6][i]]];
+        black_pos_score += pawn_pos[indexes[pieces[6][i]]];
     for (unsigned int i = 0; i < pieces[7].size(); i++)
-        black_pos_score += black_rook_pos[indexes[pieces[7][i]]];
+        black_pos_score += rook_pos[indexes[pieces[7][i]]];
     for (unsigned int i = 0; i < pieces[8].size(); i++)
-        black_pos_score += black_knight_pos[indexes[pieces[8][i]]];
+        black_pos_score += knight_pos[indexes[pieces[8][i]]];
     for (unsigned int i = 0; i < pieces[9].size(); i++)
-        black_pos_score += black_bishop_pos[indexes[pieces[9][i]]];
+        black_pos_score += bishop_pos[indexes[pieces[9][i]]];
     for (unsigned int i = 0; i < pieces[10].size(); i++)
-        black_pos_score += black_queen_pos[indexes[pieces[10][i]]];
+        black_pos_score += queen_pos[indexes[pieces[10][i]]];
     for (unsigned int i = 0; i < pieces[11].size(); i++)
-        black_pos_score += black_king_pos[indexes[pieces[11][i]]];
+        black_pos_score += king_pos[indexes[pieces[11][i]]];
 
 
     int score = 0;
@@ -241,120 +235,53 @@ int ChessBoard::evaluate_white ()
     score += 500 * (pieces[1].size() - pieces[7].size()); // rooks
     score += 100 * (pieces[0].size() - pieces[6].size()); // pawns
     //score += 10 * (white_moves.size() - black_moves.size());
+
     if (this->move_index > END_OF_EARLY_GAME)
         score += white_pos_score - black_pos_score;
 
     // King's Indian Defense (here are evaluated the moves for BLACK)
     if (this->move_index <= END_OF_EARLY_GAME) {
-        if (moveToBitboard("f6") & boards[8]) {
-            score -= 50;
+        if (player == WHITE) {
+            if (moveToBitboard("f6") & boards[8]) {
+                score -= 50;
+            }
+            if (moveToBitboard("g6") & boards[6]) {
+                score -= 50;
+            }
+            if (moveToBitboard("d5") & boards[6]) {
+                score -= 50;
+            }
+            if (moveToBitboard("g7") & boards[9]) {
+                score -= 50;
+            }
+            if ((moveToBitboard("g8") & boards[11]) && (moveToBitboard("f8") & boards[7])) {
+                score -= 50;
+            }
         }
-        if (moveToBitboard("g6") & boards[6]) {
-            score -= 50;
-        }
-        if (moveToBitboard("d5") & boards[6]) {
-            score -= 50;
-        }
-        if (moveToBitboard("g7") & boards[9]) {
-            score -= 50;
-        }
-        if ((moveToBitboard("g8") & boards[11]) && (moveToBitboard("f8") & boards[7])) {
-            score -= 50;
-        }
-    }
-
-    return score;
-}
-
-int ChessBoard::evaluate_black()
-{
-    //different move vectors for each color
-    vector<pair<bitboard_t, bitboard_t> > white_moves, black_moves;
-    int white_moves_size = 1, black_moves_size = 1;
-    if (isCheck(BLACK)) {
-        getAllMoves(black_moves);
-        black_moves_size = black_moves.size();
-    }
-    current_player = WHITE;
-    if (isCheck(WHITE)) {
-        getAllMoves(white_moves);
-        white_moves_size = white_moves.size();
-    }
-
-    vector<bitboard_t> pieces[12];
-    for (int i = 0; i < 12; i++)
-        pieces[i] = split(boards[i]);
-
-    //if one player does not have any more moves, it's mate
-    if (black_moves_size == 0)
-        return INT_MIN;
-
-    if (white_moves_size == 0)
-        return INT_MAX;
-
-    int white_pos_score = 0, black_pos_score = 0;
-
-    for (unsigned int i = 0; i < pieces[0].size(); i++)
-        white_pos_score += white_pawn_pos[63 - indexes[pieces[0][i]]];
-    for (unsigned int i = 0; i < pieces[1].size(); i++)
-        white_pos_score += white_rook_pos[63 - indexes[pieces[1][i]]];
-    for (unsigned int i = 0; i < pieces[2].size(); i++)
-        white_pos_score += white_knight_pos[63 - indexes[pieces[2][i]]];
-    for (unsigned int i = 0; i < pieces[3].size(); i++)
-        white_pos_score += white_bishop_pos[63 - indexes[pieces[3][i]]];
-    for (unsigned int i = 0; i < pieces[4].size(); i++)
-        white_pos_score += white_queen_pos[63 - indexes[pieces[4][i]]];
-    for (unsigned int i = 0; i < pieces[5].size(); i++)
-        white_pos_score += white_king_pos[63 - indexes[pieces[5][i]]];
-
-    for (unsigned int i = 0; i < pieces[6].size(); i++)
-        black_pos_score += black_pawn_pos[indexes[pieces[6][i]]];
-    for (unsigned int i = 0; i < pieces[7].size(); i++)
-        black_pos_score += black_rook_pos[indexes[pieces[7][i]]];
-    for (unsigned int i = 0; i < pieces[8].size(); i++)
-        black_pos_score += black_knight_pos[indexes[pieces[8][i]]];
-    for (unsigned int i = 0; i < pieces[9].size(); i++)
-        black_pos_score += black_bishop_pos[indexes[pieces[9][i]]];
-    for (unsigned int i = 0; i < pieces[10].size(); i++)
-        black_pos_score += black_queen_pos[indexes[pieces[10][i]]];
-    for (unsigned int i = 0; i < pieces[11].size(); i++)
-        black_pos_score += black_king_pos[indexes[pieces[11][i]]];
-
-
-    int score = 0;
-    score += 900 * (pieces[10].size() - pieces[4].size()); // queens
-    score += 330 * (pieces[9].size() - pieces[3].size()); // bishops
-    score += 320 * (pieces[8].size() - pieces[2].size()); // kights
-    score += 500 * (pieces[7].size() - pieces[1].size()); // rooks
-    score += 100 * (pieces[6].size() - pieces[0].size()); // pawns
-    //score += 10 * (black_moves.size() - white_moves.size());
-    if (this->move_index > END_OF_EARLY_GAME)
-        score += 100 * (black_pos_score - white_pos_score);
-
-    // King's Indian Attack Opening (here are evaluated the moves for WHITE)
-    if (this->move_index <= END_OF_EARLY_GAME) {
-        if (moveToBitboard("f3") & boards[2]) {
-            score -= 60;
-        }
-        if (moveToBitboard("d2") & boards[2]) {
-            score -= 60;
-        }
-        if (moveToBitboard("e4") & boards[0]) {
-            score -= 50;
-        }
-        if (moveToBitboard("d3") & boards[0]) {
-            score -= 50;
-        }
-        if (moveToBitboard("g3") & boards[0]) {
-            score -= 50;
-        }
-        if (moveToBitboard("g2") & boards[3]) {
-            score -= 50;
-        }
-        if ((moveToBitboard("g1") & boards[5]) && (moveToBitboard("f2") & boards[1])) {
-            score -= 50;
+        else {
+           if (moveToBitboard("f3") & boards[2]) {
+                score -= 60;
+            }
+            if (moveToBitboard("d2") & boards[2]) {
+                score -= 60;
+            }
+            if (moveToBitboard("e4") & boards[0]) {
+                score -= 50;
+            }
+            if (moveToBitboard("d3") & boards[0]) {
+                score -= 50;
+            }
+            if (moveToBitboard("g3") & boards[0]) {
+                score -= 50;
+            }
+            if (moveToBitboard("g2") & boards[3]) {
+                score -= 50;
+            }
+            if ((moveToBitboard("g1") & boards[5]) && (moveToBitboard("f2") & boards[1])) {
+                score -= 50;
+            }
         }
     }
 
-    return score;
+    return player == WHITE ? score : (-1) * score;
 }
