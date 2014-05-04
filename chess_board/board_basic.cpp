@@ -243,19 +243,19 @@ int ChessBoard::evaluate(player_t player) {
     if (this->move_index <= END_OF_EARLY_GAME) {
         if (player == WHITE) {
             if (moveToBitboard("f6") & boards[8]) {
-                score -= 50;
+                score -= 500;
             }
             if (moveToBitboard("g6") & boards[6]) {
-                score -= 50;
+                score -= 500;
             }
             if (moveToBitboard("d5") & boards[6]) {
-                score -= 50;
+                score -= 500;
             }
             if (moveToBitboard("g7") & boards[9]) {
-                score -= 50;
+                score -= 500;
             }
             if ((moveToBitboard("g8") & boards[11]) && (moveToBitboard("f8") & boards[7])) {
-                score -= 50;
+                score -= 500;
             }
         }
         else {
