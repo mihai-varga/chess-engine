@@ -174,6 +174,7 @@ bitboard_t ChessBoard::moveToBitboard(string move) {
 int ChessBoard::evaluate(player_t player) {
     //different move vectors for each color
     vector<pair<bitboard_t, bitboard_t> > white_moves, black_moves;
+    vector<bitboard_t> moves;
     int white_moves_size = 1, black_moves_size = 1;
     player_t old = current_player;
     if (isCheck(WHITE)) {
@@ -189,8 +190,11 @@ int ChessBoard::evaluate(player_t player) {
     current_player = old;
 
     vector<bitboard_t> pieces[12];
-    for (int i = 0; i < 12; i++)
+    int attacked[12];
+    for (int i = 0; i < 12; i++) {
         pieces[i] = split(boards[i]);
+        attacked[i] = 0;
+    }
 
     //if one player does not have any more moves, it's mate
     if (white_moves_size == 0)
@@ -201,40 +205,130 @@ int ChessBoard::evaluate(player_t player) {
 
     int white_pos_score = 0, black_pos_score = 0;
 
-    for (unsigned int i = 0; i < pieces[0].size(); i++)
+    // WHITE
+    for (unsigned int i = 0; i < pieces[0].size(); i++) {
         white_pos_score += pawn_pos[63 - indexes[pieces[0][i]]];
-    for (unsigned int i = 0; i < pieces[1].size(); i++)
+        getWhitePawnMoves(moves, pieces[0][i]);
+        for (unsigned int j = 0; j < moves.size(); j++) // all the attack moves
+            for (int k = 7; k < 12; k++) // possible targets (without pawns)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[1].size(); i++) {
         white_pos_score += rook_pos[63 - indexes[pieces[1][i]]];
-    for (unsigned int i = 0; i < pieces[2].size(); i++)
+        getRooksMoves(moves, pieces[1][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 7; k < 12; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[2].size(); i++) {
         white_pos_score += knight_pos[63 - indexes[pieces[2][i]]];
-    for (unsigned int i = 0; i < pieces[3].size(); i++)
+        getKnightMoves(moves, pieces[2][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 7; k < 12; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[3].size(); i++) {
         white_pos_score += bishop_pos[63 - indexes[pieces[3][i]]];
-    for (unsigned int i = 0; i < pieces[4].size(); i++)
+        getBishopMoves(moves, pieces[3][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 7; k < 12; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[4].size(); i++) {
         white_pos_score += queen_pos[63 - indexes[pieces[4][i]]];
-    for (unsigned int i = 0; i < pieces[5].size(); i++)
+        getQueenMoves(moves, pieces[4][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 7; k < 12; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[5].size(); i++) {
         white_pos_score += king_pos[63 - indexes[pieces[5][i]]];
+        getKingMoves(moves, pieces[5][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 7; k < 12; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
 
-    for (unsigned int i = 0; i < pieces[6].size(); i++)
+
+    // BLACK
+    for (unsigned int i = 0; i < pieces[6].size(); i++) {
         black_pos_score += pawn_pos[indexes[pieces[6][i]]];
-    for (unsigned int i = 0; i < pieces[7].size(); i++)
-        black_pos_score += rook_pos[indexes[pieces[7][i]]];
-    for (unsigned int i = 0; i < pieces[8].size(); i++)
-        black_pos_score += knight_pos[indexes[pieces[8][i]]];
-    for (unsigned int i = 0; i < pieces[9].size(); i++)
-        black_pos_score += bishop_pos[indexes[pieces[9][i]]];
-    for (unsigned int i = 0; i < pieces[10].size(); i++)
-        black_pos_score += queen_pos[indexes[pieces[10][i]]];
-    for (unsigned int i = 0; i < pieces[11].size(); i++)
-        black_pos_score += king_pos[indexes[pieces[11][i]]];
+        getBlackPawnMoves(moves, pieces[6][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 1; k < 6; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
 
+    for (unsigned int i = 0; i < pieces[7].size(); i++) {
+        black_pos_score += rook_pos[indexes[pieces[7][i]]];
+        getRooksMoves(moves, pieces[7][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 1; k < 6; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[8].size(); i++) {
+        black_pos_score += knight_pos[indexes[pieces[8][i]]];
+        getKnightMoves(moves, pieces[8][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 1; k < 6; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[9].size(); i++) {
+        black_pos_score += bishop_pos[indexes[pieces[9][i]]];
+        getBishopMoves(moves, pieces[9][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 1; k < 6; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[10].size(); i++) {
+        black_pos_score += queen_pos[indexes[pieces[10][i]]];
+        getQueenMoves(moves, pieces[10][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 1; k < 6; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
+
+    for (unsigned int i = 0; i < pieces[11].size(); i++) {
+        black_pos_score += king_pos[indexes[pieces[11][i]]];
+        getKingMoves(moves, pieces[11][i]);
+        for (unsigned int j = 0; j < moves.size(); j++)
+            for (int k = 1; k < 6; k++)
+                if (moves[j] & boards[k])
+                    attacked[k]++;
+    }
 
     int score = 0;
+    
+    // Score by the number of pieces
     score += 900 * (pieces[4].size() - pieces[10].size()); // queens
     score += 330 * (pieces[3].size() - pieces[9].size()); // bishops
     score += 320 * (pieces[2].size() - pieces[8].size()); // kights
     score += 500 * (pieces[1].size() - pieces[7].size()); // rooks
     score += 100 * (pieces[0].size() - pieces[6].size()); // pawns
-    //score += 10 * (white_moves.size() - black_moves.size());
+    // Score by the attacked pieces
+    score += 90* (attacked[10] - attacked[4]); // opponent's attacked queen - my attacked queen
+    score += 33 * (attacked[9] - attacked[3]);
+    score += 32 * (attacked[8] - attacked[2]);
+    score += 50 * (attacked[7] - attacked[1]);
 
     if (this->move_index > END_OF_EARLY_GAME)
         score += white_pos_score - black_pos_score;
