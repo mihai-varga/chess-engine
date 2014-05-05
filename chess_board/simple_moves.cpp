@@ -66,7 +66,7 @@ pair<bitboard_t, bitboard_t> ChessBoard::getNextMove() {
     pair<int, PairBB> final_res;
     int depth = 4;
     if (move_index <= END_OF_EARLY_GAME)
-        depth = 1;
+        depth = 2;
     final_res = negamax_abeta (*this, current_player, depth, -Inf, Inf);
     cout << "SCORUL ESTE " << final_res.first << endl;
     return final_res.second;

@@ -335,45 +335,43 @@ int ChessBoard::evaluate(player_t player) {
 
     // King's Indian Defense (here are evaluated the moves for BLACK)
     if (this->move_index <= END_OF_EARLY_GAME) {
-        if (player == WHITE) {
-            if (moveToBitboard("f6") & boards[8]) {
-                score -= 200;
-            }
-            if (moveToBitboard("g6") & boards[6]) {
-                score -= 200;
-            }
-            if (moveToBitboard("d5") & boards[6]) {
-                score -= 200;
-            }
-            if (moveToBitboard("g7") & boards[9]) {
-                score -= 200;
-            }
-            if ((moveToBitboard("g8") & boards[11]) && (moveToBitboard("f8") & boards[7])) {
-                score -= 200;
-            }
+        // black opening
+        if (moveToBitboard("f6") & boards[8]) {
+            score -= 200;
         }
-        else {
-           if (moveToBitboard("f3") & boards[2]) {
-                score -= 60;
-            }
-            if (moveToBitboard("d2") & boards[2]) {
-                score -= 60;
-            }
-            if (moveToBitboard("e4") & boards[0]) {
-                score -= 50;
-            }
-            if (moveToBitboard("d3") & boards[0]) {
-                score -= 50;
-            }
-            if (moveToBitboard("g3") & boards[0]) {
-                score -= 50;
-            }
-            if (moveToBitboard("g2") & boards[3]) {
-                score -= 50;
-            }
-            if ((moveToBitboard("g1") & boards[5]) && (moveToBitboard("f2") & boards[1])) {
-                score -= 50;
-            }
+        if (moveToBitboard("g6") & boards[6]) {
+            score -= 200;
+        }
+        if (moveToBitboard("d5") & boards[6]) {
+            score -= 200;
+        }
+        if (moveToBitboard("g7") & boards[9]) {
+            score -= 200;
+        }
+        if ((moveToBitboard("g8") & boards[11]) && (moveToBitboard("f8") & boards[7])) {
+            score -= 200;
+        }
+        // white opening
+        if (moveToBitboard("f3") & boards[2]) {
+            score += 60;
+        }
+        if (moveToBitboard("d2") & boards[2]) {
+            score += 60;
+        }
+        if (moveToBitboard("e4") & boards[0]) {
+            score += 50;
+        }
+        if (moveToBitboard("d3") & boards[0]) {
+            score += 50;
+        }
+        if (moveToBitboard("g3") & boards[0]) {
+            score += 50;
+        }
+        if (moveToBitboard("g2") & boards[3]) {
+            score += 50;
+        }
+        if ((moveToBitboard("g1") & boards[5]) && (moveToBitboard("f2") & boards[1])) {
+            score += 50;
         }
     }
 
