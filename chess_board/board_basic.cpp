@@ -325,7 +325,8 @@ int ChessBoard::evaluate(player_t player) {
     score += 500 * (pieces[1].size() - pieces[7].size()); // rooks
     score += 100 * (pieces[0].size() - pieces[6].size()); // pawns
     // Score by the attacked pieces
-    score += 90* (attacked[10] - attacked[4]); // opponent's attacked queen - my attacked queen
+    score += 200 * (attacked[11] - attacked[5]); 
+    score += 90 * (attacked[10] - attacked[4]); // opponent's attacked queen - my attacked queen
     score += 33 * (attacked[9] - attacked[3]);
     score += 32 * (attacked[8] - attacked[2]);
     score += 50 * (attacked[7] - attacked[1]);
@@ -353,27 +354,27 @@ int ChessBoard::evaluate(player_t player) {
         }
         // white opening
         if (moveToBitboard("f3") & boards[2]) {
-            score += 60;
+            score += 200;
         }
         if (moveToBitboard("d2") & boards[2]) {
-            score += 60;
+            score += 200;
         }
         if (moveToBitboard("e4") & boards[0]) {
-            score += 50;
+            score += 200;
         }
         if (moveToBitboard("d3") & boards[0]) {
-            score += 50;
+            score += 200;
         }
         if (moveToBitboard("g3") & boards[0]) {
-            score += 50;
+            score += 200;
         }
         if (moveToBitboard("g2") & boards[3]) {
-            score += 50;
+            score += 200;
         }
         if ((moveToBitboard("g1") & boards[5]) && (moveToBitboard("f2") & boards[1])) {
-            score += 50;
+            score += 200;
         }
     }
 
-    return player == WHITE ? score : (-1) * score;
+    return player == WHITE ? score : -score;
 }
