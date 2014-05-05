@@ -243,19 +243,19 @@ int ChessBoard::evaluate(player_t player) {
     if (this->move_index <= END_OF_EARLY_GAME) {
         if (player == WHITE) {
             if (moveToBitboard("f6") & boards[8]) {
-                score -= 500;
+                score -= 200;
             }
             if (moveToBitboard("g6") & boards[6]) {
-                score -= 500;
+                score -= 200;
             }
             if (moveToBitboard("d5") & boards[6]) {
-                score -= 500;
+                score -= 200;
             }
             if (moveToBitboard("g7") & boards[9]) {
-                score -= 500;
+                score -= 200;
             }
             if ((moveToBitboard("g8") & boards[11]) && (moveToBitboard("f8") & boards[7])) {
-                score -= 500;
+                score -= 200;
             }
         }
         else {
@@ -282,6 +282,11 @@ int ChessBoard::evaluate(player_t player) {
             }
         }
     }
+
+    if (player == WHITE) 
+        printf("xxxWhite: %d\n", score);
+    else
+        printf("xxxBlack: %d\n", -score);
 
     return player == WHITE ? score : (-1) * score;
 }
