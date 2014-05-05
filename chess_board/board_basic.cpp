@@ -283,10 +283,5 @@ int ChessBoard::evaluate(player_t player) {
         }
     }
 
-    if (player == WHITE) 
-        printf("xxxWhite: %d\n", score);
-    else
-        printf("xxxBlack: %d\n", -score);
-
     return player == WHITE ? score : (-1) * score;
 }
