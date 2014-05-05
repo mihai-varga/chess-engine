@@ -13,18 +13,18 @@ pair<int, PairBB> negamax_abeta(ChessBoard cb, player_t player, int depth, int a
 {
     PairBB bestMove(0ULL, 0ULL);
 
-	if(depth == 0)
-	{
+    if(depth == 0)
+    {
         return make_pair(cb.evaluate(player), bestMove);
-	}
+    }
 
-	int score;
+    int score;
     vector<PairBB> moves;
     cb.getAllMoves(moves);
     ChessBoard newCb;
 
-	for(unsigned int i = 0; i < moves.size(); i++)
-	{
+    for(unsigned int i = 0; i < moves.size(); i++)
+    {
         newCb = cb;
         newCb.setMove(moves[i].first, moves[i].second);
         newCb.move_index++;
@@ -41,17 +41,17 @@ pair<int, PairBB> negamax_abeta(ChessBoard cb, player_t player, int depth, int a
             aux = negamax_abeta(newCb, WHITE, depth - 1, -beta, -alfa);
         }
 
-		score = -1 * aux.first;
-		if(score >= beta)
+        score = -1 * aux.first;
+        if(score >= beta)
         {
-			return make_pair(beta, moves[i]);
+            return make_pair(beta, moves[i]);
         }
-		if(score > alfa)
-		{
-			alfa = score;
-			bestMove = moves[i];
-		}
-	}
+        if(score > alfa)
+        {
+            alfa = score;
+            bestMove = moves[i];
+        }
+    }
 
     return make_pair(alfa, bestMove);
 }
