@@ -330,6 +330,7 @@ int ChessBoard::evaluate(player_t player) {
     score += 33 * (attacked[9] - attacked[3]);
     score += 32 * (attacked[8] - attacked[2]);
     score += 50 * (attacked[7] - attacked[1]);
+    score += 10 * (attacked[6] - attacked[0]);
 
     if (this->move_index > END_OF_EARLY_GAME)
         score += white_pos_score - black_pos_score;
