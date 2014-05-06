@@ -848,7 +848,6 @@ bool ChessBoard::canKingsideCastling()
 
     if(isCheck(king<<1) || isCheck(king<<2))
     {
-        cout<<"nu e sah pe drum"<<endl;
         return false;
     }
     return true;

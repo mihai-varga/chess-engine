@@ -131,8 +131,6 @@ void play(ChessBoard &cb) {
             string my_move = from + to;
 
             if (my_move_bit.first != 0ULL && my_move_bit.second != 0ULL) {
-                //char *tmp = strdup(my_move.c_str());
-                //checkCastling(tmp, cb);
                 cb.setMove(my_move_bit.first, my_move_bit.second);
                 cb.move_index++;
                 printf("move %s\n", my_move.c_str());
