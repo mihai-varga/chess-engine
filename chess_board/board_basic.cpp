@@ -92,6 +92,26 @@ ChessBoard::~ChessBoard() {}
 
 void ChessBoard::setCurrentPlayer(player_t p) {
     current_player = p;
+    //prevent opponent from calling doCastle
+/*   if(p == WHITE)
+    {
+        whiteKingMoved = false;
+        whiteRookKingMoved = false;
+        whiteRookQueenMoved = false;
+        blackKingMoved = true;
+        blackRookKingMoved = true;
+        blackRookQueenMoved = true;
+    }
+    else
+    {
+        whiteKingMoved = true;
+        whiteRookKingMoved = true;
+        whiteRookQueenMoved = true;
+        blackKingMoved = false;
+        blackRookKingMoved = false;
+        blackRookQueenMoved = false;
+    }
+*/
 }
 
 void ChessBoard::printBoard(bitboard_t b) {

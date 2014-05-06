@@ -16,9 +16,42 @@ using namespace std;
 bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     int index = getBoard(from);
     int index_opponent = getBoard(to);
+
+    //check for castling. returns false because no attack was performed
+    //only for current player. castling for opponent is handled in main
+    if(from & boards[5] && !whiteKingMoved && current_player == WHITE)
+    {
+        if(to & moveToBitboard("g1"))
+        {
+            if(!doKingsideCastling())
+                cout<<"e o problema grava k"<<endl;
+            return false;
+        }
+        else if(to & moveToBitboard("c1"))
+        {
+            if(!doQueensideCastling())
+                cout<<"e o problema grava q"<<endl;
+            return false;
+        }
+    }
+    else if(from & boards[11] && !blackKingMoved && current_player == BLACK)
+    {
+        if(to & moveToBitboard("g8"))
+        {
+            doKingsideCastling();
+            return false;
+        }
+        else if(to & moveToBitboard("c8"))
+        {
+            doQueensideCastling();
+            return false;
+        }
+    }
+
     bool isAttack = false;
     boards[index] = (boards[index] & ~from) | to;
     allPieces = (allPieces & ~from) | to;
+    
     // if white is moving
     if (from & allWhites) {
         if (from & boards[5])
@@ -63,6 +96,23 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
 }
 
 pair<bitboard_t, bitboard_t> ChessBoard::getNextMove() {
+    //debug
+    /*
+    if(canKingsideCastling())
+    {
+        if(current_player == WHITE)
+            return make_pair(boards[5], moveToBitboard("g1"));
+        else
+            return make_pair(boards[11], moveToBitboard("g8"));
+    }
+    if(canQueensideCastling())
+    {
+        if(current_player == WHITE)
+            return make_pair(boards[5], moveToBitboard("c1"));
+        else
+            return make_pair(boards[11], moveToBitboard("c8"));
+    }*/
+    //endofdebug
     pair<int, PairBB> final_res;
     int depth = 4;
     if (move_index <= END_OF_EARLY_GAME)
@@ -772,12 +822,22 @@ bool ChessBoard::canKingsideCastling()
     {
         if(whiteKingMoved || whiteRookKingMoved)
             return false;
+        //check if the rook is in the correct place
+        if(!(boards[1] & moveToBitboard("h1")))
+        {
+            return false;
+        }
         king = boards[5];
     }
     else
     {
         if(blackKingMoved || blackRookKingMoved)
             return false;
+        //check if the rook is in the correct place
+        if(!(boards[7] & moveToBitboard("h8")))
+        {
+            return false;
+        }
         king = boards[11];
     }
     //check if check from, through or to
@@ -786,8 +846,11 @@ bool ChessBoard::canKingsideCastling()
     if((king<<1 & allPieces) || (king<<2 & allPieces))
         return false;
 
-    if (isCheck(king<<1) || isCheck(king<<2))
+    if(isCheck(king<<1) || isCheck(king<<2))
+    {
+        cout<<"nu e sah pe drum"<<endl;
         return false;
+    }
     return true;
 }
 
@@ -800,12 +863,22 @@ bool ChessBoard::canQueensideCastling()
     {
         if(whiteKingMoved || whiteRookQueenMoved)
             return false;
+        //check if the rook is in the correct place
+        if(!(boards[1] & moveToBitboard("a1")))
+        {
+            return false;
+        }
         king = boards[5];
     }
     else
     {
         if(blackKingMoved || blackRookQueenMoved)
             return false;
+        //check if the rook is in the correct place
+        if(!(boards[7] & moveToBitboard("a8")))
+        {
+            return false;
+        }
         king = boards[11];
     }
     //check if check from, through or to
@@ -824,115 +897,117 @@ bool ChessBoard::canQueensideCastling()
     return true;
 }
 
-//bool ChessBoard::doKingsideCastling()
-//{
-//    if(!canKingsideCastling())
-//    {
-//        //this should be checked before calling
-//        //doCastling, so this "if" should be commented
-//        return false;
-//    }
-//    if(current_player == WHITE)
-//    {
-//        //erasing king and rook from allPieces
-//        allPieces &= ~boards[5];
-//        //we know that the king's rook has not moved
-//        allPieces &= ~square[7];
-//        //same for allWhites
-//        allWhites &= ~boards[5];
-//        allWhites &= ~square[7];
-//        
-//        boards[1] &= ~square[7];
-//        boards[1] |= square[5];
-//        boards[5] = boards[5]<<2;
-//
-//        allPieces |= boards[1] | boards[5];
-//        allWhites |= boards[1] | boards[5];
-//        
-//        whiteKingMoved = true;
-//        whiteRookKingMoved = true;
-//
-//        return true;
-//    }
-//    else
-//    {
-//        //erasing king and rook from allPieces
-//        allPieces &= ~boards[11];
-//        //we know that the king rook has not moved
-//        allPieces &= ~square[63];
-//        //same for allWhites
-//        allBlacks &= ~boards[11];
-//        allBlacks &= ~square[63];
-//        
-//        boards[7] &= ~square[63];
-//        boards[7] |= square[61];
-//        boards[11] = boards[11]<<2;
-//
-//        allPieces |= boards[11] | boards[7];
-//        allBlacks |= boards[11] | boards[7];
-//        
-//        blackKingMoved = true;
-//        blackRookKingMoved = true;
-//
-//        return true;
-//    }
-//    return false;
-//}
-//
-//bool ChessBoard::doQueensideCastling()
-//{
-//    if(!canQueensideCastling())
-//    {
-//        //this should be checked before calling
-//        //doCastling, so this if should be commented
-//        return false;
-//    }
-//    if(current_player == WHITE)
-//    {
-//        //erasing king and rook from allPieces
-//        allPieces &= ~boards[5];
-//        //we know that the king's rook has not moved
-//        allPieces &= ~square[0];
-//        //same for allWhites
-//        allWhites &= ~boards[5];
-//        allWhites &= ~square[0];
-//        
-//        boards[1] &= ~square[0];
-//        boards[1] |= square[3];
-//        boards[5] = boards[5]>>2;
-//
-//        allPieces |= boards[1] | boards[5];
-//        allWhites |= boards[1] | boards[5];
-//    
-//        whiteKingMoved = true;
-//        whiteRookQueenMoved = true;
-//
-//        return true;
-//    }
-//    else
-//    {
-//        //erasing king and rook from allPieces
-//        allPieces &= ~boards[11];
-//        //we know that the king rook has not moved
-//        allPieces &= ~square[56];
-//        //same for allWhites
-//        allBlacks &= ~boards[11];
-//        allBlacks &= ~square[56];
-//        
-//        boards[7] &= ~square[56];
-//        boards[7] |= square[59];
-//        boards[11] = boards[11]>>2;
-//
-//        allPieces |= boards[11] | boards[7];
-//        allBlacks |= boards[11] | boards[7];
-//        
-//        blackKingMoved = true;
-//        blackRookQueenMoved = true;
-//
-//        return true;
-//    }
-//    return false;
-//}
+bool ChessBoard::doKingsideCastling()
+{
+    if(!canKingsideCastling())
+    {
+        //TODO
+        //this should be checked before calling
+        //doCastling, so this "if" should be commented
+        return false;
+    }
+    if(current_player == WHITE)
+    {
+        //erasing king and rook from allPieces
+        allPieces &= ~boards[5];
+        //we know that the king's rook has not moved
+        allPieces &= ~square[7];
+        //same for allWhites
+        allWhites &= ~boards[5];
+        allWhites &= ~square[7];
+        
+        boards[1] &= ~square[7];
+        boards[1] |= square[5];
+        boards[5] = boards[5]<<2;
+
+        allPieces |= boards[1] | boards[5];
+        allWhites |= boards[1] | boards[5];
+        
+        whiteKingMoved = true;
+        whiteRookKingMoved = true;
+
+        return true;
+    }
+    else
+    {
+        //erasing king and rook from allPieces
+        allPieces &= ~boards[11];
+        //we know that the king rook has not moved
+        allPieces &= ~square[63];
+        //same for allWhites
+        allBlacks &= ~boards[11];
+        allBlacks &= ~square[63];
+        
+        boards[7] &= ~square[63];
+        boards[7] |= square[61];
+        boards[11] = boards[11]<<2;
+
+        allPieces |= boards[11] | boards[7];
+        allBlacks |= boards[11] | boards[7];
+        
+        blackKingMoved = true;
+        blackRookKingMoved = true;
+
+        return true;
+    }
+    return false;
+}
+
+bool ChessBoard::doQueensideCastling()
+{
+    if(!canQueensideCastling())
+    {
+        //TODO
+        //this should be checked before calling
+        //doCastling, so this if should be commented
+        return false;
+    }
+    if(current_player == WHITE)
+    {
+        //erasing king and rook from allPieces
+        allPieces &= ~boards[5];
+        //we know that the king's rook has not moved
+        allPieces &= ~square[0];
+        //same for allWhites
+        allWhites &= ~boards[5];
+        allWhites &= ~square[0];
+        
+        boards[1] &= ~square[0];
+        boards[1] |= square[3];
+        boards[5] = boards[5]>>2;
+
+        allPieces |= boards[1] | boards[5];
+        allWhites |= boards[1] | boards[5];
+    
+        whiteKingMoved = true;
+        whiteRookQueenMoved = true;
+
+        return true;
+    }
+    else
+    {
+        //erasing king and rook from allPieces
+        allPieces &= ~boards[11];
+        //we know that the king rook has not moved
+        allPieces &= ~square[56];
+        //same for allWhites
+        allBlacks &= ~boards[11];
+        allBlacks &= ~square[56];
+        
+        boards[7] &= ~square[56];
+        boards[7] |= square[59];
+        boards[11] = boards[11]>>2;
+
+        allPieces |= boards[11] | boards[7];
+        allBlacks |= boards[11] | boards[7];
+        
+        blackKingMoved = true;
+        blackRookQueenMoved = true;
+
+        return true;
+    }
+    return false;
+}
 
 void ChessBoard::getAllMoves(vector<pair<bitboard_t, bitboard_t> > &all_moves) {
     vector<bitboard_t> pieces, moves;
