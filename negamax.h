@@ -22,6 +22,8 @@ pair<int, PairBB> negamax_abeta(ChessBoard cb, player_t player, int depth, int a
     vector<PairBB> moves;
     cb.getAllMoves(moves);
     ChessBoard newCb;
+    if (moves.size() > 0)
+        bestMove = moves[0];
 
     for(unsigned int i = 0; i < moves.size(); i++)
     {
