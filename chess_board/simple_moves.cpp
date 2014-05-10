@@ -21,13 +21,13 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     //only for current player. castling for opponent is handled in main
     if(from & boards[5] && !whiteKingMoved && current_player == WHITE)
     {
-        if(to & moveToBitboard("g1"))
+        if(from & moveToBitboard("e1") && to & moveToBitboard("g1"))
         {
             if(!doKingsideCastling())
                 cout<<"e o problema grava k"<<endl;
             return false;
         }
-        else if(to & moveToBitboard("c1"))
+        else if(from & moveToBitboard("e1") && to & moveToBitboard("c1"))
         {
             if(!doQueensideCastling())
                 cout<<"e o problema grava q"<<endl;
@@ -36,12 +36,12 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     }
     else if(from & boards[11] && !blackKingMoved && current_player == BLACK)
     {
-        if(to & moveToBitboard("g8"))
+        if(from & moveToBitboard("e8") && to & moveToBitboard("g8"))
         {
             doKingsideCastling();
             return false;
         }
-        else if(to & moveToBitboard("c8"))
+        else if(from & moveToBitboard("e8") && to & moveToBitboard("c8"))
         {
             doQueensideCastling();
             return false;
