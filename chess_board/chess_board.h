@@ -67,6 +67,7 @@ class ChessBoard {
          * that have been made by both players
          */
         int move_index;
+        int remaining_time;
 
     private:
         static char alph[8];

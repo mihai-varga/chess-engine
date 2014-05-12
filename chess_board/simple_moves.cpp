@@ -96,29 +96,11 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
 }
 
 pair<bitboard_t, bitboard_t> ChessBoard::getNextMove() {
-    //debug
-    /*
-    if(canKingsideCastling())
-    {
-        if(current_player == WHITE)
-            return make_pair(boards[5], moveToBitboard("g1"));
-        else
-            return make_pair(boards[11], moveToBitboard("g8"));
-    }
-    if(canQueensideCastling())
-    {
-        if(current_player == WHITE)
-            return make_pair(boards[5], moveToBitboard("c1"));
-        else
-            return make_pair(boards[11], moveToBitboard("c8"));
-    }*/
-    //endofdebug
     pair<int, PairBB> final_res;
     int depth = 4;
-    if (move_index <= END_OF_EARLY_GAME)
+    if (move_index <= END_OF_EARLY_GAME || remaining_time < 30)
         depth = 2;
     final_res = negamax_abeta (*this, current_player, depth, -Inf, Inf);
-    cout << "SCORUL ESTE " << final_res.first << endl;
     return final_res.second;
 }
 

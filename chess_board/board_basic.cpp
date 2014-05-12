@@ -51,6 +51,7 @@ void ChessBoard::initBoard() {
     for (int i = 0; i < 64; i++) {
         indexes[1ULL << i] = i;
     }
+    remaining_time = 600; // 10 minutes in seconds
 }
 
 ChessBoard::ChessBoard() {

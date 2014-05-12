@@ -99,6 +99,16 @@ void play(ChessBoard &cb) {
             printf("move %s\n", (from + to).c_str());
         }
 
+        if (!strcmp(command, "time")) {
+            int time_;
+            ret = scanf("%d", &time_);
+            if (ret < 0)
+                cb.remaining_time = 600;
+            else
+                cb.remaining_time = time_ / 100;
+            printf("Timp ramas: %d\n", cb.remaining_time);
+        }
+
         if (!strcmp(command, "white")) {
             cb.setCurrentPlayer(WHITE);
             continue;
@@ -151,8 +161,6 @@ void play(ChessBoard &cb) {
                     result = "1/2-1/2 {Stalemate}";
                 }
                 printf("%s\n", result.c_str());
-
-                //printf("resign\n");
             }
         }
     }
