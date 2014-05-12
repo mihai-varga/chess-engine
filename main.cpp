@@ -106,7 +106,6 @@ void play(ChessBoard &cb) {
                 cb.remaining_time = 600;
             else
                 cb.remaining_time = time_ / 100;
-            printf("Timp ramas: %d\n", cb.remaining_time);
         }
 
         if (!strcmp(command, "white")) {
