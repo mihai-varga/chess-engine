@@ -882,9 +882,6 @@ bool ChessBoard::doKingsideCastling()
 {
     if(!canKingsideCastling())
     {
-        //TODO
-        //this should be checked before calling
-        //doCastling, so this "if" should be commented
         return false;
     }
     if(current_player == WHITE)
@@ -938,9 +935,6 @@ bool ChessBoard::doQueensideCastling()
 {
     if(!canQueensideCastling())
     {
-        //TODO
-        //this should be checked before calling
-        //doCastling, so this if should be commented
         return false;
     }
     if(current_player == WHITE)
