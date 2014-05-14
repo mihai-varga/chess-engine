@@ -17,6 +17,88 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
     int index = getBoard(from);
     int index_opponent = getBoard(to);
 
+    //check for en-passant
+    //if the 'from' position is on fift rank
+    //and it's a pawn and 'to' position is
+    //adjacent and empty
+    bool en_passant = false;
+    if(from & allWhites)
+    {
+        //moving a white piece
+        if(index == 0)
+        {
+            //is pawn
+            if(from & (~clearRank[4]))
+            {
+                //it's on fifth rank
+                if(!(to & allPieces))
+                {
+                    //does not land on an enemy piece
+                    if(to == from<<7)
+                    {
+                        //it goes to an adjacent position
+                        //so it's en passante because the
+                        //move is valid
+                        en_passant = true;
+                        //erase the "attacked" pawn
+                        allPieces = allPieces & (~(from>>1));
+                        allBlacks = allBlacks & allPieces;
+                        boards[6] = boards[6] & allBlacks;
+
+                    }
+                    else if(to == from<<9)
+                    {
+                        //erase the "attacked" pawn
+                        allPieces = allPieces & (~(from<<1));
+                        allBlacks = allBlacks & allPieces;
+                        boards[6] = boards[6] & allBlacks;
+                        en_passant = true;
+                    }
+                }
+            }
+        }
+    }
+    else if(from & allBlacks)
+    {
+        //moving a white piece
+        if(index == 6)
+        {
+            //is pawn
+            if(from & (~clearRank[3]))
+            {
+                //it's on fourth rank
+                if(!(to & allPieces))
+                {
+                    //does not land on an enemy piece
+                    if(to == from>>7)
+                    {
+                        //it goes to an adjacent position
+                        //so it's en passante because the
+                        //move is valid
+                        en_passant = true;
+                        //erase the "attacked" pawn
+                        allPieces = allPieces & (~(from<<1));
+                        allWhites = allWhites & allPieces;
+                        boards[0] = boards[0] & allBlacks;
+
+                    }
+                    else if(to == from>>9)
+                    {
+
+                        en_passant = true;
+                        //erase the "attacked" pawn
+                        allPieces = allPieces & (~(from>>1));
+                        allWhites = allWhites & allPieces;
+                        boards[0] = boards[0] & allBlacks;
+                    }
+                }
+            }
+        }
+    }
+    if(en_passant)
+        printf("am facut en passant!\n");
+
+
     //check for castling. returns false because no attack was performed
     //only for current player. castling for opponent is handled in main
     if(from & boards[5] && !whiteKingMoved && current_player == WHITE)
@@ -92,6 +174,11 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
             allWhites = allWhites & ~to;
         }
     }
+
+    //remove the piece if en passant was made
+    //and return true
+    //if(en_passant)
+
     return isAttack;
 }
 
