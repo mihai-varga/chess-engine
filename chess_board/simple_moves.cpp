@@ -183,7 +183,7 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
 pair<bitboard_t, bitboard_t> ChessBoard::getNextMove() {
     pair<int, PairBB> final_res;
     int depth = 4;
-    if (move_index <= END_OF_EARLY_GAME || remaining_time < 30)
+    if (move_index <= END_OF_EARLY_GAME || remaining_time < 20)
         depth = 2;
     final_res = negamax_abeta (*this, current_player, depth, -Inf, Inf);
     return final_res.second;
