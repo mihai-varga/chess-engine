@@ -174,7 +174,9 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
             allWhites = allWhites & ~to;
         }
     }
-
+    
+    if(en_passant)
+        return true;
     return isAttack;
 }
 
