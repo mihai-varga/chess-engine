@@ -175,10 +175,6 @@ bool ChessBoard::setMove(bitboard_t from, bitboard_t to) {
         }
     }
 
-    //remove the piece if en passant was made
-    //and return true
-    //if(en_passant)
-
     return isAttack;
 }
 
