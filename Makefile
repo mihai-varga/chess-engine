@@ -24,7 +24,7 @@ hwhite: $(EXE)
 
 
 solomid: $(EXE)
-	xboard -debug -fcp $(DIR)/$(EXE) -scp $(DIR)/$(EXE) -mode TwoMachines -tc 10
+	xboard -debug -fcp $(DIR)/$(EXE) -scp $(DIR)/$(EXE) -mode TwoMachines -tc 15
 
 clean:
 	rm $(EXE)
