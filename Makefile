@@ -1,5 +1,5 @@
 CC=g++  
-CFLAGS= -g -Wall -std=c++0x -O2
+CFLAGS= -g -Wall -std=c++0x -O3
 EXE=main
 SRC=main.cpp chess_board/*.cpp
 DIR=$(shell pwd | sed 's/ /\\ /g')
@@ -11,13 +11,13 @@ build:
 	$(CC) -o $(EXE) $(SRC) $(CFLAGS)
 
 white: $(EXE)
-	xboard -debug -fcp $(DIR)/$(EXE) -mode TwoMachines -tc 2
+	xboard -debug -fcp $(DIR)/$(EXE) -mode TwoMachines -tc 10
 
 black: $(EXE)
-	xboard -debug -scp $(DIR)/$(EXE) -mode TwoMachines -tc 2
+	xboard -debug -scp $(DIR)/$(EXE) -mode TwoMachines -tc 10
 
 hblack: $(EXE)
-	xboard -debug -fcp $(DIR)/$(EXE) -mode MachineWhite -tc 2
+	xboard -debug -fcp $(DIR)/$(EXE) -mode MachineWhite -tc 10
 
 hwhite: $(EXE)
 	xboard -debug -fcp $(DIR)/$(EXE) -tc 10
