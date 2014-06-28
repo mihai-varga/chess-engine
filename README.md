@@ -4,6 +4,7 @@
 
 * Our chess engine
     * `git clone https://github.com/mihai-varga/chess-engine.git && cd chess-engine && make -j 2`
+
 # How to play
 * Our engine (white) vs Fairymax (black)
     * `make white`
