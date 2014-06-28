@@ -1,19 +1,19 @@
 # Installation
 * Xboard and Fairymax
-'sudo apt-get install xboard fairymax'
+`sudo apt-get install xboard fairymax`
 
 * Our chess engine
-'git clone https://github.com/mihai-varga/chess-engine.git && cd chess-engine && make -j 2'
+`git clone https://github.com/mihai-varga/chess-engine.git && cd chess-engine && make -j 2`
 
 # How to play
 
 * Our engine (white) vs Fairymax (black)
-'make white'
+`make white`
 * Our engine (black) vs Fairymax (white)
-'make black'
+`make black`
 * You (white) vs our engine (black)
-'make hwhite'
+`make hwhite`
 * You (black) vs our engine (white)
-'make hblack'
+`make hblack`
 * Our engine vs itself
-'make solomid'
+`make solomid`
